@@ -60,4 +60,7 @@ Réglages à reprendre de Biathlonpronos dans le nouveau projet (voir `docs/arch
 activer pg_cron (Database > Extensions) **avant le lot 4** ; Authentication : connexions anonymes
 activées, limite par adresse IP, code e-mail à 6 chiffres, modèles « Magic Link » et « Change Email
 Address » avec `{{ .Token }}` ; fournisseurs Google / Apple plus tard, avec les applis.
+Authentication > URL Configuration : Site URL `https://velopronos.vercel.app` (puis le domaine définitif) et
+Redirect URLs `https://velopronos.vercel.app/**`, sinon les liens des e-mails renvoient vers localhost.
+Vercel : `NEXT_PUBLIC_SUPABASE_URL` = `https://<projet>.supabase.co`, sans `/rest/v1/` à la fin.
 Clés : `.env.local` (jamais versionné) et variables Vercel, recopiées depuis Project Settings > API.
