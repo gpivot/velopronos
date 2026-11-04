@@ -19,7 +19,7 @@ export function RuleInfoButton({ format, small = false }: { format: string; smal
   const t = useTranslations("RuleInfo");
   const [open, setOpen] = useState(false);
   const isRelay = RELAY_FORMATS.includes(format);
-  const lines = isRelay ? ["relay"] : FORMAT_LINES[format] ?? ["individual"];
+  const lines = isRelay ? ["relay"] : [...(FORMAT_LINES[format] ?? ["individual"]), "grilled"];
 
   return (
     <>

@@ -93,7 +93,7 @@
     "f1Title": "Un juego sencillo: 3 biatletas por carrera",
     "f1Body": "Antes de cada carrera, elige 3 biatletas. Bastan 30 segundos, y puedes cambiar de idea hasta la salida.",
     "f1Pin1": "La cuota: cuanto más alta, más puntos da el biatleta. ¿Te atreves con el outsider?",
-    "f1Pin2": "Tus 3 elegidos, y ya está. Puedes repetir los mismos biatletas de una carrera a otra.",
+    "f1Pin2": "Tus 3 elegidos, y ya está. Un biatleta elegido queda «quemado» en la siguiente carrera de la etapa: varía tus elecciones.",
     "f1Pin3": "El pronóstico se cierra en la salida de la carrera.",
     "f2Title": "Puntúas si tus biatletas terminan en el Top 10",
     "f2Body": "Cada biatleta aporta su cuota multiplicada según su puesto. Cientos de puntos en juego en cada carrera.",
@@ -147,7 +147,7 @@
     "faq_special_q": "¿Qué son las etapas especiales?",
     "faq_special_a": "Algunas carreras, anunciadas con antelación, tienen una regla excepcional. Vuelta de penalización: cada vuelta de penalización de tus biatletas cuesta 20 puntos, y un biatleta no pronosticado cuenta 5 vueltas (-100). Niebla: un biatleta fuera del Top 10 te resta tantos puntos como su puesto. Pillado: malus si tus elegidos terminan fuera del Top 10. Fiesta nacional: los biatletas de tu equipo favorito puntúan doble.",
     "faq_cards_q": "¿Cómo se ganan las cartas bonus?",
-    "faq_cards_a": "Puntuando en 10 carreras seguidas, relevos incluidos: es el 10/10. Entonces eliges tu carta: Turbo (×3 sobre un biatleta), Bala de reserva, Cohete y Gatillo (bonus de esquí y de tiro en toda una etapa), Talento (relanzar tu Diamante)… Juégala en el momento justo para dar la vuelta a la clasificación. Ninguna carta en el Mundial.",
+    "faq_cards_a": "Puntuando en 10 carreras seguidas, relevos incluidos: es el 10/10. Entonces eliges tu carta, por ejemplo Turbo (×3 sobre un biatleta), Parrillada (descongelar a tus biatletas quemados) o 4.ª elección (4 biatletas, cuentan los 3 mejores). Juégala en el momento justo para dar la vuelta a la clasificación.",
     "faq_team_q": "¿Para qué sirve el equipo favorito?",
     "faq_team_a": "Elige tus colores para la temporada, por ejemplo Francia Femenino o Noruega Masculino, y sigue sus victorias y podios desde tu inicio. Tu equipo también puede darte puntos: doble en la Fiesta nacional, y con la carta Equipo al final de la temporada.",
     "faq_standings_q": "¿Cómo funciona la clasificación?",
@@ -169,7 +169,9 @@
     "footerDisclaimer": "Biathlonpronos es un juego independiente de pronósticos de biatlón. Sin apuestas con dinero real. Sin ganancias económicas.",
     "footerSupport": "Soporte",
     "footerPrivacy": "Política de privacidad",
-    "footerTerms": "Condiciones de uso"
+    "footerTerms": "Condiciones de uso",
+    "faq_burnt_q": "¿Por qué un biatleta está «quemado»?",
+    "faq_burnt_a": "Un biatleta que has elegido no está disponible en la siguiente carrera de la misma etapa. Varía tus elecciones y guarda a tus favoritos para el momento justo. En la etapa siguiente todos vuelven a estar disponibles, y la carta Parrillada permite saltarse la regla una vez."
   },
   "Regles": {
     "title": "Las reglas",
@@ -287,7 +289,13 @@
     "leaguesBody": "Crea tu liga, comparte el código y enfréntate a tus amigos en una clasificación solo vuestra.",
     "finalTitle": "¿Listo para jugar?",
     "finalBody": "Elige a tus 3 biatletas. Vigila el tiro. Mira los esquís. Y sobre todo… evita la vuelta de penalización.",
-    "finalCta": "Ver las próximas carreras"
+    "finalCta": "Ver las próximas carreras",
+    "burntTitle": "Los biatletas quemados",
+    "burntBody": "Un biatleta elegido no está disponible en la carrera siguiente de la misma etapa. ¡Varía tus elecciones!",
+    "burntPicked": "Elegida",
+    "burntBurnt": "Quemada",
+    "burntBack": "Disponible",
+    "burntNote": "Al cambiar de etapa, todos vuelven a estar disponibles. La carta {fondue} también permite desquemar a tus biatletas una vez."
   },
   "Compte": {
     "pushOn": "Activadas en este teléfono",
@@ -604,7 +612,9 @@
     "cardFusee": "Cohete",
     "cardGachette": "Gatillo",
     "fuseeActive": "carta colocada en esta etapa: +100 / +50 / +20 pts para tus biatletas con los 3 mejores tiempos de esquí.",
-    "gachetteActive": "carta colocada en esta etapa: +100 pts por biatleta que hace 20/20 en el tiro (+50 por un 10/10 en el sprint)."
+    "gachetteActive": "carta colocada en esta etapa: +100 pts por biatleta que hace 20/20 en el tiro (+50 por un 10/10 en el sprint).",
+    "grilled": "quemado",
+    "cardGrilladeAction": "Usar Parrillada (desquemar mis biatletas)"
   },
   "SignIn": {
     "prompt": "Inicia sesión para continuar",
@@ -899,7 +909,8 @@
     "gachette": "Carta Gatillo colocada en la etapa: +100 pts por cada 20/20 en el tiro, +50 por cada 10/10 en el sprint.",
     "pursuitStart": "La salida se da en el orden de llegada del sprint y las cuotas se reevalúan según la diferencia.",
     "relay": "En los relevos, elige un solo equipo: suma puntos si termina en el Top 5 (su cuota × 10 por la victoria, luego × 6, × 4, × 2 y × 1).",
-    "x2": "Hasta la salida, puedes cambiar tu pronóstico y activar un bonus ×2 (3 por temporada)."
+    "x2": "Hasta la salida, puedes cambiar tu pronóstico y activar un bonus ×2 (3 por temporada).",
+    "grilled": "Los biatletas elegidos en la carrera anterior de la etapa están quemados: no puedes volver a elegirlos."
   },
   "BonusCards": {
     "title": "Cartas bonus",
@@ -940,7 +951,9 @@
     "stagePlayTitle": "para colocar en una etapa",
     "stagePlayNone": "No hay ninguna etapa próxima donde colocarla (ni en el Mundial/JJOO, ni con Turbo).",
     "stagePlayButton": "Colocar",
-    "stagePlayError": "No se ha podido colocar la carta. Inténtalo de nuevo."
+    "stagePlayError": "No se ha podido colocar la carta. Inténtalo de nuevo.",
+    "name_fondue": "Parrillada",
+    "desc_fondue": "Guárdala en la mano: desquema una vez a tus biatletas, en la carrera que elijas."
   },
   "Badges": {
     "leader": "Dorsal amarillo: líder de la clasificación",

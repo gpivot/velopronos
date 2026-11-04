@@ -21,11 +21,13 @@ import type { BonusCardEffect } from "./scoring/types";
  * (bonus_card_settings, migration 0039).
  * Une même carte ne se prend pas sur deux 10/10 d'affilée. Sur une même course, Ça farte et
  * Aspiration s'excluent, Aspiration et 4e choix aussi ; Ça farte se pose sur un des 4 choix d'un
- * 4e choix. Équipe se cumule avec tout. La carte « Fondue » (dégrillage) a été supprimée avec la
- * règle des biathlètes grillés le 04/11/2026 (elle reste prévue pour VéloPronos).
+ * 4e choix. Équipe se cumule avec tout.
+ * VéloPronos : la carte « Grillade » (dégrillage, valeur `fondue` en base, nom repris de
+ * Biathlonpronos) dégrille une fois ses coureurs sur la course de son choix ; elle se cumule avec tout.
  */
 
 export const CLAIMABLE_CARD_TYPES = [
+  "fondue",
   "ca_farte",
   "balle_de_pioche",
   "aspiration",

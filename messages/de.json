@@ -93,7 +93,7 @@
     "f1Title": "Ein einfaches Spiel: 3 Biathleten pro Rennen",
     "f1Body": "Wähle vor jedem Rennen 3 Biathleten. 30 Sekunden reichen, und du kannst es dir bis zum Start anders überlegen.",
     "f1Pin1": "Die Quote: je höher, desto mehr bringt der Biathlet. Traust du dich an den Außenseiter?",
-    "f1Pin2": "Deine 3 Tipps, mehr nicht. Du kannst dieselben Biathleten von Rennen zu Rennen wieder tippen.",
+    "f1Pin2": "Deine 3 Tipps, mehr nicht. Ein getippter Biathlet ist im nächsten Rennen der Etappe „gesperrt“: wechsle ab.",
     "f1Pin3": "Der Tipp schließt beim Start des Rennens.",
     "f2Title": "Du punktest, wenn deine Biathleten in die Top 10 kommen",
     "f2Body": "Jeder Biathlet bringt seine Quote, multipliziert je nach Platz. In jedem Rennen stehen Hunderte Punkte auf dem Spiel.",
@@ -147,7 +147,7 @@
     "faq_special_q": "Was sind Spezialetappen?",
     "faq_special_a": "Manche Rennen, im Voraus angekündigt, haben eine Sonderregel. Strafrunde: jede Strafrunde deiner Biathleten kostet 20 Punkte, und ein nicht getippter Biathlet zählt 5 Runden (-100). Nebel: ein Biathlet außerhalb der Top 10 kostet dich so viele Punkte wie seine Platzierung. Erwischt: Malus, wenn deine Tipps außerhalb der Top 10 landen. Nationalfeiertag: die Biathleten deines Lieblingsteams zählen doppelt.",
     "faq_cards_q": "Wie gewinne ich Bonuskarten?",
-    "faq_cards_a": "Indem du in 10 Rennen am Stück punktest, Staffeln inklusive: das ist das 10/10. Dann wählst du deine Karte: Turbowachs (×3 auf einen Biathleten), Nachlader, Rakete und Abzug (Lauf- und Schießbonus für eine ganze Etappe), Talent (Rohdiamant neu starten)… Spiel sie im richtigen Moment, um die Wertung auf den Kopf zu stellen. Keine Karten bei der WM.",
+    "faq_cards_a": "Indem du in 10 Rennen am Stück punktest, Staffeln inklusive: das ist das 10/10. Dann wählst du deine Karte, zum Beispiel Turbowachs (×3 auf einen Biathleten), Grillfest (Sperre aufheben) oder 4. Tipp (4 Biathleten, die 3 besten zählen). Spiel sie im richtigen Moment, um die Wertung auf den Kopf zu stellen.",
     "faq_team_q": "Wozu dient das Lieblingsteam?",
     "faq_team_a": "Wähle deine Farben für die Saison, zum Beispiel Deutschland Frauen oder Norwegen Männer, und verfolge ihre Siege und Podestplätze auf deiner Startseite. Dein Team kann dir auch Punkte bringen: doppelt am Nationalfeiertag und mit der Team-Karte am Saisonende.",
     "faq_standings_q": "Wie funktioniert die Wertung?",
@@ -169,7 +169,9 @@
     "footerDisclaimer": "Biathlonpronos ist ein unabhängiges Biathlon-Tippspiel. Kein Echtgeldeinsatz. Keine Geldgewinne.",
     "footerSupport": "Support",
     "footerPrivacy": "Datenschutzerklärung",
-    "footerTerms": "Nutzungsbedingungen"
+    "footerTerms": "Nutzungsbedingungen",
+    "faq_burnt_q": "Warum ist ein Biathlet „gesperrt“?",
+    "faq_burnt_a": "Ein Biathlet, den du getippt hast, ist im nächsten Rennen derselben Etappe nicht verfügbar. Wechsle also ab und heb dir deine Favoriten für den richtigen Moment auf. Bei der nächsten Etappe sind alle wieder frei, und die Grillfest-Karte hebt die Regel einmal auf."
   },
   "Regles": {
     "title": "Die Regeln",
@@ -287,7 +289,13 @@
     "leaguesBody": "Erstelle deine Liga, teile den Code und tritt in eurer eigenen Wertung gegen deine Freunde an.",
     "finalTitle": "Bereit zum Spielen?",
     "finalBody": "Wähle deine 3 Biathleten. Beobachte das Schießen. Schau auf die Ski. Und vor allem… meide die Strafrunde.",
-    "finalCta": "Nächste Rennen ansehen"
+    "finalCta": "Nächste Rennen ansehen",
+    "burntTitle": "Gesperrte Biathleten",
+    "burntBody": "Ein gewählter Biathlet ist für das nächste Rennen derselben Station gesperrt. Variiere deine Tipps!",
+    "burntPicked": "Gewählt",
+    "burntBurnt": "Gesperrt",
+    "burntBack": "Verfügbar",
+    "burntNote": "Beim Stationswechsel sind alle wieder verfügbar. Mit der Karte {fondue} kannst du die Sperre deiner Biathleten außerdem einmal aufheben."
   },
   "Compte": {
     "pushOn": "Auf diesem Handy aktiviert",
@@ -604,7 +612,9 @@
     "cardFusee": "Rakete",
     "cardGachette": "Abzug",
     "fuseeActive": "Karte auf dieser Etappe: +100 / +50 / +20 Pkt. für deine Biathleten mit den 3 schnellsten Laufzeiten.",
-    "gachetteActive": "Karte auf dieser Etappe: +100 Pkt. pro Biathlet mit 20/20 am Schießstand (+50 für 10/10 im Sprint)."
+    "gachetteActive": "Karte auf dieser Etappe: +100 Pkt. pro Biathlet mit 20/20 am Schießstand (+50 für 10/10 im Sprint).",
+    "grilled": "gesperrt",
+    "cardGrilladeAction": "Grillfest einsetzen (Sperre meiner Biathleten aufheben)"
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",
@@ -899,7 +909,8 @@
     "gachette": "Karte Abzug auf der Etappe: +100 Pkt. pro 20/20 am Schießstand, +50 pro 10/10 im Sprint.",
     "pursuitStart": "Gestartet wird in der Reihenfolge des Sprints, die Quoten werden je nach Rückstand neu bewertet.",
     "relay": "Bei Staffeln wählst du ein einziges Team: Es punktet, wenn es unter die Top 5 kommt (Quote × 10 für den Sieg, dann × 6, × 4, × 2 und × 1).",
-    "x2": "Bis zum Start kannst du deinen Tipp ändern und einen ×2-Bonus aktivieren (3 pro Saison)."
+    "x2": "Bis zum Start kannst du deinen Tipp ändern und einen ×2-Bonus aktivieren (3 pro Saison).",
+    "grilled": "Die Biathleten aus dem vorherigen Rennen der Etappe sind gesperrt: Du kannst sie nicht erneut wählen."
   },
   "BonusCards": {
     "title": "Bonuskarten",
@@ -940,7 +951,9 @@
     "stagePlayTitle": "auf eine Etappe legen",
     "stagePlayNone": "Keine kommende Etappe verfügbar (nicht bei WM/Olympia, nicht mit Turbowachs).",
     "stagePlayButton": "Legen",
-    "stagePlayError": "Die Karte konnte nicht gelegt werden. Versuch es noch einmal."
+    "stagePlayError": "Die Karte konnte nicht gelegt werden. Versuch es noch einmal.",
+    "name_fondue": "Grillfest",
+    "desc_fondue": "Auf der Hand behalten: hebe einmal die Sperre deiner Biathleten auf, im Rennen deiner Wahl."
   },
   "Badges": {
     "leader": "Gelbes Trikot: Führender der Wertung",

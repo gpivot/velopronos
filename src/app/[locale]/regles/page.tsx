@@ -30,6 +30,7 @@ const CHAPTER_EMOJI: Record<Chapter, string> = {
 };
 
 const CARDS = [
+  { type: "fondue", emoji: "🍖" },
   { type: "ca_farte", emoji: "🔥" },
   { type: "balle_de_pioche", emoji: "🃏" },
   { type: "aspiration", emoji: "💨", tag: "cardFrom4" },
@@ -51,6 +52,7 @@ export default async function ReglesPage() {
     farte: tCards("name_ca_farte"),
     fourth: tCards("name_balle_de_pioche"),
     aspiration: tCards("name_aspiration"),
+    fondue: tCards("name_fondue"),
   };
   const rank = (n: number) => t("rank", { rank: n });
 
@@ -149,6 +151,30 @@ export default async function ReglesPage() {
             </div>
             <ScoreMockup />
           </div>
+
+          <RuleCard emoji="🔥" title={t("burntTitle")} body={t("burntBody")}>
+            <div className="grid grid-cols-3 gap-1.5 text-center">
+              {(
+                [
+                  ["sprint", "burntPicked", "border-ice/50 bg-ice-soft text-ice", "✅"],
+                  ["poursuite", "burntBurnt", "border-red/50 bg-red/10 text-red", "🔥"],
+                  ["mass_start", "burntBack", "border-green/40 bg-green/10 text-green", "↩️"],
+                ] as const
+              ).map(([format, state, cls, icon], i) => (
+                <div key={format} className="relative flex flex-col gap-1">
+                  <span className="font-display text-[11px] font-bold text-text-dim">
+                    {i + 1}. {tFormat(format)}
+                  </span>
+                  <div className={`flex flex-col items-center gap-0.5 rounded-xl border px-1 py-2 ${cls}`}>
+                    <span className="text-lg leading-none">{icon}</span>
+                    <span className="text-[11px] font-semibold text-text">L. Jeanmonnot</span>
+                    <span className="font-display text-[10px] font-extrabold uppercase tracking-wide">{t(state)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-[12px] leading-relaxed text-text-dim">{t("burntNote", { fondue: cardNames.fondue })}</p>
+          </RuleCard>
 
           <RuleCard emoji="📊" title={t("oddsTitle")} body={t("oddsBody")}>
             <div className="flex flex-col gap-1">

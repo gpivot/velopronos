@@ -8,6 +8,7 @@ const FAQ = [
   "when",
   "points",
   "relays",
+  "burnt",
   "mistakes",
   "special",
   "cards",

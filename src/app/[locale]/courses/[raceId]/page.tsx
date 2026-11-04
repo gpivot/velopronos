@@ -10,10 +10,11 @@ import { getAdminProfile, getClock } from "@/lib/clock";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { PredictionForm, type AthleteWithOdds } from "./PredictionForm";
 import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm";
+import { GrilladeButton } from "./GrilladeButton";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
-import { RELAY_FORMATS } from "@/lib/raceFormats";
+import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
 import { getRaceResult } from "@/lib/lastResult";
 import { getStartList } from "@/lib/startList";
 import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
@@ -76,6 +77,7 @@ export default async function RacePage({
   let initialAthleteSelection: string[] = [];
   let initialNationSelection: string | null = null;
   // Pépites cachées pas encore révélées : jouées en caché sur toutes les courses, donc hors pronostic.
+  let grilledAthleteIds: string[] = [];
   let hiddenPepiteIds: string[] = [];
   let availableCards: { id: string; card_type: string }[] = [];
   // Cartes jouables sur cette course (une seule à la fois) et carte déjà jouée qui la couvre.
@@ -166,13 +168,22 @@ export default async function RacePage({
       .sort((a: AthleteWithOdds, b: AthleteWithOdds) => a.value - b.value);
 
     if (user) {
-      const [{ data: existing }, { data: hiddenPepites }] = await Promise.all([
+      const [{ data: existing }, { data: stageRaces }, { count: grilladeOnThisRace }, { data: hiddenPepites }] = await Promise.all([
         supabase
           .from("predictions")
           .select("athlete_ids, bonus_x2_used, bonus_card_used, bonus_card_target_athlete_id")
           .eq("user_id", user.id)
           .eq("race_id", race.id)
           .maybeSingle(),
+        supabase.from("races").select("id, format, sex, locks_at").eq("stage_id", stage.id),
+        // Carte Grillade : valeur « fondue » de l'enum bonus_card_type (nom repris de Biathlonpronos).
+        supabase
+          .from("bonus_cards")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .eq("card_type", "fondue")
+          .eq("status", "used")
+          .eq("used_on_race_id", race.id),
         supabase
           .from("pepites")
           .select("athlete_id")
@@ -182,9 +193,22 @@ export default async function RacePage({
       ]);
       hiddenPepiteIds = (hiddenPepites ?? []).map((p) => p.athlete_id as string);
       initialAthleteSelection = existing?.athlete_ids ?? [];
-      // Biathlètes grillés (§2) et carte Fondue supprimés le 04/11/2026 : tous les biathlètes
-      // restent disponibles d'une course à l'autre. La règle reste prévue pour VéloPronos
-      // (voir velopronos-trajectoire-et-regles.md).
+
+      // Coureurs grillés = coureurs choisis sur la course précédente de l'étape (même sexe), sauf si
+      // la carte Grillade a été jouée sur cette course. Calculé à partir des pronostics : le
+      // pronostic de la course affichée ne grille donc jamais ses propres choix, et il reste
+      // modifiable. (Repris du commit 91420f9 de Biathlonpronos ; adaptation vélo à faire : le
+      // grillage ne joue qu'à l'intérieur d'une course par étapes.)
+      const previousRace = previousRaceForGrilling(race, stageRaces ?? []);
+      if (previousRace && !grilladeOnThisRace) {
+        const { data: previousPrediction } = await supabase
+          .from("predictions")
+          .select("athlete_ids")
+          .eq("user_id", user.id)
+          .eq("race_id", previousRace.id)
+          .maybeSingle();
+        grilledAthleteIds = previousPrediction?.athlete_ids ?? [];
+      }
       initialBonusX2 = existing?.bonus_x2_used ?? false;
       initialCardTarget = existing?.bonus_card_target_athlete_id ?? null;
     }
@@ -392,6 +416,10 @@ export default async function RacePage({
             </div>
           ) : (
             <>
+              {!isRelay && grilledAthleteIds.length > 0 && availableCards.some((c) => c.card_type === "fondue") && (
+                <GrilladeButton raceId={race.id} cardId={availableCards.find((c) => c.card_type === "fondue")!.id} />
+              )}
+
               {isRelay ? (
                 <RelayPredictionForm
                   raceId={race.id}
@@ -408,6 +436,7 @@ export default async function RacePage({
                   format={race.format}
                   athletes={selectableAthletes}
                   initialSelection={initialAthleteSelection}
+                  grilledAthleteIds={grilledAthleteIds}
                   hiddenPepiteIds={hiddenPepiteIds}
                   playableCards={playableCards}
                   activeCard={activeCard}

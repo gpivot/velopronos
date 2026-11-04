@@ -93,7 +93,7 @@
     "f1Title": "Un jeu simple : 3 biathlètes par course",
     "f1Body": "Avant chaque course, choisis 3 biathlètes. 30 secondes suffisent, et tu peux changer d'avis jusqu'au départ.",
     "f1Pin1": "La cote : plus elle est élevée, plus le biathlète rapporte. Oseras-tu l'outsider ?",
-    "f1Pin2": "Tes 3 choix, et c'est tout. Tu peux reprendre les mêmes biathlètes d'une course à l'autre.",
+    "f1Pin2": "Tes 3 choix, et c'est tout. Un biathlète joué est « grillé » sur la course suivante de l'étape : varie tes choix.",
     "f1Pin3": "Le prono se ferme au départ de la course.",
     "f2Title": "Tu marques si tes biathlètes finissent dans le Top 10",
     "f2Body": "Chaque biathlète rapporte sa cote multipliée selon sa place. Des centaines de points se jouent à chaque course.",
@@ -147,7 +147,7 @@
     "faq_special_q": "C'est quoi, les étapes spéciales ?",
     "faq_special_a": "Certaines courses, annoncées à l'avance, ont une règle exceptionnelle. Tour de péna : chaque tour de pénalité de tes biathlètes coûte 20 points, et un biathlète non pronostiqué compte 5 tours (-100). Brouillard : un biathlète hors du Top 10 te fait perdre autant de points que sa place. T'es collé(e) : malus si tes choix finissent hors du Top 10. Fête nationale : les biathlètes de ton équipe favorite rapportent double.",
     "faq_cards_q": "Comment gagner des cartes bonus ?",
-    "faq_cards_a": "En marquant des points sur 10 courses d'affilée, relais compris : c'est le 10/10. Tu choisis alors ta carte : Ça farte (×3 sur un biathlète), Balle de pioche, Fusée et Gâchette (bonus de ski et de tir sur toute une étape), Talent (relancer ta pépite)… Joue-la au bon moment pour renverser le classement. Pas de carte aux Mondiaux/JO.",
+    "faq_cards_a": "En marquant des points sur 10 courses d'affilée, relais compris : c'est le 10/10. Tu choisis alors ta carte, par exemple Ça farte (×3 sur un biathlète), Grillade (dégriller tes biathlètes) ou 4e choix (4 biathlètes, les 3 meilleurs comptent). Joue-la au bon moment pour renverser le classement.",
     "faq_team_q": "À quoi sert l'équipe favorite ?",
     "faq_team_a": "Choisis tes couleurs pour la saison, par exemple France Femmes ou Norvège Hommes, et suis leurs victoires et podiums depuis ton accueil. Ton équipe peut aussi te rapporter des points : double lors de la Fête nationale, et avec la carte Équipe en fin de saison.",
     "faq_standings_q": "Comment fonctionne le classement ?",
@@ -169,7 +169,9 @@
     "footerDisclaimer": "Biathlonpronos est un jeu de pronostics biathlon indépendant. Aucune mise d'argent réel. Aucun gain financier.",
     "footerSupport": "Support",
     "footerPrivacy": "Politique de confidentialité",
-    "footerTerms": "CGU"
+    "footerTerms": "CGU",
+    "faq_burnt_q": "Pourquoi un biathlète est-il « grillé » ?",
+    "faq_burnt_a": "Un biathlète que tu as choisi n'est plus disponible sur la course suivante de la même étape. À toi de varier tes choix et de garder tes favoris pour le bon moment. Tout le monde est dégrillé à l'étape suivante, et la carte Grillade permet de contourner la règle une fois."
   },
   "Regles": {
     "title": "Le règlement",
@@ -287,7 +289,13 @@
     "leaguesBody": "Crée ta ligue, partage le code et affronte tes amis dans un classement rien qu'à vous.",
     "finalTitle": "Prêt à jouer ?",
     "finalBody": "Choisis tes 3 biathlètes. Surveille le tir. Regarde les skis. Et surtout… évite le tour de péna.",
-    "finalCta": "Voir les prochaines courses"
+    "finalCta": "Voir les prochaines courses",
+    "burntTitle": "Les biathlètes grillés",
+    "burntBody": "Un biathlète choisi devient indisponible pour la course suivante de la même étape. Varie tes choix !",
+    "burntPicked": "Choisie",
+    "burntBurnt": "Grillée",
+    "burntBack": "Disponible",
+    "burntNote": "Au changement d'étape, tout le monde redevient disponible. La carte {fondue} permet aussi de dégriller tes biathlètes une fois."
   },
   "Compte": {
     "pushOn": "Activées sur ce téléphone",
@@ -604,7 +612,9 @@
     "cardFusee": "Fusée",
     "cardGachette": "Gâchette",
     "fuseeActive": "carte posée sur cette étape : +100 / +50 / +20 pts pour tes biathlètes aux 3 meilleurs temps de ski.",
-    "gachetteActive": "carte posée sur cette étape : +100 pts par biathlète qui fait 20/20 au tir (+50 pour un 10/10 au sprint)."
+    "gachetteActive": "carte posée sur cette étape : +100 pts par biathlète qui fait 20/20 au tir (+50 pour un 10/10 au sprint).",
+    "grilled": "grillé",
+    "cardGrilladeAction": "Utiliser Grillade (dégriller mes biathlètes)"
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",
@@ -899,7 +909,8 @@
     "gachette": "Carte Gâchette posée sur l'étape : +100 pts par 20/20 au tir, +50 par 10/10 au sprint.",
     "pursuitStart": "Le départ se fait dans l'ordre d'arrivée du sprint, et les cotes sont réévaluées selon l'écart.",
     "relay": "Pour les relais, valide une seule équipe : elle marque des points si elle termine dans le Top 5 (sa cote × 10 pour la victoire, puis × 6, × 4, × 2 et × 1).",
-    "x2": "Jusqu'au départ, tu peux modifier ton pronostic et activer un bonus ×2 (3 par saison)."
+    "x2": "Jusqu'au départ, tu peux modifier ton pronostic et activer un bonus ×2 (3 par saison).",
+    "grilled": "Les biathlètes choisis sur la course précédente de l'étape sont grillés : tu ne peux pas les reprendre."
   },
   "BonusCards": {
     "title": "Cartes bonus",
@@ -940,7 +951,9 @@
     "stagePlayTitle": "à poser sur une étape",
     "stagePlayNone": "Aucune étape à venir où la poser (pas aux Mondiaux/JO, ni avec Ça farte).",
     "stagePlayButton": "Poser",
-    "stagePlayError": "La carte n'a pas pu être posée. Réessaie."
+    "stagePlayError": "La carte n'a pas pu être posée. Réessaie.",
+    "name_fondue": "Grillade",
+    "desc_fondue": "À garder en main : dégrille une fois tes biathlètes, sur la course de ton choix."
   },
   "Badges": {
     "leader": "Dossard jaune : leader du classement",

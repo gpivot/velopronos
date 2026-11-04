@@ -93,7 +93,7 @@
     "f1Title": "Un gioco semplice: 3 biatleti per gara",
     "f1Body": "Prima di ogni gara, scegli 3 biatleti. Bastano 30 secondi, e puoi cambiare idea fino alla partenza.",
     "f1Pin1": "La quota: più è alta, più il biatleta rende. Osi puntare sull'outsider?",
-    "f1Pin2": "Le tue 3 scelte, e basta. Puoi riprendere gli stessi biatleti da una gara all'altra.",
+    "f1Pin2": "Le tue 3 scelte, e basta. Un biatleta scelto è «bruciato» nella gara successiva della tappa: varia le tue scelte.",
     "f1Pin3": "Il pronostico si chiude alla partenza della gara.",
     "f2Title": "Fai punti se i tuoi biatleti finiscono nella Top 10",
     "f2Body": "Ogni biatleta porta la sua quota moltiplicata in base al piazzamento. Centinaia di punti in palio a ogni gara.",
@@ -147,7 +147,7 @@
     "faq_special_q": "Cosa sono le tappe speciali?",
     "faq_special_a": "Alcune gare, annunciate in anticipo, hanno una regola eccezionale. Giro di penalità: ogni giro di penalità dei tuoi biatleti costa 20 punti, e un biatleta non pronosticato conta 5 giri (-100). Nebbia: un biatleta fuori dalla Top 10 ti toglie tanti punti quanto il suo piazzamento. Bocciato: malus se le tue scelte finiscono fuori dalla Top 10. Festa nazionale: i biatleti della tua squadra preferita valgono doppio.",
     "faq_cards_q": "Come si vincono le carte bonus?",
-    "faq_cards_a": "Facendo punti in 10 gare di fila, staffette comprese: è il 10/10. Scegli allora la tua carta: Sciolina magica (×3 su un biatleta), Colpo di riserva, Razzo e Grilletto (bonus di sci e di tiro su un'intera tappa), Talento (rilancia la tua Pepita)… Giocala al momento giusto per ribaltare la classifica. Nessuna carta ai Mondiali.",
+    "faq_cards_a": "Facendo punti in 10 gare di fila, staffette comprese: è il 10/10. Scegli allora la tua carta, per esempio Sciolina magica (×3 su un biatleta), Grigliata (sbloccare i biatleti bruciati) o 4ª scelta (4 biatleti, contano i 3 migliori). Giocala al momento giusto per ribaltare la classifica.",
     "faq_team_q": "A cosa serve la squadra preferita?",
     "faq_team_a": "Scegli i tuoi colori per la stagione, per esempio Italia Femminile o Norvegia Maschile, e segui vittorie e podi dalla tua home. La tua squadra può anche farti guadagnare punti: doppi nella Festa nazionale, e con la carta Squadra a fine stagione.",
     "faq_standings_q": "Come funziona la classifica?",
@@ -169,7 +169,9 @@
     "footerDisclaimer": "Biathlonpronos è un gioco di pronostici sul biathlon indipendente. Nessuna puntata in denaro reale. Nessuna vincita in denaro.",
     "footerSupport": "Assistenza",
     "footerPrivacy": "Informativa sulla privacy",
-    "footerTerms": "Termini"
+    "footerTerms": "Termini",
+    "faq_burnt_q": "Perché un biatleta è «bruciato»?",
+    "faq_burnt_a": "Un biatleta che hai scelto non è disponibile nella gara successiva della stessa tappa. Varia le tue scelte e tieni i favoriti per il momento giusto. Alla tappa successiva tornano tutti disponibili, e la carta Grigliata permette di aggirare la regola una volta."
   },
   "Regles": {
     "title": "Il regolamento",
@@ -287,7 +289,13 @@
     "leaguesBody": "Crea la tua lega, condividi il codice e sfida i tuoi amici in una classifica tutta vostra.",
     "finalTitle": "Pronto a giocare?",
     "finalBody": "Scegli i tuoi 3 biatleti. Osserva il tiro. Guarda gli sci. E soprattutto… evita il giro di penalità.",
-    "finalCta": "Vedi le prossime gare"
+    "finalCta": "Vedi le prossime gare",
+    "burntTitle": "I biatleti bruciati",
+    "burntBody": "Un biatleta scelto non è disponibile per la gara successiva della stessa tappa. Varia le tue scelte!",
+    "burntPicked": "Scelta",
+    "burntBurnt": "Bruciata",
+    "burntBack": "Disponibile",
+    "burntNote": "Al cambio di tappa tutti tornano disponibili. La carta {fondue} permette anche di sbloccare una volta i tuoi biatleti."
   },
   "Compte": {
     "pushOn": "Attive su questo telefono",
@@ -604,7 +612,9 @@
     "cardFusee": "Razzo",
     "cardGachette": "Grilletto",
     "fuseeActive": "carta posata su questa tappa: +100 / +50 / +20 pt per i tuoi biatleti con i 3 migliori tempi sugli sci.",
-    "gachetteActive": "carta posata su questa tappa: +100 pt per ogni biatleta che fa 20/20 al tiro (+50 per un 10/10 nella sprint)."
+    "gachetteActive": "carta posata su questa tappa: +100 pt per ogni biatleta che fa 20/20 al tiro (+50 per un 10/10 nella sprint).",
+    "grilled": "bruciato",
+    "cardGrilladeAction": "Usa Grigliata (sblocca i miei biatleti bruciati)"
   },
   "SignIn": {
     "prompt": "Accedi per continuare",
@@ -899,7 +909,8 @@
     "gachette": "Carta Grilletto posata sulla tappa: +100 pt per ogni 20/20 al tiro, +50 per ogni 10/10 nella sprint.",
     "pursuitStart": "La partenza segue l'ordine d'arrivo della sprint e le quote vengono rivalutate in base al distacco.",
     "relay": "Nelle staffette, scegli una sola squadra: fa punti se chiude nella Top 5 (la sua quota × 10 per la vittoria, poi × 6, × 4, × 2 e × 1).",
-    "x2": "Fino alla partenza puoi modificare il tuo pronostico e attivare un bonus ×2 (3 a stagione)."
+    "x2": "Fino alla partenza puoi modificare il tuo pronostico e attivare un bonus ×2 (3 a stagione).",
+    "grilled": "I biatleti scelti nella gara precedente della tappa sono bruciati: non puoi sceglierli di nuovo."
   },
   "BonusCards": {
     "title": "Carte bonus",
@@ -940,7 +951,9 @@
     "stagePlayTitle": "da posare su una tappa",
     "stagePlayNone": "Nessuna tappa in arrivo dove posarla (non ai Mondiali/Olimpiadi, né con Sciolina magica).",
     "stagePlayButton": "Posa",
-    "stagePlayError": "Non è stato possibile posare la carta. Riprova."
+    "stagePlayError": "Non è stato possibile posare la carta. Riprova.",
+    "name_fondue": "Grigliata",
+    "desc_fondue": "Tienila in mano: sblocca una volta i tuoi biatleti bruciati, nella gara che preferisci."
   },
   "Badges": {
     "leader": "Pettorale giallo: leader della classifica",

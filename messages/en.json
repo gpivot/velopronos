@@ -93,7 +93,7 @@
     "f1Title": "A simple game: 3 biathletes per race",
     "f1Body": "Before each race, pick 3 biathletes. 30 seconds is all it takes, and you can change your mind until the start.",
     "f1Pin1": "The odds: the higher they are, the more the biathlete earns. Dare to back the outsider?",
-    "f1Pin2": "Your 3 picks, that's it. You can pick the same biathletes from one race to the next.",
+    "f1Pin2": "Your 3 picks, that's it. A biathlete you pick is \"burned\" for the next race of the stage: mix up your choices.",
     "f1Pin3": "Predictions close when the race starts.",
     "f2Title": "You score if your biathletes finish in the Top 10",
     "f2Body": "Each biathlete earns their odds multiplied according to their place. Hundreds of points are at stake in every race.",
@@ -147,7 +147,7 @@
     "faq_special_q": "What are special stages?",
     "faq_special_a": "Some races, announced in advance, have an exceptional rule. Penalty loop: each penalty loop by your biathletes costs 20 points, and a biathlete not picked counts as 5 loops (-100). Fog: a biathlete outside the Top 10 costs you as many points as their place. Busted: penalty if your picks finish outside the Top 10. National Day: biathletes from your favourite team earn double.",
     "faq_cards_q": "How do I win bonus cards?",
-    "faq_cards_a": "By scoring points in 10 races in a row, relays included: that's the 10/10. You then pick your card: Boost (×3 on one biathlete), Spare round, Rocket and Trigger (ski and shooting bonuses over a whole stage), Talent (relaunch your Diamond)… Play it at the right time to turn the standings upside down. No cards at the Worlds.",
+    "faq_cards_a": "By scoring points in 10 races in a row, relays included: that's the 10/10. You then pick your card, for example Boost (×3 on one biathlete), Barbecue (un-burn your biathletes) or 4th pick (4 biathletes, the best 3 count). Play it at the right time to turn the standings upside down.",
     "faq_team_q": "What's the favourite team for?",
     "faq_team_a": "Pick your colours for the season, for example France Women or Norway Men, and follow their wins and podiums from your home page. Your team can also earn you points: double on National Day, and with the Team card at the end of the season.",
     "faq_standings_q": "How do the standings work?",
@@ -169,7 +169,9 @@
     "footerDisclaimer": "Biathlonpronos is an independent biathlon prediction game. No real money wagered. No financial winnings.",
     "footerSupport": "Support",
     "footerPrivacy": "Privacy policy",
-    "footerTerms": "Terms"
+    "footerTerms": "Terms",
+    "faq_burnt_q": "Why is a biathlete \"burned\"?",
+    "faq_burnt_a": "A biathlete you picked isn't available for the next race of the same stage. Mix up your choices and save your favourites for the right moment. Everyone is available again at the next stage, and the Barbecue card lets you bypass the rule once."
   },
   "Regles": {
     "title": "The rules",
@@ -287,7 +289,13 @@
     "leaguesBody": "Create your league, share the code and take on your friends in standings of your own.",
     "finalTitle": "Ready to play?",
     "finalBody": "Pick your 3 biathletes. Watch the shooting. Check the skis. And above all… avoid the penalty loop.",
-    "finalCta": "See upcoming races"
+    "finalCta": "See upcoming races",
+    "burntTitle": "Burned biathletes",
+    "burntBody": "A biathlete you pick is unavailable for the next race of the same stage. Mix up your picks!",
+    "burntPicked": "Picked",
+    "burntBurnt": "Burned",
+    "burntBack": "Available",
+    "burntNote": "When the stage changes, everyone is available again. The {fondue} card also lets you un-burn your biathletes once."
   },
   "Compte": {
     "pushOn": "On for this phone",
@@ -604,7 +612,9 @@
     "cardFusee": "Rocket",
     "cardGachette": "Trigger",
     "fuseeActive": "card played on this stage: +100 / +50 / +20 pts for your biathletes with the 3 fastest ski times.",
-    "gachetteActive": "card played on this stage: +100 pts per biathlete who shoots 20/20 (+50 for a 10/10 in the sprint)."
+    "gachetteActive": "card played on this stage: +100 pts per biathlete who shoots 20/20 (+50 for a 10/10 in the sprint).",
+    "grilled": "burned",
+    "cardGrilladeAction": "Use Barbecue (un-burn my biathletes)"
   },
   "SignIn": {
     "prompt": "Sign in to continue",
@@ -899,7 +909,8 @@
     "gachette": "Trigger card played on the stage: +100 pts per 20/20 shooting, +50 per 10/10 in the sprint.",
     "pursuitStart": "Athletes start in the order of the sprint results, and odds are re-evaluated based on the time gap.",
     "relay": "For relays, pick a single team: it scores if it finishes in the Top 5 (its odds × 10 for a win, then × 6, × 4, × 2 and × 1).",
-    "x2": "Until the start, you can change your prediction and activate a ×2 bonus (3 per season)."
+    "x2": "Until the start, you can change your prediction and activate a ×2 bonus (3 per season).",
+    "grilled": "Biathletes picked for the previous race of the stage are burned: you can't pick them again."
   },
   "BonusCards": {
     "title": "Bonus cards",
@@ -940,7 +951,9 @@
     "stagePlayTitle": "play it on a stage",
     "stagePlayNone": "No upcoming stage to play it on (not at the Worlds/Olympics, nor with Boost).",
     "stagePlayButton": "Play",
-    "stagePlayError": "The card couldn't be played. Try again."
+    "stagePlayError": "The card couldn't be played. Try again.",
+    "name_fondue": "Barbecue",
+    "desc_fondue": "Keep it in hand: un-burn your biathletes once, on the race of your choice."
   },
   "Badges": {
     "leader": "Yellow bib: standings leader",

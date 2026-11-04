@@ -6,6 +6,7 @@ import { saveCardSetting } from "./actions";
 export const dynamic = "force-dynamic";
 
 const CARD_LABELS: Record<string, { name: string; hint: string }> = {
+  fondue: { name: "Grillade", hint: "Dégrille une fois ses coureurs, sur la course de son choix." },
   ca_farte: { name: "Ça farte", hint: "×3 sur un biathlète, sur la course de son choix." },
   balle_de_pioche: { name: "Balle de pioche", hint: "4 biathlètes sur les 4 prochaines courses, les 3 meilleurs comptent." },
   aspiration: { name: "Aspiration", hint: "Chaque biathlète compte une place plus haut. Débloquée d'office à la 4e étape." },

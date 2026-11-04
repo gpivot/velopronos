@@ -183,6 +183,7 @@ describe("cartes de la saison", () => {
   it("pas la même carte deux 10/10 de suite", () => {
     const offers = offeredCards("ca_farte", stages, new Date("2026-12-01"));
     expect(Object.fromEntries(offers.map((o) => [o.type, o.state]))).toEqual({
+      fondue: "offered",
       ca_farte: "justTaken",
       balle_de_pioche: "offered",
       aspiration: "locked",

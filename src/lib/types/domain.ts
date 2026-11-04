@@ -105,7 +105,7 @@ export interface Profile {
 }
 
 // "chat_noir" reste une valeur de l'enum en base (0001) mais la carte est retirée du jeu (01/11/2026).
-export type BonusCardType = "balle_de_pioche" | "ca_farte" | "aspiration" | "equipe";
+export type BonusCardType = "balle_de_pioche" | "ca_farte" | "fondue" | "aspiration" | "equipe";
 
 export interface Prediction {
   id: string;
