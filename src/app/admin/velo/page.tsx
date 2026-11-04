@@ -30,7 +30,7 @@ export default async function VeloAdminPage() {
   const admin = createAdminClient();
   const { data: season } = await admin.from("seasons").select("id, label").eq("status", "active").maybeSingle();
   if (!season) {
-    return <p className="text-sm text-text-dim">Crée et active une saison (onglet Calendrier & résultats) avant d'importer les courses.</p>;
+    return <p className="text-sm text-text-dim">Crée et active une saison (onglet Calendrier & résultats) avant d’importer les courses.</p>;
   }
 
   const { data: courses, error } = await admin
@@ -138,7 +138,7 @@ export default async function VeloAdminPage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h3 className="text-lg font-semibold">2. Étapes, coureurs et cotes d'une course</h3>
+        <h3 className="text-lg font-semibold">2. Étapes, coureurs et cotes d’une course</h3>
         <CourseImports
           courses={list.map((c) => ({ id: c.id, label: `${c.name ?? c.location} (${c.starts_on})` }))}
           stagesHeaders={COURSE_STAGES_HEADERS}

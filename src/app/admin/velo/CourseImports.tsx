@@ -20,7 +20,7 @@ export function CourseImports({
 }) {
   const [courseId, setCourseId] = useState(courses[0]?.id ?? "");
   const [newStartDate, setNewStartDate] = useState("");
-  if (courses.length === 0) return <p className="text-sm text-text-dim">Crée ou importe d'abord une course.</p>;
+  if (courses.length === 0) return <p className="text-sm text-text-dim">Crée ou importe d’abord une course.</p>;
 
   return (
     <div className="flex flex-col gap-3">
