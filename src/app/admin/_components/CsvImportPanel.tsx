@@ -26,7 +26,8 @@ export function CsvImportPanel({
   title: string;
   description: React.ReactNode;
   headers: readonly string[];
-  downloadHref: string;
+  /** Absent : pas de lien de téléchargement. */
+  downloadHref?: string;
   downloadLabel?: string;
   /** Demandé avant d'importer, pour un import qui remplace les données existantes. */
   confirmMessage?: string;
@@ -76,9 +77,11 @@ export function CsvImportPanel({
         >
           {loading ? "Import en cours..." : "Importer un CSV"}
         </button>
-        <a href={downloadHref} className="rounded border border-border px-4 py-1.5 text-sm text-text-dim hover:text-ice">
-          {downloadLabel}
-        </a>
+        {downloadHref && (
+          <a href={downloadHref} className="rounded border border-border px-4 py-1.5 text-sm text-text-dim hover:text-ice">
+            {downloadLabel}
+          </a>
+        )}
       </div>
 
       {result && (

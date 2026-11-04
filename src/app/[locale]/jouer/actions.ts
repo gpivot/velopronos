@@ -30,6 +30,7 @@ export async function findNextPlayableRace(): Promise<string | null> {
       .from("odds")
       .select("id", { count: "exact", head: true })
       .eq("season_id", season.id)
+      .eq("stage_id", race.stage_id) // cotes propres à la course (VéloPronos, 0045)
       .eq("format", race.format)
       .is("valid_until", null);
     if (!count) continue;

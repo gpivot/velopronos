@@ -223,7 +223,7 @@ export function computeResultRowPoints(params: { rank: number; odds: number | un
   return base > 0 ? base : null;
 }
 
-const RACE_SELECT = "id, format, sex, locks_at, special_rule, stages!inner(location, country_code, coefficient, counts_in_standings, season_id)";
+const RACE_SELECT = "id, stage_id, format, sex, locks_at, special_rule, stages!inner(location, country_code, coefficient, counts_in_standings, season_id)";
 
 /** Durée pendant laquelle le dernier résultat de chaque catégorie reste affiché sur l'accueil. */
 export const LAST_RESULTS_WINDOW_MS = 48 * 3600 * 1000;
@@ -307,6 +307,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
       .from("odds")
       .select(relay ? "nation_code, value" : "athlete_id, value")
       .eq("season_id", stage.season_id)
+      .eq("stage_id", race.stage_id) // cotes propres à la course (VéloPronos, 0045)
       .eq("format", race.format)
       .is("valid_until", null),
     // Questions bonus de la course : leurs points s'ajoutent au total de la course.

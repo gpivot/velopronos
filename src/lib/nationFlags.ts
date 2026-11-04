@@ -8,6 +8,10 @@ const ALPHA3_TO_ALPHA2: Record<string, string> = {
   KOR: "KR", CHN: "CN", KAZ: "KZ", BLR: "BY", SVK: "SK", BEL: "BE",
   GBR: "GB", NED: "NL", ROU: "RO", HUN: "HU", RUS: "RU",
   MDA: "MD", LTU: "LT", CRO: "HR", GRL: "GL", AUS: "AU", DEN: "DK", GRE: "GR", BRA: "BR",
+  // Nations du cyclisme (VéloPronos)
+  ESP: "ES", POR: "PT", COL: "CO", ECU: "EC", ERI: "ER", IRL: "IE", LUX: "LU", NZL: "NZ",
+  RSA: "ZA", MEX: "MX", ARG: "AR", URU: "UY", ISR: "IL", TUR: "TR", SRB: "RS", MON: "MC",
+  AND: "AD", VEN: "VE", CRC: "CR", ETH: "ET", RWA: "RW", UAE: "AE",
 };
 
 export function nationFlagEmoji(nationCode: string | null | undefined): string {
@@ -40,4 +44,22 @@ export const NATION_NAMES: Record<string, string> = {
   BEL: "Belgique", GBR: "Royaume-Uni", NED: "Pays-Bas", ROU: "Roumanie", HUN: "Hongrie", RUS: "Russie",
   MDA: "Moldavie", LTU: "Lituanie", CRO: "Croatie", GRL: "Groenland", AUS: "Australie", DEN: "Danemark",
   GRE: "Grèce", BRA: "Brésil",
+  ESP: "Espagne", POR: "Portugal", COL: "Colombie", ECU: "Équateur", ERI: "Érythrée", IRL: "Irlande",
+  LUX: "Luxembourg", NZL: "Nouvelle-Zélande", RSA: "Afrique du Sud", MEX: "Mexique", ARG: "Argentine",
+  URU: "Uruguay", ISR: "Israël", TUR: "Turquie", SRB: "Serbie", MON: "Monaco", AND: "Andorre",
+  VEN: "Venezuela", CRC: "Costa Rica", ETH: "Éthiopie", RWA: "Rwanda", UAE: "Émirats arabes unis",
 };
+
+/** Codes de l'ancienne app base44 ou ISO qui diffèrent du code IOC utilisé en base. */
+const NATION_CODE_ALIASES: Record<string, string> = { ALL: "GER", DEU: "GER", MCO: "MON", PRT: "POR", NLD: "NED", CHE: "SUI", SVN: "SLO", DNK: "DEN", ZAF: "RSA", HRV: "CRO" };
+
+/**
+ * Code pays d'un fichier d'import (alpha-2 ou alpha-3, IOC ou ISO, ou ancien code base44) →
+ * code alpha-3 IOC utilisé en base. `undefined` si vide ; inconnu : renvoyé en majuscules.
+ */
+export function normalizeNationCode(code: string | undefined): string | undefined {
+  const c = (code ?? "").trim().toUpperCase();
+  if (!c) return undefined;
+  if (c.length === 2) return ALPHA2_TO_ALPHA3[c];
+  return NATION_CODE_ALIASES[c] ?? c;
+}

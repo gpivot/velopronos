@@ -2,6 +2,8 @@
 // (supabase/migrations/0001_init.sql). À terme, remplacer par les types
 // générés automatiquement via `supabase gen types typescript`.
 
+import type { CourseCategory, CourseKind, JerseyType } from "../velo/courses";
+
 export type Sex = "H" | "F";
 
 export type SeasonStatus = "preparation" | "active" | "archived";
@@ -26,6 +28,36 @@ export interface Athlete {
   last_name: string;
   nation_code: string;
   sex: Sex;
+  /** VéloPronos (0045) */
+  team_id?: string | null;
+}
+
+/** VéloPronos (0045) : équipe d'une saison. */
+export interface Team {
+  id: string;
+  season_id: string;
+  code: string;
+  name: string;
+  nation_code: string | null;
+}
+
+/** VéloPronos (0045) : engagé d'une course. */
+export interface StageRider {
+  stage_id: string;
+  athlete_id: string;
+  bib: number | null;
+  abandoned_race_id: string | null;
+}
+
+/** VéloPronos (0045) : pronostic maillot d'une course. */
+export interface CoursePrediction {
+  id: string;
+  user_id: string;
+  stage_id: string;
+  jersey: JerseyType;
+  athlete_id: string | null;
+  team_id: string | null;
+  corrected_via_chat_noir: boolean;
 }
 
 export type OddsFormat =
@@ -35,7 +67,18 @@ export type OddsFormat =
   | "mass_start"
   | "gros_globe"
   | "meilleur_jeune"
-  | "meilleure_nation";
+  | "meilleure_nation"
+  // VéloPronos (0044) : types d'étape et maillots, cotes propres à une course
+  | "montagne"
+  | "clm"
+  | "baroudeurs"
+  | "clm_equipes"
+  | "maillot_general"
+  | "maillot_points"
+  | "maillot_montagne"
+  | "maillot_jeune"
+  | "super_combatif"
+  | "meilleure_equipe";
 
 export interface Odds {
   id: string;
@@ -44,6 +87,9 @@ export interface Odds {
   athlete_id: string | null;
   nation_code: string | null;
   nation_sex: Sex | null;
+  /** VéloPronos (0045) : course de la cote (null = cote de saison) et équipe ciblée. */
+  stage_id?: string | null;
+  team_id?: string | null;
   value: number;
   valid_from: string;
   valid_until: string | null;
@@ -59,6 +105,14 @@ export interface Stage {
   coefficient: 1 | 2;
   /** false : étape « Autre (×0) », hors classement de la saison (migration 0041). */
   counts_in_standings: boolean;
+  // VéloPronos (0045) : une « stage » est une course (Tour de France, Strade Bianche…).
+  name?: string | null;
+  kind?: CourseKind;
+  category?: CourseCategory | null;
+  jersey_color?: string | null;
+  jerseys?: JerseyType[];
+  rest_days?: string[];
+  is_visible?: boolean;
 }
 
 export type RaceFormat =
@@ -69,7 +123,12 @@ export type RaceFormat =
   | "relais_h"
   | "relais_f"
   | "relais_mixte"
-  | "relais_mixte_simple";
+  | "relais_mixte_simple"
+  // VéloPronos (0044) : type d'étape ("sprint" est commun)
+  | "montagne"
+  | "clm"
+  | "baroudeurs"
+  | "clm_equipes";
 
 export type SpecialRule = "tour_de_pena" | "brouillard" | "tes_colle" | null;
 
@@ -83,6 +142,13 @@ export interface Race {
   locks_at: string;
   special_rule: SpecialRule;
   status: RaceStatus;
+  // VéloPronos (0045) : une « race » est une étape.
+  stage_number?: number | null;
+  start_city?: string | null;
+  end_city?: string | null;
+  distance_km?: number | null;
+  elevation_m?: number | null;
+  combatif_athlete_id?: string | null;
 }
 
 export interface RaceResult {
