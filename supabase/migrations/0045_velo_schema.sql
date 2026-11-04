@@ -1,5 +1,6 @@
 -- VéloPronos — schéma saison > course > étape (04/11/2026).
--- À coller APRÈS 0044 (exécutée seule) et après 0043 (mention d'étape, si elle est passée).
+-- À coller APRÈS 0044 (exécutée seule). Le numéro 0043 est libre : la mention d'étape
+-- (stages.label) préparée dans un autre fil n'a pas été gardée et sera refaite plus tard.
 --
 -- On garde les tables de Biathlonpronos, avec un sens vélo :
 --   seasons  = saison (2027)

@@ -1,8 +1,9 @@
 # VéloPronos — schéma saison > course > étape (04/11/2026)
 
-Migrations **0044** (valeurs d'enum, à exécuter **seule**) puis **0045** (schéma). Elles se collent
-après 0043 (mention d'étape, `stages.label`, fil « Afficher le type d'étape dans le programme ») ;
-0045 ne dépend pas de 0043.
+Migrations **0044** (valeurs d'enum, à exécuter **seule**) puis **0045** (schéma), juste après
+0042. Le numéro **0043 est laissé libre** : la mention d'étape (`stages.label`), préparée dans un
+fil abandonné le 04/11/2026, n'a pas été gardée et sera refaite sur la nouvelle formule ; rien ici
+n'en dépend.
 
 ## Principe : on garde les tables, on change leur sens
 
