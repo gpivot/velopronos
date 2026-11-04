@@ -52,6 +52,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
       .from("odds")
       .select("nation_code, value, nations(name)")
       .eq("season_id", stage.season_id)
+      .eq("stage_id", race.stage_id) // cotes propres à la course (VéloPronos, 0045)
       .eq("format", race.format)
       .is("valid_until", null);
 
@@ -85,6 +86,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
       .from("odds")
       .select("athlete_id, value, athletes(first_name, last_name, nation_code, sex)")
       .eq("season_id", stage.season_id)
+      .eq("stage_id", race.stage_id) // cotes propres à la course (VéloPronos, 0045)
       .eq("format", race.format)
       .is("valid_until", null);
 

@@ -227,7 +227,7 @@ export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<
   // §14 — la Pépite est indépendante du pronostic du joueur sur cette course précise : à vérifier
   // même si personne n'a pronostiqué dessus. Après les pronostics, pour s'ajouter à leurs points.
   // Étape hors classement (×0) : la Pépite n'y est pas révélée, elle reste en jeu pour la suite.
-  if (stage.counts_in_standings !== false) await applyPepiteBonuses(admin, stage.season_id, race, results ?? []);
+  if (stage.counts_in_standings !== false) await applyPepiteBonuses(admin, stage.season_id, stage.id, race, results ?? []);
 
   await admin.from("races").update({ status: "finished" }).eq("id", raceId);
   await recomputeSeasonStreaks(admin, stage.season_id);
@@ -438,6 +438,7 @@ export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: st
 async function applyPepiteBonuses(
   admin: SupabaseClient,
   seasonId: string,
+  stageId: string,
   race: { id: string; format: string; locks_at: string },
   results: any[]
 ): Promise<void> {
@@ -461,6 +462,7 @@ async function applyPepiteBonuses(
     .from("odds")
     .select("athlete_id, value")
     .eq("season_id", seasonId)
+    .eq("stage_id", stageId)
     .eq("format", raceFormat)
     .is("valid_until", null)
     .in("athlete_id", athleteIds);
@@ -551,6 +553,7 @@ async function scoreIndividualPredictions(
       .from("odds")
       .select("athlete_id, value")
       .eq("season_id", stage.season_id)
+      .eq("stage_id", stage.id) // cotes propres à la course (VéloPronos, 0045)
       .eq("format", race.format)
       .is("valid_until", null)
       .in("athlete_id", Array.from(athleteIds)),
@@ -665,6 +668,7 @@ async function scoreRelayPredictions(
       .from("odds")
       .select("nation_code, value")
       .eq("season_id", stage.season_id)
+      .eq("stage_id", stage.id) // cotes propres à la course (VéloPronos, 0045)
       .eq("format", race.format)
       .is("valid_until", null)
       .in("nation_code", Array.from(nationCodes)),

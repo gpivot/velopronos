@@ -26,6 +26,8 @@ Le dépôt `gpivot/velopronos` est une copie de `gpivot/biathlonpronos` **avec t
 4. **Documents VéloPronos** rangés dans `docs/velopronos/` (passation, trajectoire et règles, ce
    fichier). Méthode pour les correctifs communs : `docs/correctifs-partages.md`.
 
+5. **Schéma vélo** (04/11/2026, migrations 0044 et 0045) : voir `schema-velo.md`.
+
 Les textes de l'app parlent encore de biathlon (biathlètes, sprint, poursuite…) : ils changeront
 avec le nouveau schéma et les écrans vélo.
 
