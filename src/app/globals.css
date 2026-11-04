@@ -36,47 +36,49 @@ body::before {
   z-index: 60;
 }
 
-/* Palette : thème sombre par défaut (planche d'identité), thème clair via la classe `light` sur
-   <html>, choisie dans Profil > Apparence et mémorisée dans le navigateur (localStorage "theme"). */
+/* Palette VéloPronos (marron / jaune / blanc, première proposition à valider par Guillaume) :
+   thème sombre par défaut, thème clair via la classe `light` sur <html>, choisie dans Profil >
+   Apparence et mémorisée dans le navigateur (localStorage "theme"). Les noms des variables (ice,
+   gold…) sont ceux de Biathlonpronos, gardés pour que le code reste commun aux deux apps. */
 :root {
-  --c-bg: 10 15 28;
-  --c-bg2: 13 21 38;
-  --c-card: 18 29 51;
-  --c-card2: 22 35 61;
-  --c-border: 34 50 82;
-  --c-text: 244 248 255;
-  --c-text-dim: 144 163 196;
-  --c-frost: 234 246 255;
-  --c-ice: 0.8 0.12 200;
-  --c-ice-soft: 0.3 0.06 200;
-  --c-gold: 0.84 0.15 90;
-  --c-gold-soft: 0.3 0.07 90;
+  /* Sombre : fond marron très foncé, accent principal jaune maillot, accent secondaire ocre. */
+  --c-bg: 27 19 13;
+  --c-bg2: 35 25 17;
+  --c-card: 48 34 23;
+  --c-card2: 58 42 29;
+  --c-border: 86 64 45;
+  --c-text: 255 251 243;
+  --c-text-dim: 196 177 155;
+  --c-frost: 255 248 232;
+  --c-ice: 0.88 0.17 98;
+  --c-ice-soft: 0.32 0.06 90;
+  --c-gold: 0.74 0.14 65;
+  --c-gold-soft: 0.31 0.05 60;
   --c-red: 0.62 0.2 25;
-  --c-on-ice: 6 32 36;
-  --c-on-gold: 42 25 0;
-  --c-nav: 10 15 28;
+  --c-on-ice: 40 27 10;
+  --c-on-gold: 33 21 8;
+  --c-nav: 27 19 13;
   color-scheme: dark;
 }
 
 html.light {
-  /* Palette froide « glace » : fond bleu très clair, cartes blanches, texte et accent principal
-     bleu foncé (boutons, en-têtes d'étape), accent secondaire bleu vif à la place de l'or
-     (points, saison, mises en avant). */
-  --c-bg: 234 242 251;
-  --c-bg2: 222 234 247;
+  /* Clair : fond crème, cartes blanches, texte et accent principal marron (boutons, en-têtes),
+     accent secondaire jaune foncé (points, saison, mises en avant). */
+  --c-bg: 250 246 238;
+  --c-bg2: 243 236 224;
   --c-card: 255 255 255;
-  --c-card2: 238 244 251;
-  --c-border: 211 224 240;
-  --c-text: 14 32 64;
-  --c-text-dim: 90 110 142;
-  --c-frost: 14 32 64;
-  --c-ice: 0.42 0.13 258;
-  --c-ice-soft: 0.95 0.025 250;
-  --c-gold: 0.6 0.15 243;
-  --c-gold-soft: 0.94 0.035 238;
+  --c-card2: 250 245 236;
+  --c-border: 230 218 200;
+  --c-text: 52 34 20;
+  --c-text-dim: 122 100 80;
+  --c-frost: 52 34 20;
+  --c-ice: 0.45 0.08 55;
+  --c-ice-soft: 0.95 0.02 80;
+  --c-gold: 0.72 0.15 80;
+  --c-gold-soft: 0.95 0.05 95;
   --c-red: 0.58 0.2 25;
   --c-on-ice: 255 255 255;
-  --c-on-gold: 255 255 255;
+  --c-on-gold: 40 27 10;
   --c-nav: 255 255 255;
   color-scheme: light;
 }

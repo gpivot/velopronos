@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-// Tokens repris de la planche d'identité graphique (projet claude.ai "Biathlopronos").
+// Tokens repris de Biathlonpronos ; couleurs VéloPronos (marron / jaune / blanc) dans src/app/globals.css.
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
@@ -36,10 +36,12 @@ const config: Config = {
         "on-gold": "rgb(var(--c-on-gold) / <alpha-value>)",
         // Fond de la barre de navigation basse (blanche en thème clair, comme VéloPronos).
         nav: "rgb(var(--c-nav) / <alpha-value>)",
-        // Turquoise fixe des dégradés de marque (avatar, en-têtes) : ne change pas avec le thème.
-        teal: "oklch(0.8 0.12 200 / <alpha-value>)",
-        // Bleu vif des accents VéloPronos (dégradé du bouton d'appel à l'action, avec ice).
-        blue: "oklch(0.62 0.19 255 / <alpha-value>)",
+        // Jaune fixe des dégradés de marque (avatar, en-têtes) : ne change pas avec le thème.
+        // (Nom « teal » hérité de Biathlonpronos, gardé pour le code commun.)
+        teal: "oklch(0.88 0.17 98 / <alpha-value>)",
+        // Marron caramel des accents (dégradé du bouton d'appel à l'action, avec ice).
+        // (Nom « blue » hérité de Biathlonpronos.)
+        blue: "oklch(0.58 0.12 55 / <alpha-value>)",
         // Vert des bonus de combinaison (Top 3/5/10, Prono parfait), comme le « Bonus Musette » VéloPronos.
         green: "oklch(0.78 0.15 155 / <alpha-value>)",
       },

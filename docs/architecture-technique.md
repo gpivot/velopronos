@@ -1367,7 +1367,7 @@ restent disponibles d'une course à l'autre.
 
 **⚠️ VéloPronos : la règle reste.** Lors de la duplication de l'app pour VéloPronos, le
 **coureur grillé** et sa carte (**Grillade**, l'équivalent de Fondue) doivent être conservés (voir
-`velopronos-trajectoire-et-regles.md`). Le code à reprendre est celui du commit `91420f9` (dernier
+`docs/velopronos/trajectoire-et-regles.md`). **Fait dans VéloPronos le 04/11/2026** (migration 0042, voir `docs/velopronos/duplication.md`). Le code à reprendre est celui du commit `91420f9` (dernier
 état de `main` avec la règle) : `src/lib/grilling.ts` + `src/lib/__tests__/grilling.test.ts`,
 `src/app/[locale]/courses/[raceId]/FondueButton.tsx`, le calcul des grillés dans
 `courses/[raceId]/page.tsx` et la prop `grilledAthleteIds` de `PredictionForm.tsx`. Pour les

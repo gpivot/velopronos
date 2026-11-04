@@ -1,4 +1,12 @@
-# Biathlonpronos
+# VéloPronos
+
+Jeu de pronostics cyclisme, reconstruit à partir du code de
+[Biathlonpronos](https://github.com/gpivot/biathlonpronos) (copie du 04/11/2026). Voir
+`docs/velopronos/` et `CLAUDE.md`. Le reste de ce fichier est hérité de Biathlonpronos.
+
+---
+
+# (Hérité) Biathlonpronos
 
 Jeu de pronostics biathlon, dans la continuité de [VéloPronos](https://velopronos.fr),
 reconstruit indépendamment de base44.

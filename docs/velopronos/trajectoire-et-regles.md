@@ -18,7 +18,7 @@ Tout ce qui est marqué ❓ vient d'une lecture du code base44 ou d'une ambiguï
 - **Reprise des joueurs 2026** dans la mesure du possible. Les données de jeu 2026 ne sont pas reprises. Abonnement base44 maintenu au niveau Starter (export de données limité).
 - **Deux évolutions communes aux deux apps** : (a) classement par étapes avec dossard rouge, (b) parcours d'accueil par « course test » (voir §5).
 
-> **04/11/2026 — à ne pas oublier à la duplication** : Biathlonpronos a supprimé la règle des biathlètes grillés et la carte Fondue. **VéloPronos garde le coureur grillé et la carte Grillade.** Le code de la règle est à reprendre du commit `91420f9` de Biathlonpronos (détail dans `docs/architecture-technique.md`).
+> **04/11/2026 — fait à la duplication (branche `velopronos-init`, migration 0042)** : Biathlonpronos a supprimé la règle des biathlètes grillés et la carte Fondue. **VéloPronos garde le coureur grillé et la carte Grillade.** Le code de la règle est à reprendre du commit `91420f9` de Biathlonpronos (détail dans `docs/architecture-technique.md`).
 
 ## 1 bis. Décisions de Guillaume du 01/11/2026 (réponses à la matrice)
 

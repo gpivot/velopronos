@@ -1,4 +1,18 @@
-# Biathlonpronos — contexte pour Claude Code
+# VéloPronos — contexte pour Claude Code
+
+**Ce dépôt est VéloPronos**, copie de Biathlonpronos faite le 04/11/2026. Lis d'abord
+`docs/velopronos/passation-projet.md`, puis `docs/velopronos/trajectoire-et-regles.md` (section
+1 bis), puis `docs/velopronos/duplication.md` (ce qui a été changé à la copie et ce qui reste à
+confirmer). Correctifs communs aux deux apps : `docs/correctifs-partages.md`.
+Règles : ne jamais copier la liste des joueurs dans le dépôt ; consigner les interprétations
+« à confirmer » dans la documentation ; ne pousser sur GitHub que sur demande.
+
+La suite de ce fichier décrit Biathlonpronos, dont tout le code est hérité. Elle sera réécrite au
+fil de l'adaptation au vélo.
+
+---
+
+# (Hérité) Biathlonpronos — contexte pour Claude Code
 
 Ce projet a été initié dans une conversation Cowork avec Guillaume (g.pivot@teasermedias.com),
 puis développé en grande partie dans Claude Code. Lis ce fichier et le dossier `docs/` avant toute

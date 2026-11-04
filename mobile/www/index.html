@@ -3,19 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Biathlonpronos</title>
+    <title>VéloPronos</title>
     <style>
-      html, body { margin: 0; height: 100%; background: #0a0f1c; color: #eaf6ff; font-family: system-ui, sans-serif; }
+      html, body { margin: 0; height: 100%; background: #1b130d; color: #fff8e8; font-family: system-ui, sans-serif; }
       main { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center; box-sizing: border-box; }
       h1 { margin: 0; font-size: 22px; }
       p { margin: 0; color: #9fb0c3; font-size: 14px; max-width: 320px; }
-      button { margin-top: 8px; border: 0; border-radius: 12px; padding: 12px 24px; background: #4fd1e8; color: #0a0f1c; font-weight: 700; font-size: 15px; }
+      button { margin-top: 8px; border: 0; border-radius: 12px; padding: 12px 24px; background: #f5d33a; color: #1b130d; font-weight: 700; font-size: 15px; }
     </style>
   </head>
   <body>
     <main>
       <h1>Pas de connexion</h1>
-      <p id="msg">Biathlonpronos a besoin d'internet. Vérifie ta connexion puis réessaie.</p>
+      <p id="msg">VéloPronos a besoin d'internet. Vérifie ta connexion puis réessaie.</p>
       <button id="retry" onclick="location.href='https://www.biathlonpronos.fr/'">Réessayer</button>
     </main>
     <script>
@@ -23,7 +23,7 @@
       if (!/^fr/i.test(navigator.language || "")) {
         document.documentElement.lang = "en";
         document.querySelector("h1").textContent = "No connection";
-        document.getElementById("msg").textContent = "Biathlonpronos needs the internet. Check your connection and try again.";
+        document.getElementById("msg").textContent = "VéloPronos needs the internet. Check your connection and try again.";
         document.getElementById("retry").textContent = "Try again";
       }
     </script>

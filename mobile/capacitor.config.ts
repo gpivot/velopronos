@@ -1,23 +1,27 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 /**
- * L'appli n'embarque pas le site : elle ouvre www.biathlonpronos.fr dans une vue web native.
+ * L'appli n'embarque pas le site : elle ouvre www.velopronos.fr dans une vue web native.
  * Chaque mise à jour poussée sur main (déployée par Vercel) arrive donc dans l'appli sans
  * repasser par les stores. Seuls les changements natifs (plugins, icône…) demandent une
  * nouvelle version.
  */
 const config: CapacitorConfig = {
+  // Identifiant d'application : à confirmer par Guillaume (nouvel identifiant, ou celui d'une appli
+  // VéloPronos déjà publiée). Le changer demande aussi de mettre à jour android/ et ios/ (voir
+  // docs/velopronos/duplication.md).
   appId: "fr.biathlonpronos.app",
-  appName: "Biathlonpronos",
+  appName: "VéloPronos",
   // Pages locales : seulement l'écran affiché quand le site est injoignable (pas de réseau).
   webDir: "www",
   server: {
-    url: "https://www.biathlonpronos.fr/",
+    // Domaine à confirmer (velopronos.fr pointe encore vers l'app base44).
+    url: "https://www.velopronos.fr/",
     errorPath: "offline.html",
     // Liens vers ces domaines restent dans l'appli ; les autres s'ouvrent dans le navigateur.
-    allowNavigation: ["www.biathlonpronos.fr", "biathlonpronos.fr"],
+    allowNavigation: ["www.velopronos.fr", "velopronos.fr"],
   },
-  backgroundColor: "#0a0f1c",
+  backgroundColor: "#1b130d",
   android: {
     // Le site garde la même apparence que dans Chrome.
     allowMixedContent: false,
@@ -29,7 +33,7 @@ const config: CapacitorConfig = {
   plugins: {
     SplashScreen: {
       launchShowDuration: 1500,
-      backgroundColor: "#0a0f1c",
+      backgroundColor: "#1b130d",
       showSpinner: false,
     },
     FirebaseMessaging: {
