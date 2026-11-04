@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Notifications : petite icône blanche et couleur d'accent de Biathlonpronos. -->
+        <!-- Notifications : petite icône blanche et couleur d'accent de VéloPronos. -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stat_notify"

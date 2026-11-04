@@ -1,11 +1,11 @@
-# Compilation des applis Android et iOS de Biathlonpronos sur Codemagic (codemagic.io), qui
+# Compilation des applis Android et iOS de VéloPronos sur Codemagic (codemagic.io), qui
 # fournit les Mac nécessaires à iOS. Builds lancés à la main depuis Codemagic (« Start new build »).
 # Le code de l'appli est dans mobile/ (Capacitor) ; elle affiche le site en ligne, donc seules les
 # évolutions natives (notifications, icône…) demandent un nouveau build.
 #
 # À régler une fois dans Codemagic (Team settings / Code signing identities) :
-#   - Android : la clé de signature (keystore) nommée « Biathlonpronos » ;
-#   - iOS : la clé API App Store Connect nommée « Biathlonpronos » (Integrations), puis un
+#   - Android : la clé de signature (keystore) nommée « VeloPronos » ;
+#   - iOS : la clé API App Store Connect nommée « VeloPronos » (Integrations), puis un
 #     certificat de distribution iOS généré par Codemagic.
 
 workflows:
@@ -15,7 +15,7 @@ workflows:
     max_build_duration: 60
     environment:
       android_signing:
-        - Biathlonpronos
+        - VeloPronos
       node: 22
       java: 21
     scripts:
@@ -26,7 +26,7 @@ workflows:
       - name: Construire l'appli (AAB signé)
         script: |
           cd mobile/android
-          ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=1.0.$BUILD_NUMBER
+          ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=2.0.$BUILD_NUMBER
     artifacts:
       - mobile/android/app/build/outputs/bundle/release/*.aab
     # Envoi automatique sur Google Play : à activer après le tout premier envoi, que Google
@@ -42,11 +42,11 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
     integrations:
-      app_store_connect: Biathlonpronos
+      app_store_connect: VeloPronos
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: fr.biathlonpronos.app
+        bundle_identifier: com.base6a1f0e7a3cd8ee2103802f51.app
       node: 22
       xcode: latest
     scripts:

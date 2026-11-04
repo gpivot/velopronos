@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Biathlonpronos</string>
-    <string name="title_activity_main">Biathlonpronos</string>
-    <string name="package_name">fr.biathlonpronos.app</string>
-    <string name="custom_url_scheme">fr.biathlonpronos.app</string>
+    <string name="app_name">VéloPronos</string>
+    <string name="title_activity_main">VéloPronos</string>
+    <string name="package_name">fr.velopronos.app</string>
+    <string name="custom_url_scheme">fr.velopronos.app</string>
 </resources>

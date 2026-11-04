@@ -1,4 +1,4 @@
-package fr.biathlonpronos.app;
+package fr.velopronos.app;
 
 import com.getcapacitor.BridgeActivity;
 

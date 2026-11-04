@@ -35,11 +35,20 @@ avec le nouveau schéma et les écrans vélo.
   ocre ; clair : fond crème, accent marron, accent jaune foncé). À valider à l'écran.
 - **Noms de la carte Grillade dans les autres langues** : Barbecue (en), Grillfest (de),
   Parrillada (es), Grigliata (it). Les autres langues sont-elles utiles pour VéloPronos ?
-- **Identifiant d'application** (`appId`, aujourd'hui encore `fr.biathlonpronos.app`) : nouvel
-  identifiant `fr.velopronos.app`, ou celui d'une appli VéloPronos déjà publiée ? À changer en même
-  temps dans `mobile/capacitor.config.ts`, `mobile/android` (build.gradle, AndroidManifest,
-  dossier Java, strings.xml), `mobile/ios` (project.pbxproj, Info.plist), `codemagic.yaml`, et
-  avec les nouveaux fichiers Firebase (`google-services.json`, `GoogleService-Info.plist`).
+- **Identifiants d'application** (décidés par Guillaume le 04/11/2026) :
+  - **iOS** : `com.base6a1f0e7a3cd8ee2103802f51.app`, celui de l'appli VéloPronos déjà publiée sur
+    l'App Store (compte de Guillaume, version 1.0 base44). Version passée à **2.0** pour la nouvelle
+    formule (`MARKETING_VERSION`).
+  - **Android** : `fr.velopronos.app`, nouvelle fiche sur le compte organisation (l'ancienne n'a
+    jamais été publiée).
+  - Mis à jour : `mobile/capacitor.config.ts`, `mobile/android` (build.gradle, strings.xml, dossier
+    Java, couleur des notifications), `mobile/ios` (project.pbxproj, Info.plist), `codemagic.yaml`
+    (signatures et intégration nommées « VeloPronos » dans Codemagic).
+  - **Reste à faire** : un projet Firebase VéloPronos avec les deux applis, puis remplacer
+    `mobile/android/app/google-services.json` et `mobile/ios/App/App/GoogleService-Info.plist`
+    (ceux de Biathlonpronos sont encore en place : le build Android échouera tant qu'ils ne sont
+    pas remplacés) ; les identifiants Google OAuth de `src/lib/native/socialLogin.ts` et
+    d'`Info.plist` sont encore ceux de Biathlonpronos.
 - **Domaine** : `velopronos.fr` pointe encore vers l'app base44. Bascule à prévoir.
 - **E-mails de connexion** (04/11/2026) : Supabase ne laisse modifier les modèles « Magic Link » et
   « Change Email Address » qu'avec un SMTP personnalisé (par exemple Resend, comme Biathlonpronos),

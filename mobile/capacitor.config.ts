@@ -7,10 +7,10 @@ import type { CapacitorConfig } from "@capacitor/cli";
  * nouvelle version.
  */
 const config: CapacitorConfig = {
-  // Identifiant d'application : à confirmer par Guillaume (nouvel identifiant, ou celui d'une appli
-  // VéloPronos déjà publiée). Le changer demande aussi de mettre à jour android/ et ios/ (voir
-  // docs/velopronos/duplication.md).
-  appId: "fr.biathlonpronos.app",
+  // Identifiants (Guillaume, 04/11/2026) : Android fr.velopronos.app (nouvelle fiche, compte
+  // organisation) ; iOS com.base6a1f0e7a3cd8ee2103802f51.app, celui de l'appli VéloPronos déjà
+  // publiée sur l'App Store (fixé dans ios/App/App.xcodeproj). Voir docs/velopronos/duplication.md.
+  appId: "fr.velopronos.app",
   appName: "VéloPronos",
   // Pages locales : seulement l'écran affiché quand le site est injoignable (pas de réseau).
   webDir: "www",
