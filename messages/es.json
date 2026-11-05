@@ -947,7 +947,7 @@
     "desc_aspiration": "Guárdala en la mano: en una etapa individual que elijas, cada uno de tus ciclistas cuenta un puesto más arriba (un 11.º pasa a 10.º y puntúa).",
     "desc_equipe": "Grandes vueltas: se activa enseguida; desde la etapa 10, cada corredor de tu equipo favorito en el Top 10 te da una vez su cuota, lo hayas elegido o no.",
     "lockedUntil_aspiration": "Desde la 4.ª carrera",
-    "lockedUntil_equipe": "Gran vuelta y equipo favorito elegido",
+    "lockedUntil_equipe": "Gran vuelta y equipo favorito (o equipo de la vuelta) elegido",
     "justTaken": "Elegida en la última racha",
     "name_fusee": "Cohete",
     "name_gachette": "Gatillo",
@@ -1127,7 +1127,11 @@
     "chatNoirHint": "Uno de tus corredores ha abandonado: sustitúyelo una vez, hasta el primer día de descanso a partir de la etapa 8.",
     "chatNoirReplace": "Sustituir",
     "chatNoirError": "No se pudo sustituir.",
-    "chatNoirAbandoned": "abandono"
+    "chatNoirAbandoned": "abandono",
+    "gtTeamTitle": "Mi equipo en esta gran vuelta",
+    "gtTeamHint": "Para la carta Equipo: mantén tu equipo favorito o elige otro solo para esta gran vuelta, hasta la salida de la 1.ª etapa.",
+    "gtTeamKeepHeart": "Mi equipo favorito ({team})",
+    "gtTeamNoHeart": "Mi equipo favorito (aún sin elegir)"
   },
   "Heart": {
     "title": "Mis elecciones del corazón",

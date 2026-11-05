@@ -947,7 +947,7 @@
     "desc_aspiration": "Keep it in hand: on an individual stage of your choice, each of your riders counts one place higher (an 11th becomes 10th and scores).",
     "desc_equipe": "Grand Tours: activates right away; from stage 10, each rider of your favourite team in the Top 10 earns you their odds once more, picked or not.",
     "lockedUntil_aspiration": "From race 4",
-    "lockedUntil_equipe": "Grand Tour and favourite team chosen",
+    "lockedUntil_equipe": "Grand Tour and favourite team (or Grand Tour team) chosen",
     "justTaken": "Taken at the last streak",
     "name_fusee": "Rocket",
     "name_gachette": "Trigger",
@@ -1127,7 +1127,11 @@
     "chatNoirHint": "One of your riders has abandoned: replace them once, until the first rest day from stage 8 on.",
     "chatNoirReplace": "Replace",
     "chatNoirError": "Could not replace.",
-    "chatNoirAbandoned": "abandoned"
+    "chatNoirAbandoned": "abandoned",
+    "gtTeamTitle": "My team for this Grand Tour",
+    "gtTeamHint": "For the Team card: keep your favourite team or pick another one for this Grand Tour only, until the start of stage 1.",
+    "gtTeamKeepHeart": "My favourite team ({team})",
+    "gtTeamNoHeart": "My favourite team (not chosen yet)"
   },
   "Heart": {
     "title": "My heart choices",

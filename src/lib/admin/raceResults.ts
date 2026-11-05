@@ -528,7 +528,8 @@ async function applyPepiteBonuses(
  */
 async function loadPlayedCards(
   admin: SupabaseClient,
-  seasonId: string
+  seasonId: string,
+  courseId: string | null = null
 ): Promise<{
   cardsByUserId: Map<string, CardRow[]>;
   seasonRaces: CardRace[];
@@ -536,7 +537,7 @@ async function loadPlayedCards(
   /** VéloPronos : équipe de cœur de chaque joueur (carte Équipe, migration 0052). */
   heartTeamByUserId: Map<string, string>;
 }> {
-  const [{ data: playedCards }, seasonRaces, { data: favoriteTeams }] = await Promise.all([
+  const [{ data: playedCards }, seasonRaces, { data: favoriteTeams }, { data: courseTeams }] = await Promise.all([
     admin
       .from("bonus_cards")
       .select("id, user_id, card_type, status, used_on_race_id, used_on_stage_id")
@@ -545,6 +546,10 @@ async function loadPlayedCards(
       .in("card_type", ["ca_farte", "balle_de_pioche", "aspiration", "equipe", "fusee", "gachette"]),
     getSeasonCardRaces(admin, seasonId),
     admin.from("favorite_teams").select("user_id, nation_code, sex, team_id").eq("season_id", seasonId),
+    // Équipe choisie pour ce Grand Tour seulement (migration 0054), prioritaire sur l'équipe de cœur.
+    courseId
+      ? admin.from("course_heart_teams").select("user_id, team_id").eq("stage_id", courseId)
+      : Promise.resolve({ data: [] as any[] }),
   ]);
   const cardsByUserId = new Map<string, CardRow[]>();
   for (const c of (playedCards ?? []) as (CardRow & { user_id: string })[]) {
@@ -558,6 +563,7 @@ async function loadPlayedCards(
   const heartTeamByUserId = new Map(
     (favoriteTeams ?? []).filter((f) => f.team_id).map((f) => [f.user_id as string, f.team_id as string])
   );
+  for (const t of (courseTeams ?? []) as any[]) heartTeamByUserId.set(t.user_id, t.team_id);
   return { cardsByUserId, seasonRaces, favoriteTeamByUserId, heartTeamByUserId };
 }
 
@@ -582,7 +588,7 @@ async function scoreIndividualPredictions(
       .eq("format", race.format)
       .is("valid_until", null)
       .in("athlete_id", Array.from(athleteIds)),
-    loadPlayedCards(admin, stage.season_id),
+    loadPlayedCards(admin, stage.season_id, stage.id),
   ]);
 
   const athleteTeamByAthleteId: Record<string, { nationCode: string; sex: "H" | "F" }> = {};
@@ -781,7 +787,7 @@ async function scoreRelayPredictions(
       .eq("format", race.format)
       .is("valid_until", null)
       .in("nation_code", Array.from(nationCodes)),
-    loadPlayedCards(admin, stage.season_id),
+    loadPlayedCards(admin, stage.season_id, stage.id),
   ]);
 
   const oddsByNationCode: Record<string, number> = {};

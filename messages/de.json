@@ -947,7 +947,7 @@
     "desc_aspiration": "Auf der Hand behalten: in einem Einzelrennen deiner Wahl zählt jeder deiner Fahrer einen Platz besser (ein 11. wird 10. und punktet).",
     "desc_equipe": "Grand Tours: sofort aktiv; ab der 10. Etappe bringt dir jeder Fahrer deines Lieblingsteams in den Top 10 einmal seine Quote, getippt oder nicht.",
     "lockedUntil_aspiration": "Ab der 4. Station",
-    "lockedUntil_equipe": "Grand Tour und Lieblingsteam gewählt",
+    "lockedUntil_equipe": "Grand Tour und Lieblingsteam (oder Grand-Tour-Team) gewählt",
     "justTaken": "Bei der letzten Serie genommen",
     "name_fusee": "Rakete",
     "name_gachette": "Abzug",
@@ -1127,7 +1127,11 @@
     "chatNoirHint": "Einer deiner Fahrer hat aufgegeben: ersetze ihn einmal, bis zum ersten Ruhetag ab der 8. Etappe.",
     "chatNoirReplace": "Ersetzen",
     "chatNoirError": "Ersetzen nicht möglich.",
-    "chatNoirAbandoned": "aufgegeben"
+    "chatNoirAbandoned": "aufgegeben",
+    "gtTeamTitle": "Mein Team für diese Grand Tour",
+    "gtTeamHint": "Für die Team-Karte: behalte dein Lieblingsteam oder wähle ein anderes nur für diese Grand Tour, bis zum Start der 1. Etappe.",
+    "gtTeamKeepHeart": "Mein Lieblingsteam ({team})",
+    "gtTeamNoHeart": "Mein Lieblingsteam (noch nicht gewählt)"
   },
   "Heart": {
     "title": "Meine Herzensentscheidungen",

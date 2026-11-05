@@ -947,7 +947,7 @@
     "desc_aspiration": "Tienila in mano: in una tappa individuale a tua scelta, ognuno dei tuoi ciclisti conta una posizione più in alto (un 11º diventa 10º e fa punti).",
     "desc_equipe": "Grandi giri: si attiva subito; dalla tappa 10, ogni corridore della tua squadra del cuore nel Top 10 ti porta una volta la sua quota, scelto o no.",
     "lockedUntil_aspiration": "Dalla 4ª gara",
-    "lockedUntil_equipe": "Grande giro e squadra del cuore scelta",
+    "lockedUntil_equipe": "Grande giro e squadra del cuore (o squadra del giro) scelta",
     "justTaken": "Presa all'ultima serie",
     "name_fusee": "Razzo",
     "name_gachette": "Grilletto",
@@ -1127,7 +1127,11 @@
     "chatNoirHint": "Uno dei tuoi corridori si è ritirato: sostituiscilo una volta, fino al primo giorno di riposo dalla tappa 8.",
     "chatNoirReplace": "Sostituisci",
     "chatNoirError": "Sostituzione impossibile.",
-    "chatNoirAbandoned": "ritirato"
+    "chatNoirAbandoned": "ritirato",
+    "gtTeamTitle": "La mia squadra in questo grande giro",
+    "gtTeamHint": "Per la carta Squadra: tieni la tua squadra del cuore o scegline un'altra solo per questo grande giro, fino alla partenza della 1ª tappa.",
+    "gtTeamKeepHeart": "La mia squadra del cuore ({team})",
+    "gtTeamNoHeart": "La mia squadra del cuore (non ancora scelta)"
   },
   "Heart": {
     "title": "Le mie scelte del cuore",

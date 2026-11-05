@@ -392,7 +392,7 @@ export async function getCourseStreak(supabase: SupabaseClient, courseId: string
 export async function getPlayerCards(supabase: SupabaseClient, seasonId: string, userId: string, now: Date): Promise<PlayerCards> {
   const course = await getCardCourse(supabase, seasonId, now);
   if (!course) return { unclaimed: 0, cards: [], offers: [], course: null };
-  const [{ data: cards }, { data: streak }, races, { data: settings }, { data: favorite }] = await Promise.all([
+  const [{ data: cards }, { data: streak }, races, { data: settings }, { data: favorite }, { data: courseTeam }] = await Promise.all([
     supabase
       .from("bonus_cards")
       .select("id, card_type, status, used_on_race_id, used_on_stage_id, course_id, earned_at")
@@ -406,6 +406,7 @@ export async function getPlayerCards(supabase: SupabaseClient, seasonId: string,
       .select("card_type, enabled, available_from, available_until, force_unlock")
       .eq("season_id", seasonId),
     supabase.from("favorite_teams").select("team_id").eq("user_id", userId).eq("season_id", seasonId).maybeSingle(),
+    supabase.from("course_heart_teams").select("team_id").eq("user_id", userId).eq("stage_id", course.id).maybeSingle(),
   ]);
   const rows = (cards ?? []) as CardRow[];
   return {
@@ -417,8 +418,8 @@ export async function getPlayerCards(supabase: SupabaseClient, seasonId: string,
     cards: rows.map((c) => describeCard(c, races, now)),
     offers: offeredCards(rows[rows.length - 1]?.card_type ?? null, [], now, {
       settings: (settings ?? []) as CardSetting[],
-      // Équipe : Grand Tour et équipe de cœur choisie (claim_course_card, migration 0052).
-      equipeAvailable: course.kind === "grand_tour" && !!favorite?.team_id,
+      // Équipe : Grand Tour et équipe de cœur (ou équipe de ce Grand Tour, 0054) choisie.
+      equipeAvailable: course.kind === "grand_tour" && !!(courseTeam?.team_id ?? favorite?.team_id),
     }),
   };
 }
