@@ -111,7 +111,7 @@ export async function getSeasonView(
 
   const { data: stages, error } = await supabase
     .from("stages")
-    .select("id, kind, name, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, jerseys, races(id, format, sex, locks_at, status, special_rule, stage_number, start_city, end_city, distance_km)")
+    .select("id, kind, category, name, location, country_code, jersey_color, starts_on, ends_on, coefficient, counts_in_standings, jerseys, races(id, format, sex, locks_at, status, special_rule, stage_number, start_city, end_city, distance_km)")
     .eq("season_id", season.id)
     .order("starts_on", { ascending: true });
   if (error) console.error("getSeasonView:", error.message);
@@ -206,7 +206,10 @@ export async function getSeasonView(
 
   const mapped: CalendarStage[] = (stages ?? []).map((stage: any) => ({
     id: stage.id,
-    location: stage.location,
+    location: stage.name ?? stage.location,
+    kind: stage.kind ?? null,
+    category: stage.category ?? null,
+    jerseyColor: stage.jersey_color ?? null,
     country_code: stage.country_code,
     starts_on: stage.starts_on,
     ends_on: stage.ends_on,

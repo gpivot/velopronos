@@ -116,7 +116,7 @@ async function getHomeData(): Promise<HomeData> {
     Promise.resolve(null as number | null),
     supabase
       .from("stages")
-      .select("id, location, country_code, starts_on, ends_on")
+      .select("id, name, kind, category, coefficient, location, country_code, starts_on, ends_on")
       .eq("season_id", season.id)
       .gt("starts_on", weekStage ? weekStage.endsOn : parisDay(now))
       .order("starts_on", { ascending: true })

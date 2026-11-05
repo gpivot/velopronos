@@ -10,6 +10,7 @@ import type { RaceDisplayStatus } from "@/lib/raceStatus";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { raceTitle, stageRoute } from "@/lib/raceLabel";
 import { SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
+import { COURSE_FILTERS, FLAG_STRIPES, courseLook, isMultiStage, matchesCourseFilter, type CourseFilter } from "@/lib/velo/courseLook";
 
 export interface CalendarRace {
   id: string;
@@ -35,7 +36,12 @@ export interface CalendarRace {
 
 export interface CalendarStage {
   id: string;
+  /** Nom de la course. */
   location: string;
+  /** VéloPronos : type et catégorie de la course, couleur du maillot de leader. */
+  kind?: string | null;
+  category?: string | null;
+  jerseyColor?: string | null;
   country_code: string;
   starts_on: string;
   ends_on: string;
@@ -79,65 +85,133 @@ export function CalendarAccordion({
   const tRace = useTranslations("Race");
   const tJerseys = useTranslations("Jerseys");
 
+  const [filter, setFilter] = useState<CourseFilter>("all");
+  const looks = new Map(stages.map((stage) => [stage.id, courseLook(stage)]));
+  // Filtres proposés : seulement les types présents dans la saison.
+  const filters = COURSE_FILTERS.filter((f) => f === "all" || stages.some((st) => matchesCourseFilter(looks.get(st.id)!, f)));
+  const shown = stages.filter((stage) => matchesCourseFilter(looks.get(stage.id)!, filter));
+  const day = (date: string) =>
+    new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
+
   return (
     <div className="flex flex-col gap-2.5">
-      {stages.map((stage) => {
+      {filters.length > 2 && (
+        <div className="-mx-5 flex gap-1.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
+          {filters.map((f) => (
+            <button
+              key={f}
+              type="button"
+              onClick={() => setFilter(f)}
+              className={`whitespace-nowrap rounded-full px-3 py-1.5 font-display text-[12px] font-bold ${
+                filter === f ? "bg-ice text-on-ice" : "border border-border bg-card text-text-dim"
+              }`}
+            >
+              {t(`filter_${f}`)}
+            </button>
+          ))}
+        </div>
+      )}
+      {shown.map((stage) => {
         const isOpen = stage.id === openStageId;
-        // Coefficient 2 = Mondiaux (ou JO) : encart doré pour le distinguer des étapes de Coupe du monde.
-        const isChampionship = stage.coefficient === 2;
-        // Étape hors classement (×0) : encart grisé, en pointillés.
+        const look = looks.get(stage.id)!;
+        const multiStage = isMultiStage(look);
+        const isWorlds = look === "worlds";
+        const isMonument = look === "monument";
+        // Course hors classement (×0) : contour en pointillés, mention seulement une fois dépliée.
         const isOffStandings = stage.counts_in_standings === false;
         const toPlayCount = readOnly || stage.opensOn ? 0 : stage.races.filter((r) => r.displayStatus === "upcoming" && !r.predicted).length;
+        // Course par étapes : prochaine étape sur laquelle parier (la 1re avant le départ).
+        const nextRace = multiStage ? stage.races.find((r) => r.displayStatus === "upcoming") : undefined;
+        const stripes = look === "grand_tour" ? FLAG_STRIPES[stage.country_code] ?? (stage.jerseyColor ? [stage.jerseyColor] : null) : null;
+        const accent = look === "grand_tour" ? stage.jerseyColor ?? null : null;
+        const eyebrow =
+          look === "grand_tour"
+            ? `${t("lookGrandTour")} · ${t("stagesCount", { count: stage.races.length })}`
+            : look === "stage_race"
+              ? `${t("lookStageRace")} · ${t("stagesCount", { count: stage.races.length })}`
+              : isMonument
+                ? t("lookMonument")
+                : isWorlds
+                  ? t("lookWorlds")
+                  : null;
         return (
           <div
             key={stage.id}
             ref={stage.id === scrollToStageId ? scrollIntoViewOnMount : undefined}
-            className={`overflow-hidden rounded-2xl border ${
+            style={accent ? { borderColor: accent, boxShadow: `0 0 28px -12px ${accent}` } : undefined}
+            className={`relative overflow-hidden ${
+              multiStage ? "rounded-[1.75rem] border-2" : "rounded-2xl border"
+            } ${
               isOffStandings
-                ? "border-dashed border-text-dim/40 bg-text-dim/10"
-                : isChampionship
-                  ? "border-gold/60 bg-gradient-to-br from-gold/25 to-card shadow-[0_0_24px_-8px_oklch(0.84_0.15_90/0.5)]"
-                  : "border-border bg-card"
+                ? "border-dashed border-text-dim/40 bg-card"
+                : look === "grand_tour"
+                  ? "border-ice/60 bg-gradient-to-br from-ice/10 to-card"
+                  : look === "stage_race"
+                    ? "border-ice/40 bg-card"
+                    : isWorlds
+                      ? "border-champ/70 bg-gradient-to-br from-champ/25 to-card shadow-[0_0_24px_-8px_oklch(var(--c-champ)/0.6)]"
+                      : isMonument
+                        ? "border-gold/60 bg-gradient-to-br from-gold/20 to-card"
+                        : "border-border bg-card"
             }`}
           >
+            {stripes && (
+              // Grand Tour : liseré aux couleurs du pays dans le coin, pour en faire un événement.
+              <div aria-hidden className="pointer-events-none absolute -right-9 top-4 w-32 rotate-45 shadow-md">
+                {stripes.map((color, i) => (
+                  <div key={i} className="h-[5px]" style={{ backgroundColor: color }} />
+                ))}
+              </div>
+            )}
             <button
               onClick={() => setOpenStageId(isOpen ? null : stage.id)}
-              className="flex w-full items-center gap-3.5 px-4 py-3.5 text-left"
+              className={`flex w-full items-center gap-3.5 px-4 text-left ${multiStage ? "py-5" : "py-3.5"}`}
             >
               <div
-                className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-lg ${
-                  isOffStandings ? "bg-text-dim/15 grayscale" : isChampionship ? "bg-gold/20" : "bg-ice-soft"
+                className={`flex flex-shrink-0 items-center justify-center rounded-xl ${multiStage ? "h-12 w-12 text-2xl" : "h-10 w-10 text-lg"} ${
+                  isWorlds ? "bg-champ/20" : isMonument ? "bg-gold/20" : "bg-ice-soft"
                 }`}
               >
-                {nationFlagEmoji(stage.country_code)}
+                {/* Week-end des Champions : pas de drapeau, c'est un mode de pari à part. */}
+                {look === "bonus" ? "🏆" : nationFlagEmoji(stage.country_code)}
               </div>
-              <div className="flex flex-1 flex-col gap-0.5">
-                {isChampionship && !isOffStandings && (
-                  <div className="font-display text-[10px] font-bold uppercase tracking-wider text-gold">
-                    {t("worldChampionships")}
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                {eyebrow && (
+                  <div
+                    className={`font-display text-[10px] font-bold uppercase tracking-wider ${
+                      isWorlds ? "text-champ" : isMonument ? "text-gold" : "text-ice"
+                    }`}
+                  >
+                    {eyebrow}
                   </div>
                 )}
-                {isOffStandings && (
-                  <div className="font-display text-[10px] font-bold uppercase tracking-wider text-text-dim">
-                    {t("offStandingsBadge")}
-                  </div>
-                )}
-                <div className={`text-sm font-semibold ${isOffStandings ? "text-text-dim" : isChampionship ? "text-gold" : ""}`}>
+                <div
+                  className={`font-semibold ${multiStage ? "text-base font-bold" : "text-sm"} ${
+                    isWorlds ? "text-champ" : isMonument ? "text-gold" : ""
+                  }`}
+                >
                   {stage.location}
                 </div>
                 <div className="text-xs text-text-dim">
-                  {new Date(stage.starts_on).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
-                  {" – "}
-                  {new Date(stage.ends_on).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
+                  {multiStage && stage.starts_on !== stage.ends_on
+                    ? `${day(stage.starts_on)} – ${day(stage.ends_on)}`
+                    : day(stage.starts_on)}
                 </div>
+                {nextRace && (
+                  <div className="mt-1 truncate text-xs text-frost">
+                    {t(stage.races[0]?.id === nextRace.id ? "firstStage" : "nextStage", {
+                      title: raceTitle(nextRace, tFormat, tRace),
+                      date: day(new Date(nextRace.locks_at).toLocaleDateString("sv-SE", { timeZone: DISPLAY_TIME_ZONE })),
+                    })}
+                  </div>
+                )}
               </div>
-              {isOffStandings && (
-                <div className="whitespace-nowrap rounded-full border border-text-dim/40 px-2.5 py-1 font-display text-[11px] font-bold text-text-dim">
-                  ×0
-                </div>
-              )}
               {stage.coefficient === 2 && !isOffStandings && (
-                <div className="whitespace-nowrap rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
+                <div
+                  className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${
+                    isWorlds ? "bg-champ/20 text-champ" : "bg-gold-soft text-gold"
+                  }`}
+                >
                   {t("coefficientBadge")}
                 </div>
               )}
@@ -154,9 +228,10 @@ export function CalendarAccordion({
             {isOpen && (
               <div
                 className={`flex flex-col gap-2 border-t px-3 py-3 ${
-                  isOffStandings ? "border-dashed border-text-dim/30" : isChampionship ? "border-gold/30" : "border-border"
+                  isOffStandings ? "border-dashed border-text-dim/30" : isWorlds ? "border-champ/30" : isMonument ? "border-gold/30" : "border-border"
                 }`}
               >
+                {isOffStandings && <div className="px-1.5 text-[11px] italic text-text-dim">{t("offStandingsNote")}</div>}
                 {!readOnly && (stage.jerseys ?? 0) > 0 && (
                   <Link
                     href={`/maillots/${stage.id}`}

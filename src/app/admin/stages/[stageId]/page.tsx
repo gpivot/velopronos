@@ -78,8 +78,18 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
               </option>
             ))}
           </select>
-          <input name="starts_on" type="date" required defaultValue={stage.starts_on} title="Début" className={inputClass} />
-          <input name="ends_on" type="date" required defaultValue={stage.ends_on} title="Fin" className={inputClass} />
+          {/* Course d'un jour : une seule date (la fin suit le début, cf. updateStage). */}
+          <input
+            name="starts_on"
+            type="date"
+            required
+            defaultValue={stage.starts_on}
+            title={stage.kind === "one_day" ? "Date" : "Début"}
+            className={inputClass}
+          />
+          {stage.kind !== "one_day" && (
+            <input name="ends_on" type="date" required defaultValue={stage.ends_on} title="Fin" className={inputClass} />
+          )}
           <select name="coefficient" defaultValue={stageCategoryFormValue(stage)} className={inputClass}>
             {STAGE_CATEGORY_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
