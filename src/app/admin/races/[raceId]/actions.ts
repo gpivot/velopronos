@@ -5,6 +5,8 @@ import { fromDateTimeLocalParis, isSpecialRuleAllowed, stageFormFields } from ".
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { fetchIbuResults, fetchIbuStartList } from "@/lib/admin/ibuResults";
+import { aiResultToCsv, fetchAiStageResults, findRiderByName, officialSiteFor } from "@/lib/admin/aiStageResults";
+import { toParisWallTime } from "@/lib/displayTimeZone";
 import { matchStartList, saveStartList } from "@/lib/admin/startListImport";
 import { notifyRaceResults } from "@/lib/notifications/jobs";
 import { redirect } from "next/navigation";
@@ -110,6 +112,88 @@ export async function loadIbuResults(raceId: string, forcedIbuRaceId?: string): 
     return { ok: true, message: `Résultats IBU : ${result.description} (${result.raceId}).`, csv: result.csv, warnings: result.warnings };
   } catch (err) {
     return { ok: false, message: err instanceof Error ? err.message : "Erreur IBU inconnue.", warnings: [] };
+  }
+}
+
+export interface AiImportState {
+  ok: boolean;
+  message: string;
+  csv?: string;
+  warnings: string[];
+  sources: Array<{ name: string; url: string }>;
+  /** Combatif du jour donné par l'IA, retrouvé parmi les engagés (sinon seulement son nom). */
+  combatif?: { name: string; athleteId: string | null };
+}
+
+/**
+ * Résultats de l'étape cherchés par l'IA sur le web (site officiel, ProCyclingStats, L'Équipe),
+ * au format CSV, pour pré-remplir le formulaire (rien n'est enregistré).
+ */
+export async function loadAiResults(raceId: string, officialUrl?: string): Promise<AiImportState> {
+  await requireAdmin();
+  const admin = createAdminClient();
+  const { data: race } = await admin
+    .from("races")
+    .select("stage_id, format, special_rule, stage_number, start_city, end_city, locks_at, stages(name, location, kind)")
+    .eq("id", raceId)
+    .single();
+  if (!race) return { ok: false, message: "Étape introuvable.", warnings: [], sources: [] };
+  const stage = race.stages as unknown as { name: string | null; location: string; kind: string };
+  const courseName = stage.name ?? stage.location;
+  const teamTimeTrial = race.format === "clm_equipes";
+
+  // Étape Crevaison : la place de chaque coureur pronostiqué compte, même hors Top 10.
+  let extraRiders: string[] = [];
+  if (race.special_rule === "brouillard") {
+    const { data: predictions } = await admin.from("predictions").select("athlete_ids").eq("race_id", raceId);
+    const ids = [...new Set((predictions ?? []).flatMap((p: any) => (p.athlete_ids ?? []) as string[]))];
+    if (ids.length > 0) {
+      const { data: athletes } = await admin.from("athletes").select("first_name, last_name").in("id", ids);
+      extraRiders = (athletes ?? []).map((a: any) => `${a.first_name} ${a.last_name}`.trim());
+    }
+  }
+
+  try {
+    const { result, model } = await fetchAiStageResults({
+      courseName,
+      date: toParisWallTime(new Date(race.locks_at)).slice(0, 10),
+      stageNumber: stage.kind === "one_day" ? null : race.stage_number,
+      startCity: race.start_city,
+      endCity: race.end_city,
+      teamTimeTrial,
+      officialUrl: officialUrl?.trim() || officialSiteFor(courseName),
+      topN: 10,
+      extraRiders,
+    });
+    if (result.status === "not_found" || result.rows.length === 0) {
+      return {
+        ok: false,
+        message: "L'IA n'a pas trouvé de résultat publié pour cette étape. Réessaie plus tard ou indique l'adresse de la page des résultats.",
+        warnings: result.notes,
+        sources: result.sources,
+      };
+    }
+    const { csv, warnings } = aiResultToCsv(result, teamTimeTrial);
+
+    let combatif: AiImportState["combatif"];
+    if (result.combatif && !teamTimeTrial) {
+      const { data: entries } = await admin.from("stage_riders").select("athlete_id, athletes(first_name, last_name)").eq("stage_id", race.stage_id);
+      const riders = ((entries ?? []) as any[])
+        .filter((e) => e.athletes)
+        .map((e) => ({ id: e.athlete_id as string, firstName: e.athletes.first_name ?? "", lastName: e.athletes.last_name ?? "" }));
+      combatif = { name: result.combatif.name, athleteId: findRiderByName(result.combatif.name, riders)?.id ?? null };
+    }
+
+    return {
+      ok: true,
+      message: `Résultats trouvés par l'IA (${model}, ${result.sources.length} source(s)).`,
+      csv,
+      warnings,
+      sources: result.sources,
+      combatif,
+    };
+  } catch (err) {
+    return { ok: false, message: err instanceof Error ? err.message : "Erreur IA inconnue.", warnings: [], sources: [] };
   }
 }
 

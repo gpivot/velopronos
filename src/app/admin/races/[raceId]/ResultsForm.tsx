@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { loadIbuResults, submitResults, type SubmitResultsState } from "./actions";
+import { loadAiResults, loadIbuResults, submitResults, updateCombatif, type AiImportState, type SubmitResultsState } from "./actions";
 import type { ResultEntryInput } from "@/lib/admin/raceResults";
 import {
   ATHLETE_RESULTS_HEADERS,
@@ -90,6 +90,36 @@ export function ResultsForm({
   const [ibuLoading, setIbuLoading] = useState(false);
   const [ibuRaceId, setIbuRaceId] = useState("");
 
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiUrl, setAiUrl] = useState("");
+  const [aiOutcome, setAiOutcome] = useState<AiImportState | null>(null);
+  const [combatifSaved, setCombatifSaved] = useState(false);
+
+  async function handleAi() {
+    setAiLoading(true);
+    setCsvReport(null);
+    setAiOutcome(null);
+    setCombatifSaved(false);
+    try {
+      const outcome = await loadAiResults(raceId, aiUrl || undefined);
+      setAiOutcome(outcome);
+      if (outcome.ok && outcome.csv) applyCsv(outcome.csv, `${outcome.message} `, outcome.warnings);
+      else setCsvReport({ ok: false, message: outcome.message, warnings: outcome.warnings });
+    } catch (err) {
+      setCsvReport({ ok: false, message: err instanceof Error ? err.message : "Erreur IA inconnue.", warnings: [] });
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
+  async function saveCombatif(athleteId: string) {
+    const formData = new FormData();
+    formData.set("race_id", raceId);
+    formData.set("combatif_athlete_id", athleteId);
+    await updateCombatif(formData);
+    setCombatifSaved(true);
+  }
+
   /** Le CSV (fichier ou IBU) remplace la saisie à l'écran ; rien n'est enregistré avant le clic sur le bouton. */
   function applyCsv(csvText: string, source: string, extraWarnings: string[] = []) {
     try {
@@ -166,6 +196,67 @@ export function ResultsForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <SubmitBar submitting={submitting} result={result} />
 
+      {mode !== "nation" && (
+        <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+          <div className="text-sm font-semibold">Récupérer les résultats avec l&apos;IA</div>
+          <p className="text-xs text-text-dim">
+            L&apos;IA cherche le Top 10 {isTeamMode ? "des équipes" : "et le combatif du jour"} sur le site officiel de la course, puis
+            ProCyclingStats et L&apos;Équipe, et signale les places où les sources divergent. Le tableau est pré-rempli : relis-le
+            avant d&apos;enregistrer. Compte une à deux minutes.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <input
+              type="url"
+              value={aiUrl}
+              onChange={(e) => setAiUrl(e.target.value)}
+              placeholder="Page officielle des résultats (facultatif)"
+              className="min-w-0 flex-1 rounded border border-border bg-bg px-2 py-1.5 text-sm"
+            />
+            <button
+              type="button"
+              onClick={handleAi}
+              disabled={aiLoading}
+              className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice disabled:opacity-60"
+            >
+              {aiLoading ? "Recherche en cours..." : "Récupérer les résultats"}
+            </button>
+          </div>
+          {aiOutcome?.combatif && (
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              <span>
+                Combatif du jour selon l&apos;IA : <strong>{aiOutcome.combatif.name}</strong>
+              </span>
+              {aiOutcome.combatif.athleteId ? (
+                combatifSaved ? (
+                  <span className="text-ice">enregistré.</span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => saveCombatif(aiOutcome.combatif!.athleteId!)}
+                    className="rounded border border-border px-2 py-0.5 text-text-dim hover:text-ice"
+                  >
+                    L&apos;enregistrer comme combatif
+                  </button>
+                )
+              ) : (
+                <span className="text-gold">introuvable parmi les engagés, à choisir à la main.</span>
+              )}
+            </div>
+          )}
+          {aiOutcome && aiOutcome.sources.length > 0 && (
+            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-text-dim">
+              Sources :
+              {aiOutcome.sources.map((s, i) => (
+                <a key={i} href={s.url} target="_blank" rel="noreferrer" className="underline hover:text-ice">
+                  {s.name || s.url}
+                </a>
+              ))}
+            </div>
+          )}
+          {isTeamMode && csvReport && <CsvReport report={csvReport} />}
+        </div>
+      )}
+
       {!isTeamMode && (
       <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">Importer les résultats en CSV</div>
@@ -191,18 +282,7 @@ export function ResultsForm({
             Télécharger le modèle (avec la saisie en cours)
           </button>
         </div>
-        {csvReport && (
-          <div className="flex flex-col gap-1 text-xs">
-            <div className={csvReport.ok ? "text-ice" : "text-red"}>{csvReport.message}</div>
-            {csvReport.warnings.length > 0 && (
-              <ul className="list-disc pl-4 text-gold">
-                {csvReport.warnings.map((w, i) => (
-                  <li key={i}>{w}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
+        {csvReport && <CsvReport report={csvReport} />}
       </div>
       )}
 
@@ -324,6 +404,22 @@ function SubmitBar({ submitting, result }: { submitting: boolean; result: Submit
         {submitting ? "Calcul en cours..." : "Enregistrer et calculer les scores"}
       </button>
       {result && <div className={result.status === "error" ? "text-sm text-red" : "text-sm text-ice"}>{result.message}</div>}
+    </div>
+  );
+}
+
+/** Retour d'un import (fichier CSV ou IA) : message et avertissements. */
+function CsvReport({ report }: { report: { ok: boolean; message: string; warnings: string[] } }) {
+  return (
+    <div className="flex flex-col gap-1 text-xs">
+      <div className={report.ok ? "text-ice" : "text-red"}>{report.message}</div>
+      {report.warnings.length > 0 && (
+        <ul className="list-disc pl-4 text-gold">
+          {report.warnings.map((w, i) => (
+            <li key={i}>{w}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
