@@ -5,8 +5,8 @@
 export type CourseLook = "grand_tour" | "stage_race" | "worlds" | "monument" | "bonus" | "one_day";
 
 /** Filtres proposés en haut de Ma saison. */
-export type CourseFilter = "all" | "grand_tour" | "stage_race" | "one_day" | "monument" | "championships";
-export const COURSE_FILTERS: CourseFilter[] = ["all", "grand_tour", "stage_race", "one_day", "monument", "championships"];
+export type CourseFilter = "all" | "grand_tour" | "stage_race" | "one_day" | "monument" | "championships" | "other";
+export const COURSE_FILTERS: CourseFilter[] = ["all", "grand_tour", "stage_race", "one_day", "monument", "championships", "other"];
 
 export interface CourseLookInput {
   kind?: string | null;
@@ -29,10 +29,15 @@ export function isMultiStage(look: CourseLook): boolean {
   return look === "grand_tour" || look === "stage_race";
 }
 
-export function matchesCourseFilter(look: CourseLook, filter: CourseFilter): boolean {
+/**
+ * Filtre « Autre » : les courses hors classement, qui sortent des autres filtres (demande de
+ * Guillaume du 05/11/2026).
+ */
+export function matchesCourseFilter(look: CourseLook, filter: CourseFilter, countsInStandings = true): boolean {
+  if (filter === "all") return true;
+  if (filter === "other") return !countsInStandings;
+  if (!countsInStandings) return false;
   switch (filter) {
-    case "all":
-      return true;
     case "grand_tour":
       return look === "grand_tour";
     case "stage_race":

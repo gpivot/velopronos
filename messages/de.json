@@ -475,7 +475,8 @@
     "stagesCount": "{count, plural, one {# Etappe} other {# Etappen}}",
     "firstStage": "1. Etappe: {title} · {date}",
     "nextStage": "Nächste Etappe: {title} · {date}",
-    "offStandingsNote": "Dieses Rennen zählt nicht für die Gesamtwertung."
+    "offStandingsNote": "Dieses Rennen zählt nicht für die Gesamtwertung.",
+    "filter_other": "Andere"
   },
   "RaceFormat": {
     "sprint": "Sprint",
