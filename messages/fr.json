@@ -448,7 +448,7 @@
     "importButton": "Importer le calendrier (CSV)",
     "importLoading": "Import en cours...",
     "importSummary": "{stagesCreated} course(s) créée(s), {stagesUpdated} mise(s) à jour · {racesCreated} étape(s) créée(s), {racesUpdated} mise(s) à jour.",
-    "worldChampionships": "Championnats du monde",
+    "worldChampionships": "Course majeure",
     "toPlayCount": "{count} à jouer",
     "toPlayButton": "À jouer",
     "seasonPredictionsTitle": "Mes pronostics de saison",
@@ -570,7 +570,10 @@
     "opinionTitle": "L'avis de VéloPronos",
     "bonusQuestionsLine": "Questions bonus",
     "malusScale_tour_de_pena_4": "Coureur non pronostiqué → 5 tours d'office, -100 pts (pas de prono : -300)",
-    "offStandingsNotice": "Étape hors classement : elle a son propre classement, mais ses points ne comptent pas pour la saison (pas de dossard rouge, de carte bonus, de ×2 ni de Pépite)."
+    "offStandingsNotice": "Étape hors classement : elle a son propre classement, mais ses points ne comptent pas pour la saison (pas de dossard rouge, de carte bonus, de ×2 ni de Pépite).",
+    "stageNumber": "Étape {number}",
+    "prologue": "Prologue",
+    "stageTitle": "{stage} · {type}"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 coureurs",
@@ -618,7 +621,9 @@
     "fuseeActive": "carte posée sur cette course : +100 / +50 / +20 pts pour tes coureurs aux 3 meilleurs temps de ski.",
     "gachetteActive": "carte posée sur cette course : +100 pts par coureur qui fait 20/20 au tir (+50 pour un 10/10 au sprint).",
     "grilled": "grillé",
-    "cardGrilladeAction": "Utiliser Grillade (dégriller mes coureurs)"
+    "cardGrilladeAction": "Utiliser Grillade (dégriller mes coureurs)",
+    "chooseTeams": "Choisis {count} équipes",
+    "searchTeam": "Chercher une équipe"
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",
@@ -1071,5 +1076,33 @@
     "manageHint": "Tu peux changer d'avis à tout moment dans ton profil.",
     "invalid": "Ce lien n'est plus valable. Tu peux gérer tes e-mails depuis ton profil.",
     "toProfile": "Aller à mon profil"
+  },
+  "Jerseys": {
+    "title": "Mes maillots",
+    "back": "Retour à Ma saison",
+    "linkLabel": "Mes pronostics maillots",
+    "linkCount": "{chosen} sur {total} choisis",
+    "intro": "Pronostique le vainqueur final de chaque classement. Modifiable jusqu'au départ de la 1re étape.",
+    "closed": "La course est partie : les pronostics maillots sont fermés.",
+    "pointsRule": "Top 3 final de chaque maillot : cote ×5 pour le vainqueur, ×2 pour le 2e, ×1 pour le 3e.",
+    "combatifRule": "Super combatif : +200 s'il est élu, +50 chaque jour où il est combatif du jour.",
+    "jersey_general": "Classement général",
+    "jersey_points": "Classement par points",
+    "jersey_montagne": "Meilleur grimpeur",
+    "jersey_jeune": "Meilleur jeune",
+    "jersey_combatif": "Super combatif",
+    "jersey_equipe": "Meilleure équipe",
+    "noPick": "— Pas de choix —",
+    "notChosen": "Pas de choix",
+    "submit": "Enregistrer mes maillots",
+    "saving": "Enregistrement…",
+    "saved": "Maillots enregistrés.",
+    "saveError": "Enregistrement impossible : la course est peut-être déjà partie.",
+    "loginRequired": "Crée ton compte ou connecte-toi pour pronostiquer les maillots.",
+    "searchRider": "Chercher un coureur, une équipe, une nation",
+    "searchTeam": "Chercher une équipe",
+    "odds": "cote {value}",
+    "noRiders": "Les engagés de la course ne sont pas encore connus : reviens un peu avant le départ.",
+    "noJerseys": "Pas de pronostic maillot sur cette course."
   }
 }

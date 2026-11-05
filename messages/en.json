@@ -448,7 +448,7 @@
     "importButton": "Import calendar (CSV)",
     "importLoading": "Importing...",
     "importSummary": "{stagesCreated} race(s) created, {stagesUpdated} updated · {racesCreated} stage(s) created, {racesUpdated} updated.",
-    "worldChampionships": "World Championships",
+    "worldChampionships": "Major race",
     "toPlayCount": "{count} to play",
     "toPlayButton": "Play",
     "seasonPredictionsTitle": "My season predictions",
@@ -570,7 +570,10 @@
     "opinionTitle": "VéloPronos' take",
     "bonusQuestionsLine": "Bonus questions",
     "malusScale_tour_de_pena_4": "Rider not picked → 5 loops, -100 pts (no pick at all: -300)",
-    "offStandingsNotice": "Unranked stage: it has its own ranking, but its points don't count towards the season (no red bib, bonus card, ×2 or Hidden Diamond)."
+    "offStandingsNotice": "Unranked stage: it has its own ranking, but its points don't count towards the season (no red bib, bonus card, ×2 or Hidden Diamond).",
+    "stageNumber": "Stage {number}",
+    "prologue": "Prologue",
+    "stageTitle": "{stage} · {type}"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 riders",
@@ -618,7 +621,9 @@
     "fuseeActive": "card played on this race: +100 / +50 / +20 pts for your riders with the 3 fastest ski times.",
     "gachetteActive": "card played on this race: +100 pts per rider who shoots 20/20 (+50 for a 10/10 in the sprint).",
     "grilled": "burned",
-    "cardGrilladeAction": "Use Barbecue (un-burn my riders)"
+    "cardGrilladeAction": "Use Barbecue (un-burn my riders)",
+    "chooseTeams": "Pick {count} teams",
+    "searchTeam": "Search a team"
   },
   "SignIn": {
     "prompt": "Sign in to continue",
@@ -1071,5 +1076,33 @@
     "manageHint": "You can change your mind at any time in your profile.",
     "invalid": "This link is no longer valid. You can manage your emails from your profile.",
     "toProfile": "Go to my profile"
+  },
+  "Jerseys": {
+    "title": "My jerseys",
+    "back": "Back to My season",
+    "linkLabel": "My jersey predictions",
+    "linkCount": "{chosen} of {total} chosen",
+    "intro": "Predict the final winner of each classification. You can change it until the first stage starts.",
+    "closed": "The race has started: jersey predictions are closed.",
+    "pointsRule": "Final top 3 of each jersey: odds ×5 for the winner, ×2 for 2nd, ×1 for 3rd.",
+    "combatifRule": "Super combative: +200 if elected, +50 each day he is the most combative rider.",
+    "jersey_general": "General classification",
+    "jersey_points": "Points classification",
+    "jersey_montagne": "Best climber",
+    "jersey_jeune": "Best young rider",
+    "jersey_combatif": "Super combative",
+    "jersey_equipe": "Best team",
+    "noPick": "— No pick —",
+    "notChosen": "No pick",
+    "submit": "Save my jerseys",
+    "saving": "Saving…",
+    "saved": "Jerseys saved.",
+    "saveError": "Could not save: the race may already have started.",
+    "loginRequired": "Create your account or sign in to predict the jerseys.",
+    "searchRider": "Search a rider, team or nation",
+    "searchTeam": "Search a team",
+    "odds": "odds {value}",
+    "noRiders": "The start list is not known yet: come back shortly before the start.",
+    "noJerseys": "No jersey predictions for this race."
   }
 }

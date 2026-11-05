@@ -20,6 +20,7 @@ export interface WeekStagePick {
 export interface WeekStageRace {
   id: string;
   format: string;
+  stageNumber?: number | null;
   sex: string | null;
   locksAt: string;
   displayStatus: RaceDisplayStatus;
@@ -61,6 +62,7 @@ export function addDays(day: string, days: number): string {
 interface RaceRow {
   id: string;
   format: string;
+  stage_number?: number | null;
   sex: string | null;
   locks_at: string;
   status: string;
@@ -121,25 +123,29 @@ export async function getWeekStage(
 
   const { data: raceRows } = await supabase
     .from("races")
-    .select("id, format, sex, locks_at, status, special_rule")
+    .select("id, format, stage_number, sex, locks_at, status, special_rule")
     .eq("stage_id", stage.id)
     .order("locks_at", { ascending: true });
-  const races = (raceRows ?? []) as RaceRow[];
+  // Course par étapes (VéloPronos) : seulement la veille et les 6 jours à venir, pas les 21 étapes d'un Grand Tour.
+  const races = ((raceRows ?? []) as RaceRow[]).filter((r) => {
+    const day = parisDay(new Date(r.locks_at));
+    return (raceRows ?? []).length <= 3 || (day >= addDays(today, -1) && day <= addDays(today, 6));
+  });
 
   const { data: predictionRows } = races.length
     ? await supabase
         .from("predictions")
-        .select("race_id, athlete_ids, nation_code, bonus_x2_used")
+        .select("race_id, athlete_ids, nation_code, team_ids, bonus_x2_used")
         .eq("user_id", userId)
         .in(
           "race_id",
           races.map((r) => r.id)
         )
     : { data: [] as any[] };
-  type PredictionRow = { race_id: string; athlete_ids: string[] | null; nation_code: string | null; bonus_x2_used?: boolean | null };
+  type PredictionRow = { race_id: string; athlete_ids: string[] | null; nation_code: string | null; team_ids?: string[] | null; bonus_x2_used?: boolean | null };
   const predictions = new Map<string, PredictionRow>(
     ((predictionRows ?? []) as PredictionRow[])
-      .filter((p) => (p.athlete_ids?.length ?? 0) > 0 || p.nation_code)
+      .filter((p) => (p.athlete_ids?.length ?? 0) > 0 || p.nation_code || (p.team_ids?.length ?? 0) > 0)
       .map((p) => [p.race_id, p])
   );
 
@@ -149,20 +155,27 @@ export async function getWeekStage(
   const allPredictions = Array.from(predictions.values());
   const athleteIds = allPredictions.flatMap((p) => p.athlete_ids ?? []);
   const nationCodes = allPredictions.map((p) => p.nation_code).filter(Boolean) as string[];
-  const [{ data: athletes }, { data: nations }] = await Promise.all([
+  const teamIds = allPredictions.flatMap((p) => p.team_ids ?? []);
+  const [{ data: athletes }, { data: nations }, { data: teams }] = await Promise.all([
     athleteIds.length
       ? supabase.from("athletes").select("id, first_name, last_name, nation_code").in("id", athleteIds)
       : Promise.resolve({ data: [] as any[] }),
     nationCodes.length
       ? supabase.from("nations").select("code, name").in("code", nationCodes)
       : Promise.resolve({ data: [] as any[] }),
+    teamIds.length ? supabase.from("teams").select("id, name, nation_code").in("id", teamIds) : Promise.resolve({ data: [] as any[] }),
   ]);
 
   const toRace = (r: RaceRow): WeekStageRace => {
     const p = predictions.get(r.id);
     let picks: WeekStagePick[] | null = null;
     if (p) {
-      picks = p.nation_code
+      picks = (p.team_ids?.length ?? 0) > 0
+        ? (p.team_ids ?? []).map((id) => {
+            const team = (teams ?? []).find((x: any) => x.id === id);
+            return { key: id, name: team?.name ?? id, nationCode: team?.nation_code ?? "" };
+          })
+        : p.nation_code
         ? [
             {
               key: p.nation_code,
@@ -179,7 +192,7 @@ export async function getWeekStage(
             };
           });
     }
-    return { id: r.id, format: r.format, sex: r.sex, locksAt: r.locks_at, displayStatus: getRaceDisplayStatus(r as any, now),
+    return { id: r.id, format: r.format, stageNumber: r.stage_number ?? null, sex: r.sex, locksAt: r.locks_at, displayStatus: getRaceDisplayStatus(r as any, now),
       picks,
       specialRule: r.special_rule ?? null,
       bonusX2: p?.bonus_x2_used ?? false,

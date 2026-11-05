@@ -48,6 +48,32 @@ test (21 étapes, 2 repos, 184 coureurs, 23 équipes, 1 519 cotes).
 Une course de test se crée à la main sur la même page (« Créer une course à la main »), hors
 classement par défaut.
 
+## Libellés côté joueur
+
+Une étape s'affiche « Étape 3 · Sprint », « Prologue · Contre-la-montre », ou seulement son type
+pour une classique (étape unique **sans numéro**, migration de données **0046**). Le sexe n'est
+plus jamais affiché (`displayedSex` renvoie toujours null). Sous le titre : « Départ → Arrivée ·
+km » (`src/lib/raceLabel.ts`). L'encadré de la semaine de l'accueil ne montre, pour une course
+par étapes, que les étapes de la veille aux 6 jours suivants. Badge des courses ×2 : « Course
+majeure » (monuments, Mondiaux).
+
+## Pronostics maillots (page `/maillots/<course>`)
+
+Lien « Mes pronostics maillots » dans la course dépliée de Ma saison, dès que la course a des
+maillots. Un choix par maillot (coureur, ou équipe pour « meilleure équipe »), parmi les engagés
+qui ont une cote pour ce maillot (tous les engagés si aucun n'en a), favoris d'abord. Modifiable
+jusqu'au départ de la 1re étape (RLS de `course_predictions`), en lecture seule ensuite. Les
+points (Top 3 final : cote ×5/×2/×1 ; super combatif +200 et +50 par jour) arrivent avec le
+moteur vélo. Pastille du général à la couleur de la course (`jersey_color`).
+
+## Pronostic d'une étape CLM par équipes
+
+Le joueur choisit **3 équipes** parmi celles qui ont une cote « CLM par équipes » pour la course
+(onglet admin Coureurs & cotes, ou import des équipes), enregistrées dans `predictions.team_ids`.
+Bonus ×2 possible comme sur une étape normale. Affichées dans Ma saison et l'encadré de la
+semaine. **Pas encore** : saisie du résultat par équipe (il faudra `race_results.team_id`),
+points, et pronostics des autres joueurs pendant/après l'étape (moteur vélo).
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :

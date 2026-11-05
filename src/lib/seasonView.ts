@@ -13,6 +13,7 @@ import { areJokersApplied, loadSeasonJokers } from "./jokers";
 export interface JokerLine {
   raceId: string;
   format: string;
+  stageNumber?: number | null;
   sex: string | null;
   location: string;
   countryCode: string | null;
@@ -85,7 +86,7 @@ export async function getSeasonView(
 
   const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }, streak, cards] = await Promise.all([
     userId
-      ? supabase.from("predictions").select("race_id, athlete_ids, nation_code, bonus_x2_used").eq("user_id", userId)
+      ? supabase.from("predictions").select("race_id, athlete_ids, nation_code, team_ids, bonus_x2_used").eq("user_id", userId)
       : Promise.resolve({ data: [] as any[] }),
     userId
       ? supabase.from("score_ledger").select("race_id, points, breakdown").eq("user_id", userId).eq("season_id", season.id)
@@ -106,10 +107,16 @@ export async function getSeasonView(
 
   const { data: stages, error } = await supabase
     .from("stages")
-    .select("id, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, races(id, format, sex, locks_at, status, special_rule)")
+    .select("id, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, jerseys, races(id, format, sex, locks_at, status, special_rule, stage_number, start_city, end_city, distance_km)")
     .eq("season_id", season.id)
     .order("starts_on", { ascending: true });
   if (error) console.error("getSeasonView:", error.message);
+
+  // Pronostics maillots du joueur (VéloPronos), comptés par course.
+  const { data: jerseyPicks } =
+    userId && isOwner ? await supabase.from("course_predictions").select("stage_id").eq("user_id", userId) : { data: [] as any[] };
+  const jerseyPicksByStage = new Map<string, number>();
+  for (const p of (jerseyPicks ?? []) as any[]) jerseyPicksByStage.set(p.stage_id, (jerseyPicksByStage.get(p.stage_id) ?? 0) + 1);
 
   // Chez un autre joueur, rien sur une course pas encore partie.
   const lockedRaceIds = new Set(
@@ -148,9 +155,15 @@ export async function getSeasonView(
     nationCodes.length ? supabase.from("nations").select("code, name").in("code", nationCodes) : Promise.resolve({ data: [] as any[] }),
   ]);
   const athleteById = new Map((athletes ?? []).map((a: any) => [a.id as string, a]));
+  // CLM par équipes (VéloPronos) : noms des équipes pronostiquées.
+  const teamIds = Array.from(new Set(predictions.flatMap((p: any) => p.team_ids ?? [])));
+  const { data: teams } = teamIds.length ? await supabase.from("teams").select("id, name").in("id", teamIds) : { data: [] as any[] };
+  const teamNameById = new Map((teams ?? []).map((x: any) => [x.id as string, x.name as string]));
   const nationNameByCode = new Map((nations ?? []).map((n: any) => [n.code as string, n.name as string]));
   const pickNames = (p: any): string =>
-    p.nation_code
+    (p.team_ids?.length ?? 0) > 0
+      ? (p.team_ids as string[]).map((id) => teamNameById.get(id) ?? "?").join(", ")
+      : p.nation_code
       ? nationNameByCode.get(p.nation_code) ?? p.nation_code
       : (p.athlete_ids ?? []).map((id: string) => shortName(athleteById.get(id))).join(", ");
 
@@ -202,6 +215,8 @@ export async function getSeasonView(
     ends_on: stage.ends_on,
     coefficient: stage.coefficient,
     counts_in_standings: stage.counts_in_standings !== false,
+    jerseys: (stage.jerseys ?? []).length,
+    jerseysPicked: jerseyPicksByStage.get(stage.id) ?? 0,
     opensOn: isPredictionOpen(stage.starts_on, now) ? null : predictionOpensOn(stage.starts_on),
     races: (stage.races ?? [])
       .map((race: any) => ({
@@ -228,7 +243,7 @@ export async function getPlayerJokers(supabase: SupabaseClient, seasonId: string
     loadSeasonJokers(supabase, seasonId, [userId]),
     supabase
       .from("races")
-      .select("id, format, sex, status, stages!inner(season_id, location, country_code)")
+      .select("id, format, stage_number, sex, status, stages!inner(season_id, location, country_code)")
       .eq("stages.season_id", seasonId),
   ]);
   const raceById = new Map(((races ?? []) as any[]).map((r) => [r.id as string, r]));
@@ -242,6 +257,7 @@ export async function getPlayerJokers(supabase: SupabaseClient, seasonId: string
       return {
         raceId: c.raceId,
         format: race?.format ?? "",
+        stageNumber: race?.stage_number ?? null,
         sex: race?.sex ?? null,
         location: race?.stages?.location ?? "",
         countryCode: race?.stages?.country_code ?? null,

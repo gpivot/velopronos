@@ -186,7 +186,7 @@ export async function importCourseCalendar(admin: SupabaseClient, seasonId: stri
           stage_id: stageId,
           sex: "H",
           format: ONE_DAY_DEFAULT_TYPE,
-          stage_number: 1,
+          stage_number: null, // classique : étape unique, sans numéro
           locks_at: parisTimeToUtcIso(course.startsOn, ONE_DAY_DEFAULT_TIME),
           status: "upcoming",
         });
@@ -309,21 +309,26 @@ export async function importCourseStages(
   if (shift) summary.details.push(`Dates décalées de ${shift} jour(s).`);
   if (stages.length === 0) return summary;
 
-  const { data: existing } = await admin.from("races").select("id, stage_number").eq("stage_id", stageId);
+  const [{ data: existing }, { data: course }] = await Promise.all([
+    admin.from("races").select("id, stage_number").eq("stage_id", stageId),
+    admin.from("stages").select("kind").eq("id", stageId).maybeSingle(),
+  ]);
   const idByNumber = new Map((existing ?? []).map((r) => [r.stage_number as number | null, r.id as string]));
-  // Classique créée par le calendrier : son étape unique (n° 1) est reprise par la 1re ligne.
+  // Classique : étape unique sans numéro, reprise (et mise à jour) par la ligne du fichier.
+  const isOneDay = course?.kind === "one_day";
 
   for (const stage of stages) {
+    const stageNumber = isOneDay ? null : stage.stageNumber;
     const fields = {
       format: stage.type,
-      stage_number: stage.stageNumber,
+      stage_number: stageNumber,
       start_city: stage.startCity || null,
       end_city: stage.endCity || null,
       distance_km: stage.distanceKm,
       elevation_m: stage.elevationM,
       locks_at: parisTimeToUtcIso(stage.date, stage.time),
     };
-    const id = idByNumber.get(stage.stageNumber);
+    const id = idByNumber.get(stageNumber) ?? (isOneDay ? idByNumber.get(1) : undefined);
     if (id) {
       const { error } = await admin.from("races").update(fields).eq("id", id);
       if (error) summary.warnings.push(`Étape ${stage.stageNumber} : ${error.message}`);

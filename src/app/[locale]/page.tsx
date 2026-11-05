@@ -74,7 +74,7 @@ async function getHomeData(): Promise<HomeData> {
   const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult, badges, { count: startedRaces }] = await Promise.all([
     supabase
       .from("races")
-      .select("id, format, sex, locks_at, stages!inner(location, country_code, season_id, starts_on)")
+      .select("id, format, stage_number, sex, locks_at, stages!inner(location, country_code, season_id, starts_on)")
       .eq("stages.season_id", season.id)
       .eq("status", "upcoming")
       .gt("locks_at", now.toISOString())

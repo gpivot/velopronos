@@ -448,7 +448,7 @@
     "importButton": "Kalender importieren (CSV)",
     "importLoading": "Wird importiert...",
     "importSummary": "{stagesCreated} Station(en) erstellt, {stagesUpdated} aktualisiert · {racesCreated} Etappe erstellt, {racesUpdated} aktualisiert.",
-    "worldChampionships": "Weltmeisterschaften",
+    "worldChampionships": "Großes Rennen",
     "toPlayCount": "{count} offen",
     "toPlayButton": "Jetzt tippen",
     "seasonPredictionsTitle": "Meine Saisontipps",
@@ -570,7 +570,10 @@
     "opinionTitle": "Die Meinung von VéloPronos",
     "bonusQuestionsLine": "Bonusfragen",
     "malusScale_tour_de_pena_4": "Nicht getippter Fahrer → 5 Strafrunden, -100 Pkt. (kein Tipp: -300)",
-    "offStandingsNotice": "Etappe außer Wertung: Es hat seine eigene Rangliste, aber seine Punkte zählen nicht für die Saison (kein rotes Trikot, keine Bonuskarte, kein ×2, kein Rohdiamant)."
+    "offStandingsNotice": "Etappe außer Wertung: Es hat seine eigene Rangliste, aber seine Punkte zählen nicht für die Saison (kein rotes Trikot, keine Bonuskarte, kein ×2, kein Rohdiamant).",
+    "stageNumber": "Etappe {number}",
+    "prologue": "Prolog",
+    "stageTitle": "{stage} · {type}"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Fahrer",
@@ -618,7 +621,9 @@
     "fuseeActive": "Karte auf dieser Rennen: +100 / +50 / +20 Pkt. für deine Fahrer mit den 3 schnellsten Laufzeiten.",
     "gachetteActive": "Karte auf dieser Rennen: +100 Pkt. pro Fahrer mit 20/20 am Schießstand (+50 für 10/10 im Sprint).",
     "grilled": "gesperrt",
-    "cardGrilladeAction": "Grillfest einsetzen (Sperre meiner Fahrer aufheben)"
+    "cardGrilladeAction": "Grillfest einsetzen (Sperre meiner Fahrer aufheben)",
+    "chooseTeams": "Wähle {count} Teams",
+    "searchTeam": "Team suchen"
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",
@@ -1071,5 +1076,33 @@
     "manageHint": "Du kannst das jederzeit in deinem Profil ändern.",
     "invalid": "Dieser Link ist nicht mehr gültig. Du kannst deine E-Mails in deinem Profil verwalten.",
     "toProfile": "Zu meinem Profil"
+  },
+  "Jerseys": {
+    "title": "Meine Trikots",
+    "back": "Zurück zu Meine Saison",
+    "linkLabel": "Meine Trikot-Tipps",
+    "linkCount": "{chosen} von {total} gewählt",
+    "intro": "Tippe den Endsieger jeder Wertung. Änderbar bis zum Start der 1. Etappe.",
+    "closed": "Das Rennen hat begonnen: Die Trikot-Tipps sind geschlossen.",
+    "pointsRule": "Endgültige Top 3 jedes Trikots: Quote ×5 für den Sieger, ×2 für den 2., ×1 für den 3.",
+    "combatifRule": "Kämpferischster Fahrer: +200 bei Wahl, +50 an jedem Tag, an dem er der kämpferischste des Tages ist.",
+    "jersey_general": "Gesamtwertung",
+    "jersey_points": "Punktewertung",
+    "jersey_montagne": "Bester Kletterer",
+    "jersey_jeune": "Bester Jungprofi",
+    "jersey_combatif": "Kämpferischster Fahrer",
+    "jersey_equipe": "Bestes Team",
+    "noPick": "— Keine Wahl —",
+    "notChosen": "Keine Wahl",
+    "submit": "Meine Trikots speichern",
+    "saving": "Speichern…",
+    "saved": "Trikots gespeichert.",
+    "saveError": "Speichern nicht möglich: Das Rennen hat vielleicht schon begonnen.",
+    "loginRequired": "Erstelle dein Konto oder melde dich an, um die Trikots zu tippen.",
+    "searchRider": "Fahrer, Team oder Nation suchen",
+    "searchTeam": "Team suchen",
+    "odds": "Quote {value}",
+    "noRiders": "Die Startliste ist noch nicht bekannt: Schau kurz vor dem Start wieder vorbei.",
+    "noJerseys": "Keine Trikot-Tipps für dieses Rennen."
   }
 }

@@ -84,9 +84,9 @@ describe("e-mails", () => {
   });
 
   it("nomme la course dans la langue du joueur", () => {
-    expect(raceName(notificationTexts("fr"), { format: "sprint", sex: "F" })).toBe("Sprint Femmes");
-    expect(raceName(notificationTexts("en"), { format: "relais_h", sex: "H" })).toBe("Men's Relay");
-    expect(raceName(notificationTexts("xx"), { format: "relais_mixte", sex: null })).toBe("Relais Mixte");
+    expect(raceName(notificationTexts("fr"), { format: "sprint", sex: "H", stage_number: 3 })).toBe("Étape 3 · Sprint");
+    expect(raceName(notificationTexts("en"), { format: "clm", sex: "H", stage_number: 0 })).toBe("Prologue · Time trial");
+    expect(raceName(notificationTexts("xx"), { format: "baroudeurs", sex: "H", stage_number: null })).toBe("Baroudeurs");
     expect(notificationTexts("de").t("resultsPushBody", { location: "Oslo", points: 1 })).toContain("1");
   });
 });

@@ -8,7 +8,7 @@ import { PredictedBadge } from "@/components/PredictedBadge";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { RaceDisplayStatus } from "@/lib/raceStatus";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
-import { displayedSex } from "@/lib/raceLabel";
+import { raceTitle, stageRoute } from "@/lib/raceLabel";
 import { SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
 
 export interface CalendarRace {
@@ -26,6 +26,11 @@ export interface CalendarRace {
   points: number | null;
   /** Course malus (tour_de_pena, brouillard, tes_colle). */
   special_rule: string | null;
+  /** VéloPronos : numéro (0 = prologue, null = classique), villes et distance. */
+  stage_number?: number | null;
+  start_city?: string | null;
+  end_city?: string | null;
+  distance_km?: number | null;
 }
 
 export interface CalendarStage {
@@ -39,6 +44,9 @@ export interface CalendarStage {
   counts_in_standings?: boolean;
   /** Jour d'ouverture des pronostics ("2027-01-02") tant qu'ils sont fermés (7 jours avant l'étape), null sinon. */
   opensOn: string | null;
+  /** VéloPronos : nombre de maillots pronostiqués sur la course, et choisis par le joueur. */
+  jerseys?: number;
+  jerseysPicked?: number;
   races: CalendarRace[];
 }
 
@@ -66,8 +74,8 @@ export function CalendarAccordion({
   const [openStageId, setOpenStageId] = useState<string | null>(defaultOpenStageId);
   const t = useTranslations("Courses");
   const tFormat = useTranslations("RaceFormat");
-  const tSex = useTranslations("Sex");
   const tRace = useTranslations("Race");
+  const tJerseys = useTranslations("Jerseys");
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -147,6 +155,20 @@ export function CalendarAccordion({
                   isOffStandings ? "border-dashed border-text-dim/30" : isChampionship ? "border-gold/30" : "border-border"
                 }`}
               >
+                {!readOnly && (stage.jerseys ?? 0) > 0 && (
+                  <Link
+                    href={`/maillots/${stage.id}`}
+                    className="flex items-center gap-3 rounded-xl border border-gold/50 bg-gold-soft px-3.5 py-3"
+                  >
+                    <span className="text-lg">🟡</span>
+                    <span className="flex flex-1 flex-col">
+                      <span className="text-sm font-semibold">{tJerseys("linkLabel")}</span>
+                      <span className="text-xs text-text-dim">
+                        {tJerseys("linkCount", { chosen: stage.jerseysPicked ?? 0, total: stage.jerseys ?? 0 })}
+                      </span>
+                    </span>
+                  </Link>
+                )}
                 {stage.races.length === 0 ? (
                   <div className="px-1.5 py-2 text-[12px] text-text-dim">{t("noRacesInStage")}</div>
                 ) : (
@@ -158,9 +180,9 @@ export function CalendarAccordion({
                       >
                         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                           <div className="text-sm font-semibold">
-                            {tFormat(race.format)}
-                            {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
+                            {raceTitle(race, tFormat, tRace)}
                           </div>
+                          {stageRoute(race) && <div className="truncate text-xs text-text-dim">{stageRoute(race)}</div>}
                           <div className="text-xs text-text-dim">
                             {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                             {" · "}
