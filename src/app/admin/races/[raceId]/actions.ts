@@ -203,6 +203,27 @@ export async function updateRace(formData: FormData) {
   revalidatePath("/admin", "layout");
 }
 
+/**
+ * Combatif du jour (VéloPronos) : +50 aux joueurs dont le super combatif pronostiqué sur la course
+ * est désigné. Une étape déjà notée est renotée aussitôt.
+ */
+export async function updateCombatif(formData: FormData) {
+  await requireAdmin();
+  const raceId = String(formData.get("race_id"));
+  const athleteId = String(formData.get("combatif_athlete_id") ?? "") || null;
+  const admin = createAdminClient();
+  const { data: race, error } = await admin
+    .from("races")
+    .update({ combatif_athlete_id: athleteId })
+    .eq("id", raceId)
+    .select("status")
+    .single();
+  if (error) throw new Error(error.message);
+  if (race?.status === "finished") await scoreRace(admin, raceId);
+  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
+}
+
 /** « L'avis de VéloPronos » de la course ; un texte vide masque la rubrique sur la page course. */
 export async function updateRaceOpinion(formData: FormData) {
   await requireAdmin();

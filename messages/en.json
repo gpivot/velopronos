@@ -78,7 +78,8 @@
     "pepiteRevealRank": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}",
     "lastResultExtra_missingPicks": "Riders not picked (5 loops each)",
     "lastResultExtra_fusee": "Rocket card",
-    "lastResultExtra_gachette": "Trigger card"
+    "lastResultExtra_gachette": "Trigger card",
+    "lastResultExtra_combatif": "Most combative rider of the day"
   },
   "Landing": {
     "heroTitle": "Predict the cycling races.",
@@ -594,7 +595,7 @@
     "emptySlot": "To pick",
     "bonusX2Activate": "Activate my ×2 bonus",
     "bonusX2Active": "×2 bonus activated",
-    "bonusX2Remaining": "{count, plural, =0 {No ×2 bonus left} one {# ×2 bonus left} other {# ×2 bonuses left}} this season",
+    "bonusX2Remaining": "{count, plural, =0 {No ×2 bonus left} one {# ×2 bonus left} other {# ×2 bonuses left}} for this race",
     "bonusX2Cancel": "Remove",
     "unsavedHint": "Change not saved yet: confirm to apply it.",
     "chooseFour": "Pick 3 or 4 riders",

@@ -78,7 +78,8 @@
     "pepiteRevealRank": "{rank}.º",
     "lastResultExtra_missingPicks": "Ciclistas no pronosticados (5 vueltas cada uno)",
     "lastResultExtra_fusee": "Carta Cohete",
-    "lastResultExtra_gachette": "Carta Gatillo"
+    "lastResultExtra_gachette": "Carta Gatillo",
+    "lastResultExtra_combatif": "Más combativo del día"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de ciclismo.",
@@ -594,7 +595,7 @@
     "emptySlot": "Por elegir",
     "bonusX2Activate": "Activar mi bonus ×2",
     "bonusX2Active": "Bonus ×2 activado",
-    "bonusX2Remaining": "{count, plural, =0 {No te queda ningún bonus ×2} one {Te queda # bonus ×2} other {Te quedan # bonus ×2}} esta temporada",
+    "bonusX2Remaining": "{count, plural, =0 {No te queda ningún bonus ×2} one {Te queda # bonus ×2} other {Te quedan # bonus ×2}} en esta carrera",
     "bonusX2Cancel": "Quitar",
     "unsavedHint": "Cambio aún no guardado: valida para aplicarlo.",
     "chooseFour": "Elige 3 o 4 ciclistas",

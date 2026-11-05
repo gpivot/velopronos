@@ -16,7 +16,7 @@ import {
 import { ConfirmButton } from "../../_components/ConfirmButton";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
-import { removeRace, resetResults, updateRace, updateRaceOpinion } from "./actions";
+import { removeRace, resetResults, updateCombatif, updateRace, updateRaceOpinion } from "./actions";
 import { ArrowLeftIcon } from "@/components/icons";
 import { START_LIST_FORMATS, getStartList } from "@/lib/startList";
 import { StartListPanel } from "./StartListPanel";
@@ -150,6 +150,14 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
   const hasResults = (existingResults ?? []).length > 0 || race.status === "finished";
   const startList = START_LIST_FORMATS.includes(race.format) ? await getStartList(admin, race) : null;
   const bonusQuestions = await getAdminBonusQuestions(admin, race, now);
+  // Engagés de la course, pour le combatif du jour (VéloPronos).
+  const { data: entries } = await admin
+    .from("stage_riders")
+    .select("athlete_id, bib, athletes(first_name, last_name)")
+    .eq("stage_id", race.stage_id);
+  const riders = ((entries ?? []) as any[])
+    .filter((e) => e.athletes)
+    .sort((a, b) => (a.bib ?? 9999) - (b.bib ?? 9999));
 
   return (
     <div className="flex flex-col gap-4">
@@ -194,6 +202,28 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
         </div>
         <p className="text-xs text-text-dim">Heure de départ en heure de Paris : c&apos;est aussi l&apos;heure de verrouillage des pronostics.</p>
       </form>
+
+      {race.format !== "clm_equipes" && riders.length > 0 && (
+        <form action={updateCombatif} className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-4">
+          <input type="hidden" name="race_id" value={race.id} />
+          <span className="text-sm font-semibold">Combatif du jour</span>
+          <select name="combatif_athlete_id" defaultValue={race.combatif_athlete_id ?? ""} className={inputClass}>
+            <option value="">— Aucun —</option>
+            {riders.map((e) => (
+              <option key={e.athlete_id} value={e.athlete_id}>
+                {e.bib ? `${e.bib} · ` : ""}
+                {fullAthleteName(e.athletes)}
+              </option>
+            ))}
+          </select>
+          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
+            Enregistrer
+          </button>
+          <p className="w-full text-xs text-text-dim">
+            +50 (doublé par le ×2) aux joueurs dont le super combatif pronostiqué est ce coureur. Une étape déjà notée est renotée.
+          </p>
+        </form>
+      )}
 
       <form action={updateRaceOpinion} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">L&apos;avis de VéloPronos</div>

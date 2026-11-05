@@ -33,6 +33,9 @@ import { HelpButton } from "@/components/HelpButton";
 import { BonusPointsBadge, BonusQuestions } from "@/components/BonusQuestions";
 import { getRaceBonusQuestions } from "@/lib/bonusQuestions";
 
+/** VéloPronos : un bonus ×2 personnel par course par étapes (passation, décision du 01/11/2026). */
+const X2_PER_COURSE = 1;
+
 export const dynamic = "force-dynamic";
 
 export default async function RacePage({
@@ -65,6 +68,7 @@ export default async function RacePage({
     /** false : étape « Autre (×0) », hors classement de la saison (migration 0041). */
     counts_in_standings?: boolean;
     starts_on: string;
+    kind?: string | null;
   };
   const offStandings = stage.counts_in_standings === false;
   const isRelay = RELAY_FORMATS.includes(race.format);
@@ -96,7 +100,10 @@ export default async function RacePage({
 
   // §7 — bonus ×2 personnel : 3 fois par saison, jamais sur une course
   // spéciale ni sur une étape Mondiaux/JO (déjà comptée double), ni hors classement (×0).
-  const x2Eligible = !race.special_rule && stage.coefficient !== 2 && !offStandings;
+  // VéloPronos : un ×2 perso par course par étapes (Grand Tour ou course par étapes), aucun sur une
+  // classique (les monuments et les Mondiaux comptent déjà ×2).
+  const isStageRaceCourse = stage.kind === "stage_race" || stage.kind === "grand_tour";
+  const x2Eligible = isStageRaceCourse && !race.special_rule && stage.coefficient !== 2 && !offStandings;
   // Fête nationale : course bonus, encadré doré au lieu du rouge des malus.
   const bonusRule = isBonusRule(race.special_rule);
   let x2UsesRemaining = 0;
@@ -108,12 +115,13 @@ export default async function RacePage({
         .select("id, card_type, status, used_on_race_id, used_on_stage_id")
         .eq("user_id", user.id)
         .eq("season_id", stage.season_id),
+      // ×2 déjà joués sur les étapes de la même course (celle-ci comprise, comme le comptent les formulaires).
       supabase
         .from("predictions")
-        .select("id, races!inner(stages!inner(season_id))", { count: "exact", head: true })
+        .select("id, races!inner(stage_id)", { count: "exact", head: true })
         .eq("user_id", user.id)
         .eq("bonus_x2_used", true)
-        .eq("races.stages.season_id", stage.season_id),
+        .eq("races.stage_id", stage.id),
       getSeasonCardRaces(supabase, stage.season_id),
     ]);
     const cardRows = (cards ?? []) as CardRow[];
@@ -128,7 +136,7 @@ export default async function RacePage({
     playableCards = availableCards.filter(
       (c) => (c.card_type === "ca_farte" || c.card_type === "aspiration") && canPlayCard(c.card_type, race.id, cardRows, seasonRaces)
     );
-    x2UsesRemaining = Math.max(0, 3 - (x2UsedCount ?? 0));
+    x2UsesRemaining = Math.max(0, X2_PER_COURSE - (x2UsedCount ?? 0));
   }
 
   if (isTeamRace) {

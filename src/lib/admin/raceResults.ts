@@ -10,7 +10,7 @@ import {
   type AthleteRaceResult,
   type NationRaceResult,
 } from "@/lib/scoring";
-import { TOUR_DE_PENA_EMPTY_PICK_LAPS, TOUR_DE_PENA_MALUS_PER_LAP } from "@/lib/scoring/constants";
+import { COMBATIF_DU_JOUR_BONUS, TOUR_DE_PENA_EMPTY_PICK_LAPS, TOUR_DE_PENA_MALUS_PER_LAP } from "@/lib/scoring/constants";
 import { clearCurrentOdds, setCurrentOdds } from "./odds";
 import { totalMisses } from "@/lib/shootings";
 import { fetchAll } from "./fetchAll";
@@ -196,7 +196,7 @@ export interface ScoreRaceSummary {
 export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<ScoreRaceSummary> {
   const { data: race, error: raceError } = await admin
     .from("races")
-    .select("id, sex, format, special_rule, locks_at, stages(id, season_id, country_code, coefficient, counts_in_standings)")
+    .select("id, sex, format, special_rule, locks_at, combatif_athlete_id, stages(id, season_id, country_code, coefficient, counts_in_standings)")
     .eq("id", raceId)
     .single();
   if (raceError || !race) throw new Error(raceError?.message ?? "Course introuvable.");
@@ -590,6 +590,17 @@ async function scoreIndividualPredictions(
   const offStandings = stage.counts_in_standings === false;
   const noCards = stage.coefficient === 2 || offStandings;
 
+  // VéloPronos : super combatif pronostiqué sur la course = combatif du jour → +50.
+  const combatifPickByUser = new Map<string, string>();
+  if (race.combatif_athlete_id) {
+    const { data: picks } = await admin
+      .from("course_predictions")
+      .select("user_id, athlete_id")
+      .eq("stage_id", stage.id)
+      .eq("jersey", "combatif");
+    for (const p of picks ?? []) if (p.athlete_id) combatifPickByUser.set(p.user_id as string, p.athlete_id as string);
+  }
+
   for (const prediction of predictions) {
     // Mondiaux / JO : aucune carte bonus, seul le ×2 de l'événement compte (Guillaume, 04/11/2026).
     // Étape hors classement (×0) : aucune carte non plus.
@@ -619,6 +630,9 @@ async function scoreIndividualPredictions(
       // Cartes Fusée / Gâchette posées sur l'étape (04/11/2026).
       raceFormat: race.format,
       stageCards: { fusee: !!onRace.fusee, gachette: !!onRace.gachette },
+      veloRules: true,
+      combatifBonus:
+        race.combatif_athlete_id && combatifPickByUser.get(prediction.user_id) === race.combatif_athlete_id ? COMBATIF_DU_JOUR_BONUS : 0,
     });
 
     // Carte Équipe : la cote de chaque biathlète de l'équipe favorite dans le Top 10, en plus.

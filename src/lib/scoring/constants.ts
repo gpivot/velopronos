@@ -89,3 +89,6 @@ export const GACHETTE_CARD_BONUS = { sprint: 50, other: 100 } as const;
 
 /** §14 — cote minimale pour être éligible comme Pépite. */
 export const PEPITE_MIN_ODDS = 30;
+
+/** VéloPronos : bonus quand le super combatif pronostiqué est le combatif du jour (base44). */
+export const COMBATIF_DU_JOUR_BONUS = 50;
