@@ -18,5 +18,10 @@ describe("courseLook", () => {
     expect(matchesCourseFilter("bonus", "championships")).toBe(true);
     expect(matchesCourseFilter("stage_race", "grand_tour")).toBe(false);
     expect(matchesCourseFilter("grand_tour", "all")).toBe(true);
+    // Hors classement : seulement dans « Autre » (et « Toutes »).
+    expect(matchesCourseFilter("grand_tour", "other", false)).toBe(true);
+    expect(matchesCourseFilter("grand_tour", "grand_tour", false)).toBe(false);
+    expect(matchesCourseFilter("grand_tour", "all", false)).toBe(true);
+    expect(matchesCourseFilter("one_day", "other")).toBe(false);
   });
 });

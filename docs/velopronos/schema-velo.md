@@ -292,5 +292,6 @@ Demande de Guillaume : `src/lib/velo/courseLook.ts` classe chaque course (Grand 
 - **Hors classement** : plus de « ×0 · Hors classement » ; contour en pointillés et, une fois la
   course dépliée, « Cette course ne compte pas pour le classement général. ».
 - **Filtre** en haut de la liste : Toutes, Grands Tours, Courses par étapes, Courses d'un jour
-  (Monuments et Mondiaux compris), Monuments, Championnats (Mondiaux et Week-end des Champions).
+  (Monuments et Mondiaux compris), Monuments, Championnats (Mondiaux et Week-end des Champions),
+  Autre (les courses hors classement, qui sortent alors des autres filtres).
   Seuls les types présents dans la saison sont proposés (*à confirmer*).

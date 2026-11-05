@@ -88,8 +88,8 @@ export function CalendarAccordion({
   const [filter, setFilter] = useState<CourseFilter>("all");
   const looks = new Map(stages.map((stage) => [stage.id, courseLook(stage)]));
   // Filtres proposés : seulement les types présents dans la saison.
-  const filters = COURSE_FILTERS.filter((f) => f === "all" || stages.some((st) => matchesCourseFilter(looks.get(st.id)!, f)));
-  const shown = stages.filter((stage) => matchesCourseFilter(looks.get(stage.id)!, filter));
+  const filters = COURSE_FILTERS.filter((f) => f === "all" || stages.some((st) => matchesCourseFilter(looks.get(st.id)!, f, st.counts_in_standings !== false)));
+  const shown = stages.filter((stage) => matchesCourseFilter(looks.get(stage.id)!, filter, stage.counts_in_standings !== false));
   const day = (date: string) =>
     new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
 

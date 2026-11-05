@@ -475,7 +475,8 @@
     "stagesCount": "{count, plural, one {# étape} other {# étapes}}",
     "firstStage": "1re étape : {title} · {date}",
     "nextStage": "Prochaine étape : {title} · {date}",
-    "offStandingsNote": "Cette course ne compte pas pour le classement général."
+    "offStandingsNote": "Cette course ne compte pas pour le classement général.",
+    "filter_other": "Autre"
   },
   "RaceFormat": {
     "sprint": "Sprint",
