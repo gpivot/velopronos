@@ -286,17 +286,19 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     season_id: string;
   };
   const relay = RELAY_FORMATS.includes(race.format);
+  // CLM par équipes (VéloPronos) : chaque équipe est traitée comme un coureur (clé = team_id).
+  const teamRace = race.format === "clm_equipes";
 
-  const [{ data: results }, { data: prediction }, { data: ledger }, { data: odds }, bonusByRace] = await Promise.all([
+  const [{ data: results }, { data: rawPrediction }, { data: ledger }, { data: odds }, bonusByRace] = await Promise.all([
     supabase
       .from("race_results")
-      .select("rank, athlete_id, nation_code, is_fusee, is_gachette, ski_rank, shootings, penalty_laps, athletes(first_name, last_name, nation_code), nations(name)")
+      .select("rank, athlete_id, nation_code, team_id, is_fusee, is_gachette, ski_rank, shootings, penalty_laps, athletes(first_name, last_name, nation_code), nations(name), teams(name)")
       .eq("race_id", race.id)
       .order("rank", { ascending: true }),
     userId
       ? supabase
           .from("predictions")
-          .select("athlete_ids, nation_code, bonus_x2_used, bonus_card_used, bonus_card_target_athlete_id")
+          .select("athlete_ids, nation_code, team_ids, bonus_x2_used, bonus_card_used, bonus_card_target_athlete_id")
           .eq("user_id", userId)
           .eq("race_id", race.id)
           .maybeSingle()
@@ -307,7 +309,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     // Cotes en vigueur, celles qu'utilise le calcul des points (cf. scoreRace).
     supabase
       .from("odds")
-      .select(relay ? "nation_code, value" : "athlete_id, value")
+      .select(relay ? "nation_code, value" : teamRace ? "team_id, value" : "athlete_id, value")
       .eq("season_id", stage.season_id)
       .eq("stage_id", race.stage_id) // cotes propres à la course (VéloPronos, 0045)
       .eq("format", race.format)
@@ -316,9 +318,12 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     userId ? getUserBonusQuestionPointsByRace(supabase, userId, [race.id]) : Promise.resolve(new Map<string, number>()),
   ]);
 
-  const resultRows = ((results ?? []) as any[]).map((r) => applyFuseeGachetteRules(race.format, r));
+  const prediction = teamRace && rawPrediction ? { ...rawPrediction, athlete_ids: rawPrediction.team_ids ?? [] } : rawPrediction;
+  const resultRows = ((results ?? []) as any[])
+    .map((r) => (teamRace ? { ...r, athlete_id: r.team_id, athletes: { last_name: r.teams?.name ?? "" } } : r))
+    .map((r) => applyFuseeGachetteRules(race.format, r));
   const shortName = (a: { first_name?: string; last_name?: string } | null | undefined) =>
-    shortAthleteName(a, "");
+    teamRace ? a?.last_name ?? "" : shortAthleteName(a, "");
   const rowName = (r: any) => (r.athlete_id ? shortName(r.athletes) : r.nations?.name ?? r.nation_code);
   const rowNation = (r: any) => (r.athlete_id ? r.athletes?.nation_code ?? "" : r.nation_code);
 
@@ -326,7 +331,9 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     .filter((r) => r.rank <= 3)
     .map((r) => ({ rank: r.rank as number, name: rowName(r), nationCode: rowNation(r) }));
 
-  const oddsByKey = new Map(((odds ?? []) as any[]).map((o) => [(relay ? o.nation_code : o.athlete_id) as string, o.value as number]));
+  const oddsByKey = new Map(
+    ((odds ?? []) as any[]).map((o) => [(relay ? o.nation_code : teamRace ? o.team_id : o.athlete_id) as string, o.value as number])
+  );
   const rankMultipliers = relay ? RELAY_RANK_MULTIPLIERS : RANK_MULTIPLIERS;
   const predictedKeys = new Set<string>(prediction?.nation_code ? [prediction.nation_code] : prediction?.athlete_ids ?? []);
   const scoredRows = resultRows.map((r) => ({
@@ -443,9 +450,11 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
 
     // Athlètes pronostiqués absents du classement saisi : nom chargé à part.
     const missingIds = athleteIds.filter((id) => !resultRows.some((r) => r.athlete_id === id));
-    const { data: missingAthletes } = missingIds.length
-      ? await supabase.from("athletes").select("id, first_name, last_name, nation_code").in("id", missingIds)
-      : { data: [] as any[] };
+    const { data: missingAthletes } = !missingIds.length
+      ? { data: [] as any[] }
+      : teamRace
+        ? await supabase.from("teams").select("id, last_name:name").in("id", missingIds)
+        : await supabase.from("athletes").select("id, first_name, last_name, nation_code").in("id", missingIds);
 
     picks = athleteIds.map((id) => {
       const row = resultRows.find((r) => r.athlete_id === id);
