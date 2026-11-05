@@ -195,7 +195,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <LogoMark className="h-5 w-5" />
             </div>
             <div className="font-display text-base font-extrabold">
-              <span className="text-frost">Biathlon</span>
+              <span className="text-frost">Vélo</span>
               <span className="text-ice">Pronos</span>
             </div>
           </div>

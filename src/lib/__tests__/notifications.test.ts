@@ -62,9 +62,9 @@ describe("réglages", () => {
 describe("e-mails", () => {
   it("échappe le texte et prépare le désabonnement en un clic", () => {
     const page = unsubscribeUrl("11111111-2222-3333-4444-555555555555", "reminder", "de");
-    expect(page).toBe("https://www.biathlonpronos.fr/de/desabonnement?t=11111111-2222-3333-4444-555555555555&k=reminder");
+    expect(page).toBe("https://www.velopronos.fr/de/desabonnement?t=11111111-2222-3333-4444-555555555555&k=reminder");
     expect(oneClickUrl(page)).toBe(
-      "https://www.biathlonpronos.fr/api/notifications/unsubscribe?t=11111111-2222-3333-4444-555555555555&k=reminder"
+      "https://www.velopronos.fr/api/notifications/unsubscribe?t=11111111-2222-3333-4444-555555555555&k=reminder"
     );
     const { html, text } = renderEmail({
       title: "<Test>",

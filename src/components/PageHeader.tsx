@@ -17,7 +17,7 @@ export function PageHeader({
       <Link href="/" className="absolute left-4 top-3 font-display text-xs font-bold hover:opacity-80">
         ‹ {backLabel}
       </Link>
-      <div className="font-display text-[11px] font-bold uppercase tracking-[0.15em] text-white/80">Biathlonpronos</div>
+      <div className="font-display text-[11px] font-bold uppercase tracking-[0.15em] text-white/80">VéloPronos</div>
       <h1 className="mt-1 font-display text-3xl font-extrabold">
         {emoji && <span className="mr-2">{emoji}</span>}
         {title}

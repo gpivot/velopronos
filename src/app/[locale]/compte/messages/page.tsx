@@ -57,7 +57,7 @@ export default async function SupportMessagesPage() {
           messages.map((m) =>
             m.from_admin ? (
               <div key={m.id} className="mr-10 self-start rounded-2xl bg-card2 px-4 py-3">
-                <div className="font-display text-[12px] font-bold text-ice">Biathlonpronos</div>
+                <div className="font-display text-[12px] font-bold text-ice">VéloPronos</div>
                 <p className="whitespace-pre-wrap break-words text-[14px] text-frost">{m.body}</p>
                 <div className="mt-1 text-right text-[11px] text-text-dim">{format.format(new Date(m.created_at))}</div>
               </div>

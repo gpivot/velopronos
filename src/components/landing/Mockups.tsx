@@ -128,7 +128,7 @@ export async function LeagueMockup() {
     { name: "Marie_Ski", pts: 2840, yellow: true, red: false },
     { name: "PapyCarabine", pts: 2715, yellow: false, red: true },
     { name: t("mockYou"), pts: 2690, yellow: false, red: false, me: true },
-    { name: "Léa.biathlon", pts: 2410, yellow: false, red: false },
+    { name: "Léa.velo", pts: 2410, yellow: false, red: false },
     { name: "Toto74", pts: 1985, yellow: false, red: false },
   ];
   return (

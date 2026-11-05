@@ -5,7 +5,7 @@ import { AdminNav } from "@/components/AdminNav";
 import { SimulatedClockBanner } from "@/components/SimulatedClockBanner";
 import "../globals.css";
 
-export const metadata: Metadata = { title: "Biathlonpronos — Admin" };
+export const metadata: Metadata = { title: "VéloPronos — Admin" };
 
 /**
  * Back-office : réservé aux profils avec is_admin = true. Hors du routing
