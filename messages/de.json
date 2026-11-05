@@ -1104,6 +1104,7 @@
     "searchTeam": "Team suchen",
     "odds": "Quote {value}",
     "noRiders": "Die Startliste ist noch nicht bekannt: Schau kurz vor dem Start wieder vorbei.",
-    "noJerseys": "Keine Trikot-Tipps für dieses Rennen."
+    "noJerseys": "Keine Trikot-Tipps für dieses Rennen.",
+    "points": "{points} Pkt."
   }
 }

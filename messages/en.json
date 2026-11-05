@@ -1104,6 +1104,7 @@
     "searchTeam": "Search a team",
     "odds": "odds {value}",
     "noRiders": "The start list is not known yet: come back shortly before the start.",
-    "noJerseys": "No jersey predictions for this race."
+    "noJerseys": "No jersey predictions for this race.",
+    "points": "{points} pts"
   }
 }

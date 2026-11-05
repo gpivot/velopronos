@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/server";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { updateStage } from "../../calendrier/actions";
+import { submitJerseyResults } from "./actions";
+import { fullAthleteName } from "@/lib/athleteName";
 import { STAGE_CATEGORY_OPTIONS, stageCategoryFormValue } from "@/lib/stageCategory";
 import {
   COURSE_CATEGORIES,
@@ -29,6 +31,25 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
   if (!stage) notFound();
 
   const hasFinishedRace = ((stage.races ?? []) as { status: string }[]).some((r) => r.status === "finished");
+
+  // Podiums finaux des maillots (VéloPronos) : engagés et équipes de la course, résultats saisis.
+  const courseJerseys = JERSEY_TYPES.filter((j) => ((stage.jerseys ?? []) as string[]).includes(j));
+  const [{ data: entries }, { data: jerseyResults }, { count: jerseyPredictionCount }] = await Promise.all([
+    admin.from("stage_riders").select("bib, athletes(id, first_name, last_name, teams(id, code, name))").eq("stage_id", stageId),
+    admin.from("course_jersey_results").select("jersey, rank, athlete_id, team_id").eq("stage_id", stageId),
+    admin.from("course_predictions").select("id", { count: "exact", head: true }).eq("stage_id", stageId),
+  ]);
+  const riders = ((entries ?? []) as any[])
+    .filter((e) => e.athletes)
+    .sort((a, b) => (a.bib ?? 9999) - (b.bib ?? 9999))
+    .map((e) => ({ id: e.athletes.id as string, label: `${e.bib ? `${e.bib} · ` : ""}${fullAthleteName(e.athletes)}${e.athletes.teams?.code ? ` (${e.athletes.teams.code})` : ""}` }));
+  const teamMap = new Map<string, { id: string; label: string }>();
+  for (const e of (entries ?? []) as any[]) if (e.athletes?.teams) teamMap.set(e.athletes.teams.id, { id: e.athletes.teams.id, label: e.athletes.teams.name });
+  const teams = Array.from(teamMap.values()).sort((a, b) => a.label.localeCompare(b.label));
+  const podiumOf = (jersey: string, rank: number) => {
+    const r = (jerseyResults ?? []).find((x) => x.jersey === jersey && x.rank === rank);
+    return (r?.athlete_id ?? r?.team_id ?? "") as string;
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -108,6 +129,48 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
             " Attention : des étapes de cette course sont déjà notées ; un passage ×1 / ×2 ne recalcule pas leurs points tant que leurs résultats ne sont pas réenregistrés (le passage en ×0 ou hors de ×0 s’applique tout de suite au classement)."}
         </p>
       </form>
+
+      {courseJerseys.length > 0 && (
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
+          <div className="text-sm font-semibold">Podiums finaux des maillots</div>
+          <p className="text-xs text-text-dim">
+            À saisir à la fin de la course. Chaque enregistrement recalcule les points du maillot ({jerseyPredictionCount ?? 0} pronostic(s)
+            maillot sur la course) : cote × 5 / × 2 / × 1 pour le podium, +200 pour le vainqueur du super combatif.
+            Vider les 3 cases efface le podium et ses points.
+          </p>
+          {riders.length === 0 ? (
+            <p className="text-xs text-text-dim">Aucun engagé : importe d&apos;abord les coureurs de la course.</p>
+          ) : (
+            courseJerseys.map((jersey) => {
+              const options = jersey === "equipe" ? teams : riders;
+              const ranks = jersey === "combatif" ? [1] : [1, 2, 3];
+              return (
+                <form key={jersey} action={submitJerseyResults} className="flex flex-wrap items-center gap-2 border-t border-border/50 pt-3">
+                  <input type="hidden" name="stage_id" value={stage.id} />
+                  <input type="hidden" name="jersey" value={jersey} />
+                  <span className="w-44 text-sm font-semibold">{JERSEY_LABELS[jersey]}</span>
+                  {ranks.map((rank) => (
+                    <label key={rank} className="flex items-center gap-1 text-xs text-text-dim">
+                      {rank}
+                      <select name={`rank_${rank}`} defaultValue={podiumOf(jersey, rank)} className={`${inputClass} max-w-[14rem]`}>
+                        <option value="">—</option>
+                        {options.map((o) => (
+                          <option key={o.id} value={o.id}>
+                            {o.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ))}
+                  <button type="submit" className="rounded bg-ice px-3 py-1.5 text-xs font-bold text-on-ice">
+                    Enregistrer
+                  </button>
+                </form>
+              );
+            })
+          )}
+        </div>
+      )}
     </div>
   );
 }

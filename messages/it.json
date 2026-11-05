@@ -1104,6 +1104,7 @@
     "searchTeam": "Cerca una squadra",
     "odds": "quota {value}",
     "noRiders": "I partenti non sono ancora noti: torna poco prima del via.",
-    "noJerseys": "Nessun pronostico maglie per questa corsa."
+    "noJerseys": "Nessun pronostico maglie per questa corsa.",
+    "points": "{points} pt"
   }
 }
