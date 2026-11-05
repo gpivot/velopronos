@@ -167,19 +167,42 @@ Migration **0051** : `streak_counters.stage_id` (clé `(user_id, stage_id)`) et
   - **Grillade** (`fondue`) : dégrille une fois ses coureurs sur l'étape de son choix.
 - Pas de carte sur un CLM par équipes, ni sur une course ×2, ni hors classement. Pas de carte avec
   le joker retardataire.
-- À venir : **Équipe** (base44 : à partir de l'étape 10, chaque coureur de l'équipe de cœur dans
-  le Top 10 rapporte sa cote ; donc Grands Tours seulement, *à confirmer*) et **Chat noir**
-  (corriger un maillot ou le porteur d'eau après un abandon, jusqu'au 1er jour de repos), avec
-  l'équipe de cœur et la nation favorite. Les cartes du biathlon (Aspiration, Fusée, Gâchette,
-  Talent) ne sont plus proposées. Pas de carte gagnée sur un prono parfait (*à confirmer*).
+- **Équipe** (`equipe`, migration 0052) : Grands Tours seulement (*à confirmer*), et seulement
+  avec une équipe de cœur choisie. Elle s'active à la prochaine étape ; à partir de l'**étape 10**,
+  sur chaque étape restante de la course (CLM par équipes exclu), chaque coureur de l'équipe de
+  cœur dans le Top 10 rapporte une fois sa cote arrondie (1 sans cote), qu'il soit pronostiqué ou
+  non (`computeTeamCardBonus`).
+- **Chat noir** (`chat_noir`, 0052) : gardée en main. Une fois la course partie et jusqu'au départ
+  de l'étape 10 (faute de jours de repos dans la base, l'étape 10 tient lieu de 1er jour de repos,
+  *à confirmer*), elle remplace **une fois** un coureur **abandonné** : un pronostic maillot (sauf
+  meilleure équipe) ou le porteur d'eau pas encore révélé (le remplaçant doit rester éligible,
+  cotes >= 30). Elle se joue sur la page des maillots (rpc `play_chat_noir`).
+- Les cartes du biathlon (Aspiration, Fusée, Gâchette, Talent) ne sont plus proposées. Pas de carte
+  gagnée sur un prono parfait (*à confirmer*).
 
 ## Pronostics de saison
 
 Plus de pronostics de saison en vélo (demande de Guillaume du 05/11/2026), hormis l'équipe de cœur
-et la nation favorite, à venir : l'encadré des globes et l'invitation de l'accueil sont retirés.
+et la nation favorite : l'encadré des globes est retiré.
 
-Reste à faire : cartes Équipe et Chat noir, équipe de cœur et nation favorite, classement de
-saison (résultats retenus), textes du règlement.
+**Équipe de cœur et nation favorite** (page `/coeur`, reliée depuis Ma saison et l'accueil) : une
+ligne `favorite_teams` par joueur et par saison, `team_id` pour l'équipe de cœur (carte Équipe),
+`nation_code` pour la nation favorite (Fête nationale, victoires sur l'accueil). Les deux se
+choisissent séparément, à tout moment de la saison, et chaque choix est **définitif** (trigger
+`favorite_teams_fill_only`) ; *à confirmer* (base44 permettait-il d'en changer ?). La colonne `sex`
+reste à 'H' (pas de nation favorite par sexe en vélo).
+
+## Classement de saison : résultats retenus
+
+`getLeaderboard` (src/lib/leaderboard.ts) ne garde que les résultats retenus
+(`src/lib/velo/retainedResults.ts`) : tous les Grands Tours et événements bonus, les **2 meilleures**
+courses par étapes et les **8 meilleures** classiques. Une course vaut la somme de ses lignes
+`score_ledger` (étapes et maillots). Les lignes sans course (questions bonus) comptent toujours.
+Le classement d'une course entière (onglet Classement, filtre course sans étape choisie) ajoute
+les points de ses maillots. Le picto du porteur d'eau révélé ne s'affiche que dans le classement
+de son Grand Tour (`badgesInCourse`), plus dans celui de la saison.
+
+Reste à faire : textes du règlement.
 
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 

@@ -7,7 +7,7 @@ import { HeaderActions } from "@/components/HeaderActions";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard } from "@/lib/leaderboard";
-import { getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
+import { badgesInCourse, getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
 import { HelpButton } from "@/components/HelpButton";
 import { LeaderBib, PlayerBadgesRow, StageLeaderBib } from "@/components/PlayerBadgesRow";
 import { nationFlagEmoji } from "@/lib/nationFlags";
@@ -66,7 +66,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   const userId = userResult.user?.id ?? null;
   const { now } = await getClock();
 
-  const [stages, leagueRows, leaderboard, jokers, badges] = await Promise.all([
+  const [stages, leagueRows, leaderboard, jokers, seasonBadges] = await Promise.all([
     season ? getStandingsStages(supabase, season.id, now) : Promise.resolve([]),
     season && userId
       ? supabase.from("league_memberships").select("leagues!inner(id, name, season_id)").eq("user_id", userId).eq("leagues.season_id", season.id)
@@ -92,6 +92,8 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   const period: StandingsFilterState["period"] = query.periode === "etapes" ? "stages" : "season";
   const stage = period === "stages" ? stages.find((s) => s.id === query.etape) ?? stages.find((s) => s.id === pickDefaultStandingsStageId(stages)) ?? null : null;
   const race = stage?.races.find((r) => r.id === query.course) ?? null;
+  // Porteur d'eau révélé : picto seulement dans le classement de son Grand Tour.
+  const badges = badgesInCourse(seasonBadges, stage && !race ? stage.id : null);
   const state: StandingsFilterState = { scope, leagueId, period, stageId: stage?.id ?? null, raceId: race?.id ?? null };
   const options: StandingsFilterOptions = {
     leagues,
@@ -115,7 +117,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
       const ongoingStage = stages.find((s) => s.countsInStandings !== false && isStageOngoing(s));
       const [currentStreaks, ongoingRows] = await Promise.all([
         getCurrentStreaks(supabase, season.id, now),
-        ongoingStage ? getRacesStandings(supabase, ongoingStage.races, null, false) : Promise.resolve([]),
+        ongoingStage ? getRacesStandings(supabase, ongoingStage.races, null, false, ongoingStage.id) : Promise.resolve([]),
       ]);
       streaks = currentStreaks;
       ongoingStageLeaders = new Set(ongoingRows.filter((r) => r.rank === 1 && r.points > 0).map((r) => r.userId));
@@ -124,7 +126,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
       // Pronostics affichés (une ligne sous le pseudo) seulement pour une course choisie et déjà partie ;
       // sur l'étape entière, ils restent dans le pop-up du joueur pour garder des lignes compactes.
       showPicks = Boolean(race && race.displayStatus !== "upcoming");
-      rows = await getRacesStandings(supabase, race ? [race] : stage.races, members, showPicks);
+      rows = await getRacesStandings(supabase, race ? [race] : stage.races, members, showPicks, race ? null : stage.id);
     }
   }
 

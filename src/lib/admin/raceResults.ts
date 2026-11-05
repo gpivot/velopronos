@@ -18,6 +18,7 @@ import { applyLateJoker } from "@/lib/velo/lateJoker";
 import {
   cardsOnRace,
   computeEquipeBonus,
+  computeTeamCardBonus,
   getSeasonCardRaces,
   resolvePredictionCard,
   type CardRace,
@@ -532,6 +533,8 @@ async function loadPlayedCards(
   cardsByUserId: Map<string, CardRow[]>;
   seasonRaces: CardRace[];
   favoriteTeamByUserId: Map<string, { nationCode: string; sex: string }>;
+  /** VéloPronos : équipe de cœur de chaque joueur (carte Équipe, migration 0052). */
+  heartTeamByUserId: Map<string, string>;
 }> {
   const [{ data: playedCards }, seasonRaces, { data: favoriteTeams }] = await Promise.all([
     admin
@@ -541,16 +544,21 @@ async function loadPlayedCards(
       .eq("status", "used")
       .in("card_type", ["ca_farte", "balle_de_pioche", "aspiration", "equipe", "fusee", "gachette"]),
     getSeasonCardRaces(admin, seasonId),
-    admin.from("favorite_teams").select("user_id, nation_code, sex").eq("season_id", seasonId),
+    admin.from("favorite_teams").select("user_id, nation_code, sex, team_id").eq("season_id", seasonId),
   ]);
   const cardsByUserId = new Map<string, CardRow[]>();
   for (const c of (playedCards ?? []) as (CardRow & { user_id: string })[]) {
     cardsByUserId.set(c.user_id, [...(cardsByUserId.get(c.user_id) ?? []), c]);
   }
   const favoriteTeamByUserId = new Map(
-    (favoriteTeams ?? []).map((f) => [f.user_id as string, { nationCode: f.nation_code as string, sex: f.sex as string }])
+    (favoriteTeams ?? [])
+      .filter((f) => f.nation_code)
+      .map((f) => [f.user_id as string, { nationCode: f.nation_code as string, sex: f.sex as string }])
   );
-  return { cardsByUserId, seasonRaces, favoriteTeamByUserId };
+  const heartTeamByUserId = new Map(
+    (favoriteTeams ?? []).filter((f) => f.team_id).map((f) => [f.user_id as string, f.team_id as string])
+  );
+  return { cardsByUserId, seasonRaces, favoriteTeamByUserId, heartTeamByUserId };
 }
 
 async function scoreIndividualPredictions(
@@ -564,8 +572,8 @@ async function scoreIndividualPredictions(
   for (const r of results) if (r.athlete_id) athleteIds.add(r.athlete_id);
   for (const p of predictions) for (const id of p.athlete_ids ?? []) athleteIds.add(id);
 
-  const [{ data: athletes }, { data: odds }, { cardsByUserId, seasonRaces, favoriteTeamByUserId }] = await Promise.all([
-    admin.from("athletes").select("id, nation_code, sex").in("id", Array.from(athleteIds)),
+  const [{ data: athletes }, { data: odds }, { cardsByUserId, seasonRaces, favoriteTeamByUserId, heartTeamByUserId }] = await Promise.all([
+    admin.from("athletes").select("id, nation_code, sex, team_id").in("id", Array.from(athleteIds)),
     admin
       .from("odds")
       .select("athlete_id, value")
@@ -579,6 +587,7 @@ async function scoreIndividualPredictions(
 
   const athleteTeamByAthleteId: Record<string, { nationCode: string; sex: "H" | "F" }> = {};
   for (const a of athletes ?? []) athleteTeamByAthleteId[a.id] = { nationCode: a.nation_code, sex: a.sex };
+  const teamIdByAthleteId = new Map(((athletes ?? []) as any[]).filter((a) => a.team_id).map((a) => [a.id as string, a.team_id as string]));
 
   const oddsByAthleteId: Record<string, number> = {};
   for (const o of odds ?? []) oddsByAthleteId[o.athlete_id as string] = o.value;
@@ -646,18 +655,15 @@ async function scoreIndividualPredictions(
         race.combatif_athlete_id && combatifPickByUser.get(prediction.user_id) === race.combatif_athlete_id ? COMBATIF_DU_JOUR_BONUS : 0,
     });
 
-    // Carte Équipe : la cote de chaque biathlète de l'équipe favorite dans le Top 10, en plus.
+    // Carte Équipe (VéloPronos, base44) : la cote de chaque coureur de l'équipe de cœur dans le Top 10.
     const equipeBonus = onRace.equipe
-      ? computeEquipeBonus(
-          favoriteTeamByUserId.get(prediction.user_id) ?? null,
-          race,
+      ? computeTeamCardBonus(
+          heartTeamByUserId.get(prediction.user_id) ?? null,
           scoringResults.map((r) => ({
             rank: r.rank,
-            nationCode: athleteTeamByAthleteId[r.athleteId]?.nationCode ?? "",
-            sex: athleteTeamByAthleteId[r.athleteId]?.sex ?? "",
-            odds: oddsByAthleteId[r.athleteId] ?? 0,
-          })),
-          []
+            teamId: teamIdByAthleteId.get(r.athleteId) ?? null,
+            odds: oddsByAthleteId[r.athleteId] ?? null,
+          }))
         )
       : 0;
     // Joker retardataire (VéloPronos) : points ÷ 2 ; le porteur d'eau s'ajoute ensuite, entier.

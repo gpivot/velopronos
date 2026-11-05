@@ -71,8 +71,8 @@
     "seasonPicksButton": "Saisir mes pronostics de saison",
     "seasonPicksEdit": "Modifier mes pronostics de saison",
     "lastResultExtra_equipe": "Carte Équipe",
-    "favoriteTeamInvite": "Choisis ton équipe favorite",
-    "favoriteTeamInviteHint": "Suis ses victoires et podiums, et prépare la carte bonus Équipe.",
+    "favoriteTeamInvite": "Choisis ton équipe de cœur et ta nation favorite",
+    "favoriteTeamInviteHint": "Suis leurs victoires et prépare la carte Équipe des Grands Tours.",
     "pepiteRevealTitle": "Ton porteur d'eau est révélé !",
     "pepiteRevealHint": "Premier Top 10 sur ce Grand Tour : ses points s'ajoutent à ton score de l'étape.",
     "pepiteRevealRank": "{rank, selectordinal, one {#er} other {#e}}",
@@ -945,9 +945,9 @@
     "name_aspiration": "Aspiration",
     "name_equipe": "Équipe",
     "desc_aspiration": "À garder en main : sur une étape individuelle de ton choix, chacun de tes coureurs compte une place plus haut (un 11e devient 10e et marque).",
-    "desc_equipe": "S'active tout de suite jusqu'à la fin de la saison : chaque coureur de ton équipe favorite dans le Top 10 (ou ta nation dans le Top 10 du relais) te rapporte une fois sa cote en plus, que tu l'aies choisi ou non.",
+    "desc_equipe": "Grands Tours : s'active tout de suite ; à partir de l'étape 10, chaque coureur de ton équipe de cœur dans le Top 10 te rapporte une fois sa cote en plus, que tu l'aies choisi ou non.",
     "lockedUntil_aspiration": "Dès la 4e course",
-    "lockedUntil_equipe": "Après les Mondiaux",
+    "lockedUntil_equipe": "Grand Tour et équipe de cœur choisie",
     "justTaken": "Prise à la dernière série",
     "name_fusee": "Fusée",
     "name_gachette": "Gâchette",
@@ -967,7 +967,10 @@
     "stagePlayButton": "Poser",
     "stagePlayError": "La carte n'a pas pu être posée. Réessaie.",
     "name_fondue": "Grillade",
-    "desc_fondue": "À garder en main : dégrille une fois tes coureurs, sur l'étape de ton choix de cette course."
+    "desc_fondue": "À garder en main : dégrille une fois tes coureurs, sur l'étape de ton choix de cette course.",
+    "name_chat_noir": "Chat noir",
+    "desc_chat_noir": "À garder en main : remplace un de tes pronostics maillots (sauf meilleure équipe) ou ton porteur d'eau si son coureur abandonne, jusqu'au départ de l'étape 10.",
+    "lockedUntil_chat_noir": "Pas encore"
   },
   "Badges": {
     "leader": "Maillot jaune : leader du classement",
@@ -1119,6 +1122,32 @@
     "waterCarrierHidden": "Caché, pas encore révélé",
     "waterCarrierRevealed": "Révélé",
     "waterCarrierRevealedPoints": "Révélé · +{points} pts",
-    "waterCarrierChoose": "Choisis ton outsider caché pour ce Grand Tour"
+    "waterCarrierChoose": "Choisis ton outsider caché pour ce Grand Tour",
+    "chatNoirTitle": "Carte Chat noir",
+    "chatNoirHint": "Un de tes coureurs a abandonné : remplace-le une fois, jusqu'au départ de l'étape 10.",
+    "chatNoirReplace": "Remplacer",
+    "chatNoirError": "Remplacement impossible.",
+    "chatNoirAbandoned": "abandon"
+  },
+  "Heart": {
+    "title": "Mes choix de cœur",
+    "back": "Retour à Ma saison",
+    "noSeason": "Pas de saison en cours.",
+    "loginRequired": "Crée ton compte ou connecte-toi pour faire tes choix.",
+    "teamTitle": "Mon équipe de cœur",
+    "teamHint": "Ses victoires s'affichent sur ton accueil, et elle nourrit la carte Équipe des Grands Tours. Choix définitif pour la saison.",
+    "nationTitle": "Ma nation favorite",
+    "nationHint": "Ses victoires s'affichent sur ton accueil, et ses coureurs comptent double le jour de la Fête nationale. Choix définitif pour la saison.",
+    "chosen": "Choix définitif pour la saison.",
+    "noOptions": "Pas encore de choix possible : les équipes de la saison ne sont pas encore connues.",
+    "warning": "Tu choisis {choice} pour toute la saison : ce choix est définitif.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "choose": "Choisir",
+    "saving": "Enregistrement…",
+    "saveError": "Enregistrement impossible. Réessaie.",
+    "cardTitle": "Équipe de cœur et nation favorite",
+    "teamNone": "Équipe à choisir",
+    "nationNone": "nation à choisir"
   }
 }

@@ -71,8 +71,8 @@
     "seasonPicksButton": "Meine Saisontipps eingeben",
     "seasonPicksEdit": "Meine Saisontipps ändern",
     "lastResultExtra_equipe": "Team-Karte",
-    "favoriteTeamInvite": "Wähle dein Lieblingsteam",
-    "favoriteTeamInviteHint": "Verfolge seine Siege und Podestplätze und bereite die Bonuskarte Team vor.",
+    "favoriteTeamInvite": "Wähle dein Lieblingsteam und deine Lieblingsnation",
+    "favoriteTeamInviteHint": "Verfolge ihre Siege und bereite die Team-Karte der Grand Tours vor.",
     "pepiteRevealTitle": "Dein Wasserträger ist enthüllt!",
     "pepiteRevealHint": "Erste Top 10 bei dieser Grand Tour: seine Punkte kommen zu deinem Etappenergebnis hinzu.",
     "pepiteRevealRank": "{rank}.",
@@ -945,9 +945,9 @@
     "name_aspiration": "Windschatten",
     "name_equipe": "Team",
     "desc_aspiration": "Auf der Hand behalten: in einem Einzelrennen deiner Wahl zählt jeder deiner Fahrer einen Platz besser (ein 11. wird 10. und punktet).",
-    "desc_equipe": "Sofort aktiv bis Saisonende: jeder Fahrer deines Lieblingsteams in den Top 10 (oder deine Nation in den Top 10 der Staffel) bringt dir zusätzlich einmal seine Quote, ob du ihn gewählt hast oder nicht.",
+    "desc_equipe": "Grand Tours: sofort aktiv; ab der 10. Etappe bringt dir jeder Fahrer deines Lieblingsteams in den Top 10 einmal seine Quote, getippt oder nicht.",
     "lockedUntil_aspiration": "Ab der 4. Station",
-    "lockedUntil_equipe": "Nach der WM",
+    "lockedUntil_equipe": "Grand Tour und Lieblingsteam gewählt",
     "justTaken": "Bei der letzten Serie genommen",
     "name_fusee": "Rakete",
     "name_gachette": "Abzug",
@@ -967,7 +967,10 @@
     "stagePlayButton": "Legen",
     "stagePlayError": "Die Karte konnte nicht gelegt werden. Versuch es noch einmal.",
     "name_fondue": "Grillfest",
-    "desc_fondue": "Behalte sie: entgrillt deine Fahrer einmal, auf einer Etappe deiner Wahl in diesem Rennen."
+    "desc_fondue": "Behalte sie: entgrillt deine Fahrer einmal, auf einer Etappe deiner Wahl in diesem Rennen.",
+    "name_chat_noir": "Schwarze Katze",
+    "desc_chat_noir": "Behalte sie: ersetzt einen deiner Trikot-Tipps (außer bestes Team) oder deinen Wasserträger, wenn sein Fahrer aufgibt, bis zum Start der 10. Etappe.",
+    "lockedUntil_chat_noir": "Noch nicht"
   },
   "Badges": {
     "leader": "Gelbes Trikot: Führender der Wertung",
@@ -1119,6 +1122,32 @@
     "waterCarrierHidden": "Verdeckt, noch nicht enthüllt",
     "waterCarrierRevealed": "Enthüllt",
     "waterCarrierRevealedPoints": "Enthüllt · +{points} Pkt.",
-    "waterCarrierChoose": "Wähle deinen versteckten Außenseiter für diese Grand Tour"
+    "waterCarrierChoose": "Wähle deinen versteckten Außenseiter für diese Grand Tour",
+    "chatNoirTitle": "Karte Schwarze Katze",
+    "chatNoirHint": "Einer deiner Fahrer hat aufgegeben: ersetze ihn einmal, bis zum Start der 10. Etappe.",
+    "chatNoirReplace": "Ersetzen",
+    "chatNoirError": "Ersetzen nicht möglich.",
+    "chatNoirAbandoned": "aufgegeben"
+  },
+  "Heart": {
+    "title": "Meine Herzensentscheidungen",
+    "back": "Zurück zu Meine Saison",
+    "noSeason": "Keine laufende Saison.",
+    "loginRequired": "Erstelle dein Konto oder melde dich an, um zu wählen.",
+    "teamTitle": "Mein Lieblingsteam",
+    "teamHint": "Seine Siege erscheinen auf deiner Startseite, und es zählt für die Team-Karte der Grand Tours. Endgültige Wahl für die Saison.",
+    "nationTitle": "Meine Lieblingsnation",
+    "nationHint": "Ihre Siege erscheinen auf deiner Startseite, und ihre Fahrer zählen am Nationalfeiertag doppelt. Endgültige Wahl für die Saison.",
+    "chosen": "Endgültige Wahl für die Saison.",
+    "noOptions": "Noch keine Wahl möglich: die Teams der Saison sind noch nicht bekannt.",
+    "warning": "Du wählst {choice} für die ganze Saison: diese Wahl ist endgültig.",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "choose": "Wählen",
+    "saving": "Speichern…",
+    "saveError": "Speichern nicht möglich. Versuche es erneut.",
+    "cardTitle": "Lieblingsteam und -nation",
+    "teamNone": "Team wählen",
+    "nationNone": "Nation wählen"
   }
 }

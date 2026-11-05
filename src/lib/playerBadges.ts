@@ -13,7 +13,10 @@ export interface PlayerBadges {
   stageWins: number;
   /** Courses où le joueur a réussi le Prono parfait. */
   perfectPicks: number;
+  /** VéloPronos : porteurs d'eau révélés, comptés seulement dans le classement de leur Grand Tour (badgesInCourse). */
   pepites: number;
+  /** Grands Tours où le porteur d'eau du joueur a été révélé. */
+  pepiteCourseIds?: string[];
   /** Sexe des Pépites révélées (F, H), pour les mini ♀/♂ à droite du ❄️. */
   pepiteSexes?: ("F" | "H")[];
 }
@@ -83,7 +86,7 @@ export async function getPlayerBadges(supabase: SupabaseClient, seasonId: string
       .select("user_id, races!inner(stages!inner(season_id))")
       .eq("bonus_x2_used", true)
       .eq("races.stages.season_id", seasonId),
-    supabase.from("pepites").select("user_id, sex").eq("season_id", seasonId).eq("bonus_claimed", true),
+    supabase.from("pepites").select("user_id, stage_id").eq("season_id", seasonId).eq("bonus_claimed", true),
     supabase.from("races").select("id, stage_id, status, stages!inner(season_id)").eq("stages.season_id", seasonId),
   ]);
 
@@ -104,8 +107,20 @@ export async function getPlayerBadges(supabase: SupabaseClient, seasonId: string
   for (const l of (ledger ?? []) as any[]) if (Number(l.perfect ?? 0) > 0) get(l.user_id).perfectPicks += 1;
   for (const p of (x2 ?? []) as any[]) get(p.user_id).x2Used += 1;
   for (const p of (pepites ?? []) as any[]) {
-    // VéloPronos : porteurs d'eau révélés (un par Grand Tour), sans mini ♀ / ♂.
-    get(p.user_id).pepites += 1;
+    // VéloPronos : porteurs d'eau révélés (un par Grand Tour) ; le picto ne s'affiche que dans le
+    // classement de ce Grand Tour (badgesInCourse), pas dans celui de la saison.
+    const entry = get(p.user_id);
+    entry.pepiteCourseIds = [...(entry.pepiteCourseIds ?? []), p.stage_id];
   }
   return badges;
+}
+
+/** Pictos pour le classement d'une course : le porteur d'eau révélé de ce Grand Tour en plus. */
+export function badgesInCourse(badges: Map<string, PlayerBadges>, courseId: string | null): Map<string, PlayerBadges> {
+  if (!courseId) return badges;
+  const out = new Map<string, PlayerBadges>();
+  for (const [userId, b] of Array.from(badges)) {
+    out.set(userId, { ...b, pepites: (b.pepiteCourseIds ?? []).filter((id) => id === courseId).length });
+  }
+  return out;
 }

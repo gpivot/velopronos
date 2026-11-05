@@ -30,9 +30,13 @@ import type { BonusCardEffect } from "./scoring/types";
  * VéloPronos (migration 0051) : cartes gagnées et jouées dans une seule course par étapes (série
  * de 5). Proposées : Grillade (`fondue`), Boost ×3 (`ca_farte`), 4e choix (`balle_de_pioche`, 3
  * étapes). Équipe et Chat noir viendront avec l'équipe de cœur ; les cartes biathlon ne sont plus
- * proposées (leur code reste pour les cartes déjà en base).
+ * proposées (leur code reste pour les cartes déjà en base). Migration 0052 : Équipe (Grands Tours,
+ * à partir de l'étape 10, équipe de cœur) et Chat noir (remplacer un maillot ou le porteur d'eau
+ * d'un coureur qui a abandonné, jusqu'au départ de l'étape 10).
  */
-export const CLAIMABLE_CARD_TYPES = ["fondue", "ca_farte", "balle_de_pioche"] as const;
+/** VéloPronos : première étape où la carte Équipe rapporte (règle base44). */
+export const EQUIPE_FROM_STAGE_NUMBER = 10;
+export const CLAIMABLE_CARD_TYPES = ["fondue", "ca_farte", "balle_de_pioche", "equipe", "chat_noir"] as const;
 export type ClaimableCardType = (typeof CLAIMABLE_CARD_TYPES)[number];
 /** Cartes jouées par le joueur sur une course de son choix depuis le formulaire de pronostic. */
 export type RaceCardType = "ca_farte" | "aspiration";
@@ -57,6 +61,8 @@ export interface CardRace {
   sex: string | null;
   locks_at: string;
   status: string;
+  /** VéloPronos : numéro de l'étape dans sa course (carte Équipe), null pour une classique. */
+  stage_number?: number | null;
 }
 
 /** CLM par équipes : pas de carte ni de 4e choix (on y pronostique des équipes). */
@@ -158,10 +164,19 @@ export function coveredRaceIds(card: CardRow, seasonRaces: CardRace[]): string[]
   if (!card.used_on_race_id) return [];
   if (card.card_type === "balle_de_pioche") return quatriemeChoixWindow(card.used_on_race_id, seasonRaces);
   if (card.card_type === "equipe") {
+    // VéloPronos : étapes de la course de la carte, à partir de l'étape 10 et de l'activation.
     const activation = seasonRaces.find((r) => r.id === card.used_on_race_id);
     if (!activation) return [];
     const start = new Date(activation.locks_at).getTime();
-    return seasonRaces.filter((r) => new Date(r.locks_at).getTime() >= start).map((r) => r.id);
+    return seasonRaces
+      .filter(
+        (r) =>
+          r.stage_id === activation.stage_id &&
+          new Date(r.locks_at).getTime() >= start &&
+          (r.stage_number ?? 0) >= EQUIPE_FROM_STAGE_NUMBER &&
+          !isTeamFormat(r.format)
+      )
+      .map((r) => r.id);
   }
   return [card.used_on_race_id];
 }
@@ -278,6 +293,8 @@ export interface PlayerCards {
   talentCardId?: string | null;
   /** VéloPronos : course de ces cartes (série et cartes propres à chaque course). */
   course?: CardCourse | null;
+  /** Carte Chat noir en main (à jouer depuis la page des maillots de la course). */
+  chatNoirCardId?: string | null;
 }
 
 /** Réglage admin d'une carte pour la saison (table bonus_card_settings). Pas de ligne : carte active, sans limite. */
@@ -304,7 +321,7 @@ export function isOfferedBySettings(type: string, settings: CardSetting[], now: 
 export async function getSeasonCardRaces(supabase: SupabaseClient, seasonId: string): Promise<CardRace[]> {
   const { data } = await supabase
     .from("races")
-    .select("id, stage_id, format, sex, locks_at, status, stages!inner(season_id, coefficient, counts_in_standings)")
+    .select("id, stage_id, stage_number, format, sex, locks_at, status, stages!inner(season_id, coefficient, counts_in_standings)")
     .eq("stages.season_id", seasonId);
   return ((data ?? []) as any[]).map((r) => ({
     id: r.id,
@@ -315,12 +332,14 @@ export async function getSeasonCardRaces(supabase: SupabaseClient, seasonId: str
     sex: r.sex,
     locks_at: r.locks_at,
     status: r.status,
+    stage_number: r.stage_number ?? null,
   }));
 }
 
 export interface CardCourse {
   id: string;
   name: string;
+  kind?: string;
 }
 
 /**
@@ -337,7 +356,7 @@ export async function getCardCourse(supabase: SupabaseClient, seasonId: string, 
 }
 
 export function pickCardCourse(
-  stages: Array<{ id: string; name?: string | null; location: string; counts_in_standings?: boolean; races?: { locks_at: string; status: string }[] }>,
+  stages: Array<{ id: string; name?: string | null; location: string; kind?: string; counts_in_standings?: boolean; races?: { locks_at: string; status: string }[] }>,
   now: Date
 ): CardCourse | null {
   const courses = stages
@@ -345,13 +364,14 @@ export function pickCardCourse(
     .map((st) => ({
       id: st.id,
       name: st.name ?? st.location,
+      kind: st.kind,
       firstLock: Math.min(...(st.races ?? []).map((r) => Date.parse(r.locks_at))),
       finished: (st.races ?? []).every((r) => r.status === "finished"),
     }))
     .sort((a, b) => a.firstLock - b.firstLock);
   const t = now.getTime();
   const current = courses.find((c) => c.firstLock <= t && !c.finished) ?? courses.find((c) => c.firstLock > t);
-  return current ? { id: current.id, name: current.name } : null;
+  return current ? { id: current.id, name: current.name, kind: current.kind } : null;
 }
 
 /** Série en cours d'un joueur sur une course (0 sans compteur). */
@@ -372,7 +392,7 @@ export async function getCourseStreak(supabase: SupabaseClient, courseId: string
 export async function getPlayerCards(supabase: SupabaseClient, seasonId: string, userId: string, now: Date): Promise<PlayerCards> {
   const course = await getCardCourse(supabase, seasonId, now);
   if (!course) return { unclaimed: 0, cards: [], offers: [], course: null };
-  const [{ data: cards }, { data: streak }, races, { data: settings }] = await Promise.all([
+  const [{ data: cards }, { data: streak }, races, { data: settings }, { data: favorite }] = await Promise.all([
     supabase
       .from("bonus_cards")
       .select("id, card_type, status, used_on_race_id, used_on_stage_id, course_id, earned_at")
@@ -385,15 +405,21 @@ export async function getPlayerCards(supabase: SupabaseClient, seasonId: string,
       .from("bonus_card_settings")
       .select("card_type, enabled, available_from, available_until, force_unlock")
       .eq("season_id", seasonId),
+    supabase.from("favorite_teams").select("team_id").eq("user_id", userId).eq("season_id", seasonId).maybeSingle(),
   ]);
   const rows = (cards ?? []) as CardRow[];
   return {
     course,
+    chatNoirCardId: rows.find((c) => c.card_type === "chat_noir" && c.status === "available")?.id ?? null,
     unclaimed: unclaimedCredits(streak?.cards_earned ?? 0, rows.length),
     stagePlays: [],
     talentCardId: null,
     cards: rows.map((c) => describeCard(c, races, now)),
-    offers: offeredCards(rows[rows.length - 1]?.card_type ?? null, [], now, { settings: (settings ?? []) as CardSetting[] }),
+    offers: offeredCards(rows[rows.length - 1]?.card_type ?? null, [], now, {
+      settings: (settings ?? []) as CardSetting[],
+      // Équipe : Grand Tour et équipe de cœur choisie (claim_course_card, migration 0052).
+      equipeAvailable: course.kind === "grand_tour" && !!favorite?.team_id,
+    }),
   };
 }
 
@@ -479,7 +505,7 @@ export function offeredCards(
   previousClaimedType: string | null,
   stages: CardStage[],
   now: Date,
-  options: { settings?: CardSetting[]; hasRevealedPepite?: boolean } = {}
+  options: { settings?: CardSetting[]; hasRevealedPepite?: boolean; equipeAvailable?: boolean } = {}
 ): { type: ClaimableCardType; state: OfferState }[] {
   const settings = options.settings ?? [];
   return CLAIMABLE_CARD_TYPES.filter((type) => isOfferedBySettings(type, settings, now) !== "disabled").map((type) => ({
@@ -487,7 +513,9 @@ export function offeredCards(
     state:
       isOfferedBySettings(type, settings, now) === "outOfPeriod"
         ? "unavailable"
-        : (!isCardUnlocked(type, stages, now) && !settings.find((x) => x.card_type === type)?.force_unlock) ||
+        : (type === "equipe"
+              ? !options.equipeAvailable
+              : !isCardUnlocked(type, stages, now) && !settings.find((x) => x.card_type === type)?.force_unlock) ||
             ((type as string) === "talent" && !options.hasRevealedPepite)
           ? "locked"
           : type === previousClaimedType
@@ -521,4 +549,16 @@ export function computeEquipeBonus(
   return individual
     .filter((r) => r.rank <= 10 && r.nationCode === favoriteTeam.nationCode && r.sex === favoriteTeam.sex)
     .reduce((sum, r) => sum + r.odds, 0);
+}
+
+/**
+ * VéloPronos : points de la carte Équipe sur une étape (règle base44) : chaque coureur de l'équipe
+ * de cœur classé dans le Top 10 rapporte une fois sa cote du type d'étape, arrondie (1 sans cote),
+ * qu'il ait été pronostiqué ou non.
+ */
+export function computeTeamCardBonus(teamId: string | null, results: { rank: number; teamId: string | null; odds: number | null }[]): number {
+  if (!teamId) return 0;
+  return results
+    .filter((r) => r.rank <= 10 && r.teamId === teamId)
+    .reduce((sum, r) => sum + Math.round(r.odds && r.odds > 0 ? r.odds : 1), 0);
 }
