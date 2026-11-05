@@ -48,6 +48,15 @@ test (21 étapes, 2 repos, 184 coureurs, 23 équipes, 1 519 cotes).
 Une course de test se crée à la main sur la même page (« Créer une course à la main »), hors
 classement par défaut.
 
+## Coureurs & cotes (admin > « Coureurs & cotes »)
+
+Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :
+dossard, cotes des types d'étape présents dans la course et des maillots de la course, étape de
+l'abandon (`stage_riders.abandoned_race_id`). Cotes d'équipe (meilleure équipe si la course a ce
+maillot, CLM par équipes si elle a une telle étape). Case vidée = cote retirée, cote changée =
+ancienne historisée. Ajout d'un coureur (créé dans la saison s'il n'existe pas) ou d'une équipe,
+retrait d'un coureur. Le CSV téléchargé reprend le format d'import et se réimporte tel quel.
+
 ## À confirmer par Guillaume
 
 - **Colonne « Visible »** : elle vaut « non » pour toutes les courses de l'export 2027 ; elle est
@@ -79,5 +88,4 @@ classement par défaut.
 - Moteur de points vélo (barème, maillots, super combatif, porteur d'eau, joker) et grillage d'une
   étape à la suivante dans la course (la logique héritée « course précédente de la même étape »
   s'applique déjà telle quelle, à vérifier avec les cartes).
-- Back-office : saisie des résultats d'étape et des maillots, abandons, combatif du jour, édition
-  des champs vélo d'une course (type, maillots, couleur) et d'une étape (type, villes).
+- Back-office : saisie des résultats d'étape et des maillots, combatif du jour.

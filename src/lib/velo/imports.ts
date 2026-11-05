@@ -368,7 +368,7 @@ export const COURSE_RIDERS_HEADERS = [
 ];
 
 /** Colonne de cote du fichier → valeur d'odds_format. */
-const RIDER_ODDS_COLUMNS: Array<[string, string]> = [
+export const RIDER_ODDS_COLUMNS: Array<[string, string]> = [
   ["cote_sprint", "sprint"],
   ["cote_montagne", "montagne"],
   ["cote_clm", "clm"],
@@ -548,7 +548,7 @@ async function upsertTeams(admin: SupabaseClient, seasonId: string, namesByCode:
  * Remplace les cotes courantes d'une course qui ont changé (historisées), pour des cibles
  * coureur (`athlete_id`) ou équipe (`team_id`). Renvoie le nombre de cotes enregistrées.
  */
-async function writeCourseOdds(
+export async function writeCourseOdds(
   admin: SupabaseClient,
   seasonId: string,
   stageId: string,
@@ -585,6 +585,20 @@ async function writeCourseOdds(
     if (error) throw new Error(`Cotes : ${error.message}`);
   }
   return toInsert.length;
+}
+
+/** Retire (historise) les cotes courantes d'une cible dans une course, pour les types donnés (tous si vide). */
+export async function clearCourseOdds(
+  admin: SupabaseClient,
+  stageId: string,
+  target: "athlete_id" | "team_id",
+  targetId: string,
+  formats: string[] = []
+): Promise<void> {
+  let query = admin.from("odds").update({ valid_until: new Date().toISOString() }).eq("stage_id", stageId).eq(target, targetId).is("valid_until", null);
+  if (formats.length > 0) query = query.in("format", formats);
+  const { error } = await query;
+  if (error) throw new Error(`Cotes : ${error.message}`);
 }
 
 // ---------------------------------------------------------------------------------------------
