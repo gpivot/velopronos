@@ -71,8 +71,8 @@
     "seasonPicksButton": "Introducir mis pronósticos de temporada",
     "seasonPicksEdit": "Modificar mis pronósticos de temporada",
     "lastResultExtra_equipe": "Carta Equipo",
-    "favoriteTeamInvite": "Elige tu equipo favorito",
-    "favoriteTeamInviteHint": "Sigue sus victorias y podios, y prepara la carta bonus Equipo.",
+    "favoriteTeamInvite": "Elige tu equipo y tu nación favoritos",
+    "favoriteTeamInviteHint": "Sigue sus victorias y prepara la carta Equipo de las grandes vueltas.",
     "pepiteRevealTitle": "¡Tu gregario ha sido revelado!",
     "pepiteRevealHint": "Primer Top 10 en esta gran vuelta: sus puntos se suman a tu resultado de la etapa.",
     "pepiteRevealRank": "{rank}.º",
@@ -945,9 +945,9 @@
     "name_aspiration": "Rebufo",
     "name_equipe": "Equipo",
     "desc_aspiration": "Guárdala en la mano: en una etapa individual que elijas, cada uno de tus ciclistas cuenta un puesto más arriba (un 11.º pasa a 10.º y puntúa).",
-    "desc_equipe": "Se activa enseguida hasta el final de la temporada: cada ciclista de tu equipo favorito en el Top 10 (o tu nación en el Top 10 del relevo) te da una vez su cuota de más, lo hayas elegido o no.",
+    "desc_equipe": "Grandes vueltas: se activa enseguida; desde la etapa 10, cada corredor de tu equipo favorito en el Top 10 te da una vez su cuota, lo hayas elegido o no.",
     "lockedUntil_aspiration": "Desde la 4.ª carrera",
-    "lockedUntil_equipe": "Tras el Mundial",
+    "lockedUntil_equipe": "Gran vuelta y equipo favorito elegido",
     "justTaken": "Elegida en la última racha",
     "name_fusee": "Cohete",
     "name_gachette": "Gatillo",
@@ -967,7 +967,10 @@
     "stagePlayButton": "Colocar",
     "stagePlayError": "No se ha podido colocar la carta. Inténtalo de nuevo.",
     "name_fondue": "Parrillada",
-    "desc_fondue": "Guárdala: libera una vez a tus corredores quemados, en la etapa que elijas de esta carrera."
+    "desc_fondue": "Guárdala: libera una vez a tus corredores quemados, en la etapa que elijas de esta carrera.",
+    "name_chat_noir": "Gato negro",
+    "desc_chat_noir": "Guárdala: sustituye uno de tus pronósticos de maillots (salvo mejor equipo) o tu gregario si su corredor abandona, hasta la salida de la etapa 10.",
+    "lockedUntil_chat_noir": "Todavía no"
   },
   "Badges": {
     "leader": "Maillot amarillo: líder de la clasificación",
@@ -1119,6 +1122,32 @@
     "waterCarrierHidden": "Oculto, aún no revelado",
     "waterCarrierRevealed": "Revelado",
     "waterCarrierRevealedPoints": "Revelado · +{points} pts",
-    "waterCarrierChoose": "Elige tu outsider oculto para esta gran vuelta"
+    "waterCarrierChoose": "Elige tu outsider oculto para esta gran vuelta",
+    "chatNoirTitle": "Carta Gato negro",
+    "chatNoirHint": "Uno de tus corredores ha abandonado: sustitúyelo una vez, hasta la salida de la etapa 10.",
+    "chatNoirReplace": "Sustituir",
+    "chatNoirError": "No se pudo sustituir.",
+    "chatNoirAbandoned": "abandono"
+  },
+  "Heart": {
+    "title": "Mis elecciones del corazón",
+    "back": "Volver a Mi temporada",
+    "noSeason": "No hay temporada en curso.",
+    "loginRequired": "Crea tu cuenta o inicia sesión para elegir.",
+    "teamTitle": "Mi equipo favorito",
+    "teamHint": "Sus victorias aparecen en tu inicio, y alimenta la carta Equipo de las grandes vueltas. Elección definitiva para la temporada.",
+    "nationTitle": "Mi nación favorita",
+    "nationHint": "Sus victorias aparecen en tu inicio, y sus corredores cuentan doble el día de la Fiesta nacional. Elección definitiva para la temporada.",
+    "chosen": "Elección definitiva para la temporada.",
+    "noOptions": "Aún no se puede elegir: los equipos de la temporada no se conocen todavía.",
+    "warning": "Eliges {choice} para toda la temporada: esta elección es definitiva.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "choose": "Elegir",
+    "saving": "Guardando…",
+    "saveError": "No se pudo guardar. Inténtalo de nuevo.",
+    "cardTitle": "Equipo y nación favoritos",
+    "teamNone": "Equipo por elegir",
+    "nationNone": "nación por elegir"
   }
 }

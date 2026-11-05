@@ -6,7 +6,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getSeasonView, pickDefaultOpenStageId, type HiddenPepite } from "@/lib/seasonView";
 import { getClock } from "@/lib/clock";
-import { isEquipeCardActive } from "@/lib/favoriteTeam";
+import { nationFlagEmoji } from "@/lib/nationFlags";
 import { CalendarAccordion, type CalendarStage } from "./CalendarAccordion";
 import { CalendarImportButton } from "./CalendarImportButton";
 import type { SeasonPick } from "./SeasonPredictionsAccordion";
@@ -25,7 +25,8 @@ interface CalendarData {
   seasonPicksOpen: boolean;
   pepites: HiddenPepite[] | null;
   /** Ligne « Équipe favorite » des pronostics de saison (joueur connecté seulement). */
-  favoriteTeam: { label: string; nationCode: string } | { label: null; choosable: boolean } | undefined;
+  /** VéloPronos : équipe de cœur et nation favorite (null : pas encore choisie), undefined : visiteur. */
+  favoriteTeam: { teamName: string | null; nationCode: string | null; nationName: string | null } | undefined;
   streak: number | null;
   cards: PlayerCards | null;
 }
@@ -56,7 +57,7 @@ async function getCalendarData(): Promise<CalendarData> {
   return { seasonId: season.id, stages, isAdmin, seasonPicks, seasonPicksOpen: new Date(season.starts_on) > now, pepites, favoriteTeam, streak, cards };
 }
 
-/** Équipe favorite choisie (« France Femmes »), ou encore à choisir tant que la carte Équipe n'est pas active. */
+/** Équipe de cœur et nation favorite de la saison (favorite_teams, migration 0052). */
 async function getFavoriteTeamLine(
   supabase: ReturnType<typeof createClient>,
   seasonId: string,
@@ -64,14 +65,15 @@ async function getFavoriteTeamLine(
 ): Promise<CalendarData["favoriteTeam"]> {
   const { data } = await supabase
     .from("favorite_teams")
-    .select("nation_code, sex, nations(name)")
+    .select("nation_code, nations(name), teams(name)")
     .eq("user_id", userId)
     .eq("season_id", seasonId)
     .maybeSingle();
-  if (!data) return { label: null, choosable: !(await isEquipeCardActive(supabase, userId, seasonId)) };
-  const tSex = await getTranslations("Sex");
-  const name = (data as any).nations?.name ?? data.nation_code;
-  return { label: `${name} ${tSex(data.sex as "F")}`, nationCode: data.nation_code };
+  return {
+    teamName: (data as any)?.teams?.name ?? null,
+    nationCode: data?.nation_code ?? null,
+    nationName: (data as any)?.nations?.name ?? data?.nation_code ?? null,
+  };
 }
 
 export default async function CoursesPage({
@@ -85,6 +87,7 @@ export default async function CoursesPage({
   // Arrivée depuis « L'étape de la semaine » de l'accueil : cette étape est dépliée d'office.
   const { etape } = await searchParams;
   const t = await getTranslations("Courses");
+  const tHeart = await getTranslations("Heart");
   const { seasonId, stages, isAdmin, seasonPicks, seasonPicksOpen, pepites, favoriteTeam, streak, cards } = await getCalendarData();
   const requestedStageId = etape && stages.some((s) => s.id === etape) ? etape : null;
 
@@ -104,8 +107,21 @@ export default async function CoursesPage({
 
         {isAdmin && seasonId && <CalendarImportButton seasonId={seasonId} />}
 
-        {/* VéloPronos : plus de pronostics de saison ; le porteur d'eau s'affiche dans son Grand Tour
-            (calendrier). L'équipe de cœur et la nation favorite reviendront ici. */}
+        {/* VéloPronos : plus de pronostics de saison (le porteur d'eau s'affiche dans son Grand Tour),
+            seulement l'équipe de cœur et la nation favorite. */}
+        {favoriteTeam && (
+          <Link href="/coeur" className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gold-soft text-lg">❤️</div>
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <div className="text-sm font-semibold">{tHeart("cardTitle")}</div>
+              <div className="truncate text-xs text-text-dim">
+                {favoriteTeam.teamName ?? tHeart("teamNone")} ·{" "}
+                {favoriteTeam.nationCode ? `${nationFlagEmoji(favoriteTeam.nationCode)} ${favoriteTeam.nationName}` : tHeart("nationNone")}
+              </div>
+            </div>
+            <span className="text-text-dim">›</span>
+          </Link>
+        )}
 
         {streak != null && <StreakCard current={streak} cards={cards ?? undefined} seasonId={seasonId ?? undefined} />}
 

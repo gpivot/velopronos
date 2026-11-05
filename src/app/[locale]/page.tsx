@@ -19,7 +19,6 @@ import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { NextRaceCard, type NextRace } from "@/components/NextRaceCard";
 import { StreakCard } from "@/components/StreakCard";
 import { SeasonPicksInvite } from "@/components/SeasonPicksInvite";
-import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { getCurrentStreak } from "@/lib/streakCounter";
 import { getPlayerCards, type PlayerCards } from "@/lib/bonusCards";
 import { getFavoriteTeamStats, type FavoriteTeamStats } from "@/lib/favoriteTeamStats";
@@ -108,7 +107,9 @@ async function getHomeData(): Promise<HomeData> {
   ]);
   const weekResults = Object.fromEntries(weekResult.filter((r): r is LastResult => r != null).map((r) => [r.raceId, r]));
   const nextRace = weekStage ? null : ((upcomingRaces ?? []) as any[])[0] ?? null;
-  const favoriteTeam = favoriteTeamResult.data as HomeData["favoriteTeam"];
+  // VéloPronos : la ligne peut ne porter que l'équipe de cœur (0052) ; l'encadré suit la nation favorite.
+  const favoriteRow = favoriteTeamResult.data as HomeData["favoriteTeam"] | { nation_code: null } | null;
+  const favoriteTeam = favoriteRow?.nation_code ? (favoriteRow as HomeData["favoriteTeam"]) : null;
 
   // Lectures indépendantes les unes des autres : lancées en même temps plutôt qu'à la suite.
   const [seasonPicksBeforeStart, { data: nextStage }, canChooseFavoriteTeam, favoriteTeamStats, predicted] = await Promise.all([
@@ -122,7 +123,7 @@ async function getHomeData(): Promise<HomeData> {
       .order("starts_on", { ascending: true })
       .limit(1)
       .maybeSingle(),
-    user && !favoriteTeam ? isEquipeCardActive(supabase, user.id, season.id).then((active) => !active) : Promise.resolve(false),
+    Promise.resolve(!!user && !favoriteTeam),
     favoriteTeam
       ? getFavoriteTeamStats(supabase, season.id, { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex })
       : Promise.resolve(null),
@@ -209,7 +210,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
             {canChooseFavoriteTeam && (
               <Link
-                href="/globes#equipe-favorite"
+                href="/coeur"
                 className="flex items-center gap-3 rounded-xl border border-ice/40 bg-ice-soft px-3 py-2.5"
               >
                 <span className="text-lg">❤️</span>
@@ -227,7 +228,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <span className="text-[22px] leading-none">{nationFlagEmoji(favoriteTeam.nation_code)}</span>
                   {t("favoriteNationLabel")}
                   <span className="font-semibold text-frost">
-                    {favoriteTeam.nations?.name ?? favoriteTeam.nation_code} {tSex(favoriteTeam.sex)}
+                    {favoriteTeam.nations?.name ?? favoriteTeam.nation_code}
                   </span>
                 </div>
                 {favoriteTeamStats && (

@@ -71,8 +71,8 @@
     "seasonPicksButton": "Inserisci i miei pronostici stagionali",
     "seasonPicksEdit": "Modifica i miei pronostici stagionali",
     "lastResultExtra_equipe": "Carta Squadra",
-    "favoriteTeamInvite": "Scegli la tua squadra preferita",
-    "favoriteTeamInviteHint": "Segui le sue vittorie e i suoi podi, e prepara la carta bonus Squadra.",
+    "favoriteTeamInvite": "Scegli la tua squadra e la tua nazione del cuore",
+    "favoriteTeamInviteHint": "Segui le loro vittorie e prepara la carta Squadra dei grandi giri.",
     "pepiteRevealTitle": "Il tuo gregario è stato svelato!",
     "pepiteRevealHint": "Primo Top 10 in questo grande giro: i suoi punti si aggiungono al tuo punteggio di tappa.",
     "pepiteRevealRank": "{rank}º",
@@ -945,9 +945,9 @@
     "name_aspiration": "Scia",
     "name_equipe": "Squadra",
     "desc_aspiration": "Tienila in mano: in una tappa individuale a tua scelta, ognuno dei tuoi ciclisti conta una posizione più in alto (un 11º diventa 10º e fa punti).",
-    "desc_equipe": "Si attiva subito fino a fine stagione: ogni ciclista della tua squadra preferita nella Top 10 (o la tua nazione nella Top 10 della staffetta) ti fa guadagnare una volta in più la sua quota, che tu l'abbia scelto o no.",
+    "desc_equipe": "Grandi giri: si attiva subito; dalla tappa 10, ogni corridore della tua squadra del cuore nel Top 10 ti porta una volta la sua quota, scelto o no.",
     "lockedUntil_aspiration": "Dalla 4ª gara",
-    "lockedUntil_equipe": "Dopo i Mondiali",
+    "lockedUntil_equipe": "Grande giro e squadra del cuore scelta",
     "justTaken": "Presa all'ultima serie",
     "name_fusee": "Razzo",
     "name_gachette": "Grilletto",
@@ -967,7 +967,10 @@
     "stagePlayButton": "Posa",
     "stagePlayError": "Non è stato possibile posare la carta. Riprova.",
     "name_fondue": "Grigliata",
-    "desc_fondue": "Tienila in mano: libera una volta i tuoi corridori bruciati, sulla tappa che scegli di questa corsa."
+    "desc_fondue": "Tienila in mano: libera una volta i tuoi corridori bruciati, sulla tappa che scegli di questa corsa.",
+    "name_chat_noir": "Gatto nero",
+    "desc_chat_noir": "Tienila in mano: sostituisce uno dei tuoi pronostici maglie (tranne miglior squadra) o il tuo gregario se il suo corridore si ritira, fino alla partenza della tappa 10.",
+    "lockedUntil_chat_noir": "Non ancora"
   },
   "Badges": {
     "leader": "Maglia gialla: leader della classifica",
@@ -1119,6 +1122,32 @@
     "waterCarrierHidden": "Nascosto, non ancora svelato",
     "waterCarrierRevealed": "Svelato",
     "waterCarrierRevealedPoints": "Svelato · +{points} pt",
-    "waterCarrierChoose": "Scegli il tuo outsider nascosto per questo grande giro"
+    "waterCarrierChoose": "Scegli il tuo outsider nascosto per questo grande giro",
+    "chatNoirTitle": "Carta Gatto nero",
+    "chatNoirHint": "Uno dei tuoi corridori si è ritirato: sostituiscilo una volta, fino alla partenza della tappa 10.",
+    "chatNoirReplace": "Sostituisci",
+    "chatNoirError": "Sostituzione impossibile.",
+    "chatNoirAbandoned": "ritirato"
+  },
+  "Heart": {
+    "title": "Le mie scelte del cuore",
+    "back": "Torna a La mia stagione",
+    "noSeason": "Nessuna stagione in corso.",
+    "loginRequired": "Crea il tuo account o accedi per scegliere.",
+    "teamTitle": "La mia squadra del cuore",
+    "teamHint": "Le sue vittorie compaiono nella tua home, e alimenta la carta Squadra dei grandi giri. Scelta definitiva per la stagione.",
+    "nationTitle": "La mia nazione preferita",
+    "nationHint": "Le sue vittorie compaiono nella tua home, e i suoi corridori contano doppio il giorno della Festa nazionale. Scelta definitiva per la stagione.",
+    "chosen": "Scelta definitiva per la stagione.",
+    "noOptions": "Nessuna scelta possibile per ora: le squadre della stagione non sono ancora note.",
+    "warning": "Scegli {choice} per tutta la stagione: questa scelta è definitiva.",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "choose": "Scegli",
+    "saving": "Salvataggio…",
+    "saveError": "Salvataggio impossibile. Riprova.",
+    "cardTitle": "Squadra e nazione del cuore",
+    "teamNone": "Squadra da scegliere",
+    "nationNone": "nazione da scegliere"
   }
 }

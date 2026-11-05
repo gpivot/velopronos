@@ -3,6 +3,7 @@ import {
   canPlayCard,
   cardsOnRace,
   computeEquipeBonus,
+  computeTeamCardBonus,
   isCardUnlocked,
   offeredCards,
   describeCard,
@@ -187,12 +188,14 @@ describe("cartes de la saison", () => {
     expect(isCardUnlocked("equipe", noChamps, new Date("2027-02-20"))).toBe(false);
   });
 
-  it("pas la même carte deux séries de suite (VéloPronos : Grillade, Boost, 4e choix)", () => {
+  it("pas la même carte deux séries de suite ; Équipe verrouillée hors Grand Tour avec équipe de cœur", () => {
     const offers = offeredCards("ca_farte", stages, new Date("2026-12-01"));
     expect(Object.fromEntries(offers.map((o) => [o.type, o.state]))).toEqual({
       fondue: "offered",
       ca_farte: "justTaken",
       balle_de_pioche: "offered",
+      equipe: "locked",
+      chat_noir: "offered",
     });
   });
 
@@ -209,13 +212,6 @@ describe("cartes de la saison", () => {
     expect(byType.fondue).toBeUndefined();
     expect(byType.balle_de_pioche).toBe("unavailable");
     expect(byType.ca_farte).toBe("offered");
-  });
-
-  it("Équipe couvre toutes les courses restantes, relais compris", () => {
-    const equipe = [card({ id: "e", card_type: "equipe", status: "used", used_on_race_id: "relaisF" })];
-    expect(cardsOnRace("sprintH2", equipe, races).equipe?.id).toBe("e");
-    expect(cardsOnRace("relaisMixte", equipe, races).equipe?.id).toBe("e");
-    expect(cardsOnRace("sprintH", equipe, races).equipe).toBeNull();
   });
 
   it("Aspiration se joue comme Ça farte, une carte de course à la fois", () => {
@@ -309,5 +305,33 @@ describe("Mondiaux / JO et cumul avec Ça farte (Guillaume, 04/11/2026)", () => 
     const withCaFarte = [card({ id: "g", card_type: "gachette" }), card({ id: "c", card_type: "ca_farte", status: "used", used_on_race_id: "poursuiteH" })];
     expect(canPlayStageCard("gachette", "etape1", withCaFarte, races, before)).toBe(false);
     expect(canPlayStageCard("gachette", "etape2", withCaFarte, races, before)).toBe(true);
+  });
+});
+
+describe("carte Équipe (VéloPronos)", () => {
+  const gt: CardRace[] = Array.from({ length: 12 }, (_, i) => ({
+    ...etape(`g${i + 1}`, i + 1, i === 10 ? "clm_equipes" : "sprint", "giro"),
+    stage_number: i + 1,
+  }));
+
+  it("couvre les étapes de sa course à partir de la 10e, CLM par équipes exclu", () => {
+    const c = card({ card_type: "equipe", status: "used", used_on_race_id: "g2" });
+    expect(coveredRaceIds(c, gt)).toEqual(["g10", "g12"]);
+  });
+
+  it("activée après l'étape 10 : seulement les étapes suivantes", () => {
+    const c = card({ card_type: "equipe", status: "used", used_on_race_id: "g12" });
+    expect(coveredRaceIds(c, gt)).toEqual(["g12"]);
+  });
+
+  it("chaque coureur de l'équipe de cœur dans le Top 10 rapporte sa cote arrondie", () => {
+    const results = [
+      { rank: 1, teamId: "t1", odds: 4.4 },
+      { rank: 3, teamId: "t2", odds: 10 },
+      { rank: 8, teamId: "t1", odds: null },
+      { rank: 11, teamId: "t1", odds: 50 },
+    ];
+    expect(computeTeamCardBonus("t1", results)).toBe(5);
+    expect(computeTeamCardBonus(null, results)).toBe(0);
   });
 });
