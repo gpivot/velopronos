@@ -48,7 +48,7 @@
     "lastResultExtra_pronoParfait": "Pronostico perfetto",
     "lastResultExtra_specialMalus": "Malus tappa speciale",
     "lastResultExtra_aspiration": "Bonus scia",
-    "lastResultExtra_pepite": "Bonus Pepita nascosta",
+    "lastResultExtra_pepite": "Bonus gregario",
     "fuseeLabel": "Razzo: {rank, select, 1 {miglior tempo sugli sci} 2 {2° tempo sugli sci} other {3° tempo sugli sci}}",
     "gachetteLabel": "Grilletto: tiro senza errori",
     "shootingsLabel": "Errori al tiro: {shots}",
@@ -73,13 +73,14 @@
     "lastResultExtra_equipe": "Carta Squadra",
     "favoriteTeamInvite": "Scegli la tua squadra preferita",
     "favoriteTeamInviteHint": "Segui le sue vittorie e i suoi podi, e prepara la carta bonus Squadra.",
-    "pepiteRevealTitle": "La tua Pepita nascosta è stata rivelata!",
-    "pepiteRevealHint": "Prima Top 10 della stagione: i suoi punti si aggiungono al tuo punteggio della tappa.",
+    "pepiteRevealTitle": "Il tuo gregario è stato svelato!",
+    "pepiteRevealHint": "Primo Top 10 in questo grande giro: i suoi punti si aggiungono al tuo punteggio di tappa.",
     "pepiteRevealRank": "{rank}º",
     "lastResultExtra_missingPicks": "Ciclisti non pronosticati (5 giri ciascuno)",
     "lastResultExtra_fusee": "Carta Razzo",
     "lastResultExtra_gachette": "Carta Grilletto",
-    "lastResultExtra_combatif": "Più combattivo del giorno"
+    "lastResultExtra_combatif": "Più combattivo del giorno",
+    "lastResultExtra_lateJoker": "Jolly ritardatario (÷ 2)"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di ciclismo.",
@@ -438,7 +439,7 @@
     "noStages": "Nessuna gara ancora in programma.",
     "noPicks": "Nessun pronostico",
     "myRankingTitle": "La mia classifica",
-    "playerPepiteRevealed": "{sex, select, F {Pepita nascosta donne rivelata:} other {Pepita nascosta uomini rivelata:}}"
+    "playerPepiteRevealed": "Gregario svelato ({course}):"
   },
   "Courses": {
     "title": "La mia stagione",
@@ -470,11 +471,11 @@
     "jokersPoints": "{points} pt",
     "jokersNotPlayed": "Non giocata",
     "jokersDiscover": "Scopri i tuoi jolly di fine stagione",
-    "pepiteCardTitle": "Pepita nascosta",
-    "pepiteCardHint": "Giocata di nascosto in tutte le tappe fino alla sua prima Top 10. Gli altri giocatori la vedono solo una volta rivelata.",
-    "pepiteRevealed": "Rivelata",
-    "pepiteNotRevealed": "Non ancora rivelata",
-    "pepiteNone": "Non ancora scelta",
+    "pepiteCardTitle": "Gregario",
+    "pepiteCardHint": "Un outsider nascosto per grande giro, giocato su tutte le tappe fino al suo primo Top 10. Gli altri lo vedono solo una volta svelato.",
+    "pepiteRevealed": "Svelato",
+    "pepiteNotRevealed": "Non ancora svelato",
+    "pepiteNone": "Non ancora scelto",
     "pepiteChoose": "Scegli",
     "pepiteSeeRace": "vedi la tappa",
     "favoriteTeamChoose": "Scegli"
@@ -574,7 +575,10 @@
     "offStandingsNotice": "Tappa fuori classifica: ha la sua classifica, ma i suoi punti non contano per la stagione (niente pettorale rosso, carta bonus, ×2 né Pepita).",
     "stageNumber": "Tappa {number}",
     "prologue": "Prologo",
-    "stageTitle": "{stage} · {type}"
+    "stageTitle": "{stage} · {type}",
+    "lateJokerTitle": "Jolly ritardatario",
+    "lateJokerHint": "Hai dimenticato questa tappa? Puoi ancora pronosticarla fino a 1 ora dopo la partenza, una volta per corsa. I tuoi punti saranno divisi per 2.",
+    "lateJokerBadge": "Jolly ritardatario · punti ÷ 2"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 ciclisti",
@@ -611,8 +615,8 @@
     "cardAspiration": "Scia",
     "aspirationHint": "Scia: in questa tappa, ognuno dei tuoi ciclisti conta una posizione più in alto.",
     "aspirationActive": "carta giocata su questa tappa: ognuno dei tuoi ciclisti conta una posizione più in alto.",
-    "hiddenPepite": "la tua Pepita nascosta",
-    "hiddenPepiteError": "La tua Pepita nascosta è già in gioco in questa tappa: toglila dal tuo pronostico.",
+    "hiddenPepite": "il tuo gregario",
+    "hiddenPepiteError": "Il tuo gregario è già giocato di nascosto su questa tappa: toglilo dal tuo pronostico.",
     "searchAthlete": "Cerca un nome o un paese (FRA, NOR…)",
     "searchNation": "Cerca un paese (FRA, NOR…)",
     "searchNoResult": "Nessun risultato",
@@ -969,14 +973,14 @@
     "leader": "Maglia gialla: leader della classifica",
     "x2Used": "{used}/{max} bonus ×2 usati",
     "raceWins": "{count, plural, one {# tappa vinta} other {# tappe vinte}} (miglior pronosticatore)",
-    "pepite": "{count, plural, one {Pepita nascosta rivelata} other {# Pepite nascoste rivelate}}",
+    "pepite": "{count, plural, one {Gregario svelato} other {# gregari svelati}}",
     "pepiteF": "Pepita donne",
     "pepiteH": "Pepita uomini",
     "helpTitle": "Le icone dei giocatori",
     "helpLeader": "Maglia gialla: il leader della classifica generale della stagione (o della lega).",
     "helpX2": "Bonus ×2 già usati, sui 3 della stagione.",
     "helpWins": "Tappe vinte da miglior pronosticatore.",
-    "helpPepite": "Pepita nascosta rivelata: primo Top 10 raggiunto, punti incassati.",
+    "helpPepite": "Gregario svelato: ha fatto il suo primo Top 10 del grande giro e ha portato i suoi punti.",
     "stageLeader": "Pettorale rosso: leader della gara",
     "stageWins": "Pettorale rosso: {count, plural, one {# gara vinta} other {# gare vinte}}",
     "perfectPicks": "{count, plural, one {# pronostico perfetto} other {# pronostici perfetti}}",
@@ -1105,6 +1109,15 @@
     "odds": "quota {value}",
     "noRiders": "I partenti non sono ancora noti: torna poco prima del via.",
     "noJerseys": "Nessun pronostico maglie per questa corsa.",
-    "points": "{points} pt"
+    "points": "{points} pt",
+    "waterCarrierTitle": "Il mio gregario",
+    "waterCarrierHint": "Un outsider con tutte le quote della corsa almeno a 30. Nessun altro lo vede. Viene aggiunto di nascosto a tutti i tuoi pronostici di tappa: al suo primo Top 10, i suoi punti di tappa si aggiungono al tuo punteggio, una sola volta. Fino ad allora non puoi metterlo nei tuoi pronostici. Modificabile fino alla partenza della 1ª tappa.",
+    "waterCarrierSubmit": "Salva il mio gregario",
+    "waterCarrierSaved": "Gregario salvato.",
+    "waterCarrierNotEligible": "Questo corridore non è idoneo: tutte le sue quote della corsa devono essere almeno 30.",
+    "waterCarrierNoOptions": "Nessun corridore idoneo per ora: le quote della corsa non sono ancora note.",
+    "waterCarrierHidden": "Nascosto, non ancora svelato",
+    "waterCarrierRevealed": "Svelato",
+    "waterCarrierRevealedPoints": "Svelato · +{points} pt"
   }
 }

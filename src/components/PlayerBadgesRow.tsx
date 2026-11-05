@@ -42,7 +42,7 @@ function Bib({ className, label, fill, stroke, number = 1 }: { className: string
  * Pictos d'un joueur à côté de son pseudo : dossard jaune s'il mène le classement général (ou de
  * ligue) sur la saison, dossard rouge s'il mène une étape ou en a gagné (le nombre d'étapes gagnées
  * est écrit sur le dossard), 🔥 série en cours (classement Saison), ⚡ bonus ×2 utilisés (« 1/3 »),
- * 🍾 courses gagnées, ⭐ pronos parfaits, ❄️ Pépite.
+ * 🍾 courses gagnées, ⭐ pronos parfaits, 💧 porteur d'eau.
  */
 export function PlayerBadgesRow({
   badges,
@@ -93,7 +93,7 @@ export function PlayerBadgesRow({
       )}
       {b.pepites > 0 && (
         <span title={t("pepite", { count: b.pepites })} className="inline-flex items-center whitespace-nowrap text-ice">
-          <span className="text-[14px]">❄️</span>
+          <span className="text-[14px]">💧</span>
           {b.pepiteSexes?.length ? (
             // Mini ♀ / ♂ à droite du cristal : quelle(s) Pépite(s) ont été révélées (les deux empilées).
             <span className="ml-0.5 flex flex-col justify-center gap-px">

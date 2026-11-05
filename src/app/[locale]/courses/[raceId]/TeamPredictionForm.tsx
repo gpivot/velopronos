@@ -29,6 +29,7 @@ export function TeamPredictionForm({
   initialBonusX2,
   x2Eligible,
   x2UsesRemaining,
+  lateJoker = false,
 }: {
   raceId: string;
   teams: TeamWithOdds[];
@@ -36,6 +37,8 @@ export function TeamPredictionForm({
   initialBonusX2: boolean;
   x2Eligible: boolean;
   x2UsesRemaining: number;
+  /** Pronostic posé avec le joker retardataire (étape partie, points ÷ 2). */
+  lateJoker?: boolean;
 }) {
   const [selected, setSelected] = useState<string[]>(initialSelection);
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
@@ -64,7 +67,7 @@ export function TeamPredictionForm({
       return;
     }
     const { error } = await supabase.from("predictions").upsert(
-      { user_id: user.id, race_id: raceId, team_ids: selected, athlete_ids: null, nation_code: null, bonus_x2_used: bonusX2 },
+      { user_id: user.id, race_id: raceId, team_ids: selected, athlete_ids: null, nation_code: null, bonus_x2_used: bonusX2, ...(lateJoker ? { late_joker: true } : {}) },
       { onConflict: "user_id,race_id" }
     );
     setSaving(false);
@@ -73,6 +76,7 @@ export function TeamPredictionForm({
       setError(t(error.code === "42501" ? "lockedError" : "saveError"));
     } else {
       setSavedState({ teams: selected.join(","), bonusX2 });
+      if (lateJoker) router.refresh();
     }
   }
 

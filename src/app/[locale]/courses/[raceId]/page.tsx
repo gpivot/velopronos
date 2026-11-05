@@ -7,6 +7,7 @@ import { ChevronLeftIcon, ChevronRightIcon, ClockIcon } from "@/components/icons
 import { Link } from "@/i18n/navigation";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getAdminProfile, getClock } from "@/lib/clock";
+import { isLateJokerWindowOpen } from "@/lib/velo/lateJoker";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { PredictionForm, type AthleteWithOdds } from "./PredictionForm";
 import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm";
@@ -107,9 +108,11 @@ export default async function RacePage({
   // Fête nationale : course bonus, encadré doré au lieu du rouge des malus.
   const bonusRule = isBonusRule(race.special_rule);
   let x2UsesRemaining = 0;
+  // Joker retardataire (VéloPronos, migration 0050) : étapes de la course où il a été posé.
+  let lateJokerRaceIds: string[] = [];
 
   if (user) {
-    const [{ data: cards }, { count: x2UsedCount }, seasonRaces] = await Promise.all([
+    const [{ data: cards }, { count: x2UsedCount }, seasonRaces, { data: lateJokers }] = await Promise.all([
       supabase
         .from("bonus_cards")
         .select("id, card_type, status, used_on_race_id, used_on_stage_id")
@@ -123,7 +126,14 @@ export default async function RacePage({
         .eq("bonus_x2_used", true)
         .eq("races.stage_id", stage.id),
       getSeasonCardRaces(supabase, stage.season_id),
+      supabase
+        .from("predictions")
+        .select("race_id, races!inner(stage_id)")
+        .eq("user_id", user.id)
+        .eq("late_joker", true)
+        .eq("races.stage_id", stage.id),
     ]);
+    lateJokerRaceIds = ((lateJokers ?? []) as any[]).map((p) => p.race_id as string);
     const cardRows = (cards ?? []) as CardRow[];
     availableCards = cardRows.filter((c) => c.status === "available");
     const onRace = cardsOnRace(race.id, cardRows, seasonRaces);
@@ -224,7 +234,7 @@ export default async function RacePage({
           .from("pepites")
           .select("athlete_id")
           .eq("user_id", user.id)
-          .eq("season_id", stage.season_id)
+          .eq("stage_id", stage.id)
           .eq("bonus_claimed", false),
       ]);
       hiddenPepiteIds = (hiddenPepites ?? []).map((p) => p.athlete_id as string);
@@ -281,6 +291,15 @@ export default async function RacePage({
   // « L'avis de Biathlonpronos » saisi dans le back-office ; rubrique masquée s'il est vide.
   const opinion = typeof race.opinion === "string" ? race.opinion.trim() : "";
   const hasPrediction = isTeamRace ? initialTeamSelection.length > 0 : isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
+  // Joker retardataire : une étape oubliée, jusqu'à 1 h après le départ, un par course.
+  const isLateJokerPrediction = lateJokerRaceIds.includes(race.id);
+  const lateJokerOpen =
+    !!user &&
+    !user.is_anonymous &&
+    displayStatus === "ongoing" &&
+    !isRelay &&
+    isLateJokerWindowOpen(race.locks_at, race.status, now) &&
+    (hasPrediction ? isLateJokerPrediction : lateJokerRaceIds.length === 0);
 
   const results = raceResult?.results ?? [];
   const resultsTopCount = isRelay ? 5 : 10;
@@ -504,6 +523,47 @@ export default async function RacePage({
 
         {displayStatus === "ongoing" && (
           <div className="flex flex-col gap-4">
+            {lateJokerOpen && (
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-3 py-2.5">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gold/20 text-xl">⏰</div>
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="font-display text-[11px] font-bold uppercase tracking-wider text-gold">{t("lateJokerTitle")}</div>
+                    <div className="text-[13px] leading-snug text-frost">{t("lateJokerHint")}</div>
+                  </div>
+                </div>
+                {isTeamRace ? (
+                  <TeamPredictionForm
+                    raceId={race.id}
+                    teams={teamsWithOdds}
+                    initialSelection={initialTeamSelection}
+                    initialBonusX2={false}
+                    x2Eligible={false}
+                    x2UsesRemaining={0}
+                    lateJoker
+                  />
+                ) : (
+                  <PredictionForm
+                    raceId={race.id}
+                    format={race.format}
+                    athletes={athletesWithOdds}
+                    initialSelection={initialAthleteSelection}
+                    grilledAthleteIds={grilledAthleteIds}
+                    hiddenPepiteIds={hiddenPepiteIds}
+                    playableCards={[]}
+                    activeCard={null}
+                    quatriemeChoixActive={quatriemeChoixActive}
+                    stageCards={stageCards}
+                    initialBonusX2={false}
+                    initialCardTarget={null}
+                    x2Eligible={false}
+                    x2UsesRemaining={0}
+                    lateJoker
+                  />
+                )}
+              </div>
+            )}
+            {!lateJokerOpen && (
             <div className="flex flex-col gap-2">
               <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
                 {t("myPredictionTitle")}
@@ -540,7 +600,13 @@ export default async function RacePage({
                   ⚡ {t("bonusX2Badge")}
                 </div>
               )}
+              {isLateJokerPrediction && (
+                <div className="w-fit rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
+                  ⏰ {t("lateJokerBadge")}
+                </div>
+              )}
             </div>
+            )}
 
             {ongoingBoard.length > 0 && (
               <div className="flex flex-col gap-2">

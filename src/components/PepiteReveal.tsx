@@ -12,7 +12,7 @@ export function PepiteReveal({ pepite }: { pepite: NonNullable<LastResult["pepit
   return (
     <div className="flex flex-col gap-2 rounded-2xl border border-ice/60 bg-ice-soft px-3.5 py-3">
       <div className="flex items-center gap-2 font-display text-[13px] font-bold text-ice">
-        <span className="text-base">❄️</span>
+        <span className="text-base">💧</span>
         {t("pepiteRevealTitle")}
       </div>
       <div className="flex items-center gap-2.5">

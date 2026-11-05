@@ -48,7 +48,7 @@
     "lastResultExtra_pronoParfait": "Perfect Pick",
     "lastResultExtra_specialMalus": "Special stage penalty",
     "lastResultExtra_aspiration": "Draft bonus",
-    "lastResultExtra_pepite": "Hidden Diamond bonus",
+    "lastResultExtra_pepite": "Water carrier bonus",
     "fuseeLabel": "Rocket: {rank, select, 1 {fastest ski time} 2 {2nd fastest ski time} other {3rd fastest ski time}}",
     "gachetteLabel": "Trigger: clean shooting",
     "shootingsLabel": "Shooting misses: {shots}",
@@ -73,13 +73,14 @@
     "lastResultExtra_equipe": "Team card",
     "favoriteTeamInvite": "Choose your favourite team",
     "favoriteTeamInviteHint": "Follow its wins and podiums, and get ready for the Team bonus card.",
-    "pepiteRevealTitle": "Your Hidden Diamond is revealed!",
-    "pepiteRevealHint": "First Top 10 of the season: their points are added to your stage score.",
+    "pepiteRevealTitle": "Your water carrier is revealed!",
+    "pepiteRevealHint": "First Top 10 in this Grand Tour: their points are added to your stage score.",
     "pepiteRevealRank": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}",
     "lastResultExtra_missingPicks": "Riders not picked (5 loops each)",
     "lastResultExtra_fusee": "Rocket card",
     "lastResultExtra_gachette": "Trigger card",
-    "lastResultExtra_combatif": "Most combative rider of the day"
+    "lastResultExtra_combatif": "Most combative rider of the day",
+    "lastResultExtra_lateJoker": "Late joker (÷ 2)"
   },
   "Landing": {
     "heroTitle": "Predict the cycling races.",
@@ -438,7 +439,7 @@
     "noStages": "No race scheduled yet.",
     "noPicks": "No prediction",
     "myRankingTitle": "My ranking",
-    "playerPepiteRevealed": "{sex, select, F {Women's Hidden Diamond revealed:} other {Men's Hidden Diamond revealed:}}"
+    "playerPepiteRevealed": "Water carrier revealed ({course}):"
   },
   "Courses": {
     "title": "My season",
@@ -470,8 +471,8 @@
     "jokersPoints": "{points} pts",
     "jokersNotPlayed": "Not played",
     "jokersDiscover": "Discover your end-of-season jokers",
-    "pepiteCardTitle": "Hidden Diamond",
-    "pepiteCardHint": "Played secretly on every stage until their first Top 10. Other players only see it once revealed.",
+    "pepiteCardTitle": "Water carrier",
+    "pepiteCardHint": "One hidden outsider per Grand Tour, played on every stage until their first Top 10. Other players only see them once revealed.",
     "pepiteRevealed": "Revealed",
     "pepiteNotRevealed": "Not revealed yet",
     "pepiteNone": "Not chosen yet",
@@ -574,7 +575,10 @@
     "offStandingsNotice": "Unranked stage: it has its own ranking, but its points don't count towards the season (no red bib, bonus card, ×2 or Hidden Diamond).",
     "stageNumber": "Stage {number}",
     "prologue": "Prologue",
-    "stageTitle": "{stage} · {type}"
+    "stageTitle": "{stage} · {type}",
+    "lateJokerTitle": "Late joker",
+    "lateJokerHint": "Forgot this stage? You can still predict it up to 1 hour after the start, once per race. Your points will be halved.",
+    "lateJokerBadge": "Late joker · points ÷ 2"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 riders",
@@ -611,8 +615,8 @@
     "cardAspiration": "Slipstream",
     "aspirationHint": "Slipstream: on this stage, each of your riders counts one place higher.",
     "aspirationActive": "card played on this stage: each of your riders counts one place higher.",
-    "hiddenPepite": "your Hidden Diamond",
-    "hiddenPepiteError": "Your Hidden Diamond is already played on this stage: remove it from your pick.",
+    "hiddenPepite": "your water carrier",
+    "hiddenPepiteError": "Your water carrier is already played in secret on this stage: remove them from your prediction.",
     "searchAthlete": "Search a name or country (FRA, NOR…)",
     "searchNation": "Search a country (FRA, NOR…)",
     "searchNoResult": "No results",
@@ -969,14 +973,14 @@
     "leader": "Yellow jersey: standings leader",
     "x2Used": "{used}/{max} ×2 bonuses used",
     "raceWins": "{count, plural, one {# stage won} other {# stages won}} (best predictor)",
-    "pepite": "{count, plural, one {Hidden Diamond revealed} other {# Hidden Diamonds revealed}}",
+    "pepite": "{count, plural, one {Water carrier revealed} other {# water carriers revealed}}",
     "pepiteF": "Women's Diamond",
     "pepiteH": "Men's Diamond",
     "helpTitle": "Player icons",
     "helpLeader": "Yellow jersey: leader of the season's overall standings (or of the league).",
     "helpX2": "×2 bonuses already used, out of 3 per season.",
     "helpWins": "Stages won as the best predictor.",
-    "helpPepite": "Hidden Diamond revealed: it got its first Top 10 and paid its points.",
+    "helpPepite": "Water carrier revealed: they made their first Top 10 of the Grand Tour and scored their points.",
     "stageLeader": "Red bib: race leader",
     "stageWins": "Red bib: {count, plural, one {# race won} other {# races won}}",
     "perfectPicks": "{count, plural, one {# perfect pick} other {# perfect picks}}",
@@ -1105,6 +1109,15 @@
     "odds": "odds {value}",
     "noRiders": "The start list is not known yet: come back shortly before the start.",
     "noJerseys": "No jersey predictions for this race.",
-    "points": "{points} pts"
+    "points": "{points} pts",
+    "waterCarrierTitle": "My water carrier",
+    "waterCarrierHint": "An outsider whose odds for the race are all at least 30. Nobody else sees them. They are secretly added to all your stage predictions: at their first Top 10, their stage points are added to your score, once only. Until then, you can't put them in your predictions. Can be changed until the start of stage 1.",
+    "waterCarrierSubmit": "Save my water carrier",
+    "waterCarrierSaved": "Water carrier saved.",
+    "waterCarrierNotEligible": "This rider is not eligible: all their odds for the race must be at least 30.",
+    "waterCarrierNoOptions": "No eligible rider yet: the race odds are not known yet.",
+    "waterCarrierHidden": "Hidden, not revealed yet",
+    "waterCarrierRevealed": "Revealed",
+    "waterCarrierRevealedPoints": "Revealed · +{points} pts"
   }
 }

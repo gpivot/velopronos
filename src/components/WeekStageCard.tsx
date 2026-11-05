@@ -116,7 +116,7 @@ export async function WeekStageCard({
                 </div>
                 {race.displayStatus === "finished" && points != null && (
                   <div className={`whitespace-nowrap font-display text-sm font-extrabold ${points < 0 ? "text-red" : "text-gold"}`}>
-                    {result?.pepite && <span title={result.pepite.name}>❄️ </span>}
+                    {result?.pepite && <span title={result.pepite.name}>💧 </span>}
                     {formatPoints(points)}
                   </div>
                 )}

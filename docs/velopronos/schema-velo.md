@@ -107,8 +107,41 @@ actuelle ; absente = 1, comme base44). Une ligne de `score_ledger` par joueur et
 suivent le drapeau « hors classement » de leur course. Le joueur voit ses points sur la page
 Mes maillots.
 
-Reste à faire : porteur d'eau, joker retardataire, cartes vélo, classement de saison (résultats
-retenus), textes du règlement.
+## Porteur d'eau (Grand Tour)
+
+Même mécanique que la Pépite cachée de Biathlonpronos (décision de Guillaume), dans la même table
+`pepites`, rattachée à sa course (migration **0049** : colonne `stage_id`, clé `(user_id,
+stage_id)`). Un porteur par joueur et par **Grand Tour**, choisi sur la page Mes maillots du Grand
+Tour, en bas ; rappel dans Ma saison (encadré 💧, un par Grand Tour).
+
+- Éligible : coureur engagé dont **toutes les cotes de la course** (types d'étape et maillots) sont
+  d'au moins 30 (≥ 30 comme la Pépite ; le règlement base44 dit « > 30 », *à confirmer*).
+- **Modifiable jusqu'au départ de la 1re étape**, figé ensuite (la Pépite est définitive dès le
+  choix ; ici rien n'est encore joué avant le départ, *à confirmer*). Un porteur ne peut pas être
+  retiré après le départ.
+- Joué en caché sur toutes les étapes du Grand Tour (pas dans les pronostics du joueur) : à son
+  **premier Top 10**, ses points de l'étape (cote du type d'étape × multiplicateur de rang)
+  s'ajoutent au score de l'étape du joueur, **même sans pronostic sur l'étape**, une seule fois,
+  hors ×2 et hors joker (comme la Pépite ; base44 ne le comptait qu'aux joueurs qui avaient
+  pronostiqué l'étape, *à confirmer*). Pas de révélation sur un CLM par équipes.
+- Badge 💧 au classement (pour l'instant au général ; règle prévue : seulement dans le classement
+  du Grand Tour concerné, à faire avec le classement de saison).
+- La carte Talent (biathlon) ne peut plus le modifier (`play_talent_card` refuse).
+
+## Joker retardataire
+
+Migration **0050** (`predictions.late_joker`) : **un par joueur et par course** (classique, course
+par étapes ou Grand Tour). Il permet de pronostiquer une étape **oubliée** jusqu'à **1 h après son
+départ**, tant que ses résultats ne sont pas saisis : encadré ⏰ sur la page de l'étape en cours.
+Les points du pronostic sont **divisés par 2** (arrondi à l'entier inférieur, comme base44), après
+le ×2 de course et les bonus ; le porteur d'eau s'ajoute ensuite, entier. Ligne « Joker
+retardataire (÷ 2) » dans le détail des points (`breakdown.lateJokerMalus`).
+
+Choix pragmatiques (*à confirmer*) : pas de ×2 perso ni de carte jouée avec le joker ; un pronostic
+posé avant le départ ne peut pas devenir un pronostic joker ; le joueur voit déjà les pronostics
+des autres (publics au départ), la division par 2 compense.
+
+Reste à faire : cartes vélo, classement de saison (résultats retenus), textes du règlement.
 
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 

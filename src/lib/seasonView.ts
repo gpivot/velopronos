@@ -50,8 +50,12 @@ const SEASON_CATEGORIES = [
 const shortName = (a: { first_name?: string; last_name?: string } | null | undefined) => shortAthleteName(a);
 
 /** Pépite cachée d'un sexe : name null tant qu'elle n'est pas choisie (ou pas visible chez un autre joueur). */
+/** VéloPronos : porteur d'eau d'un Grand Tour (table pepites, une ligne par course, 0049). */
 export interface HiddenPepite {
-  sex: "F" | "H";
+  stageId: string;
+  courseName: string;
+  /** La 1re étape est partie : le choix est figé. */
+  locked: boolean;
   name: string | null;
   nationCode: string | null;
   revealed: boolean;
@@ -99,7 +103,7 @@ export async function getSeasonView(
           .eq("season_id", season.id)
       : Promise.resolve({ data: [] as any[] }),
     userId
-      ? supabase.from("pepites").select("sex, athlete_id, bonus_claimed, revealed_race_id").eq("user_id", userId).eq("season_id", season.id)
+      ? supabase.from("pepites").select("stage_id, athlete_id, bonus_claimed, revealed_race_id").eq("user_id", userId).eq("season_id", season.id)
       : Promise.resolve({ data: [] as any[] }),
     userId ? getCurrentStreak(supabase, season.id, userId) : Promise.resolve(null),
     userId ? getPlayerCards(supabase, season.id, userId, now) : Promise.resolve(null),
@@ -107,7 +111,7 @@ export async function getSeasonView(
 
   const { data: stages, error } = await supabase
     .from("stages")
-    .select("id, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, jerseys, races(id, format, sex, locks_at, status, special_rule, stage_number, start_city, end_city, distance_km)")
+    .select("id, kind, name, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, jerseys, races(id, format, sex, locks_at, status, special_rule, stage_number, start_city, end_city, distance_km)")
     .eq("season_id", season.id)
     .order("starts_on", { ascending: true });
   if (error) console.error("getSeasonView:", error.message);
@@ -181,30 +185,23 @@ export async function getSeasonView(
         })
     : null;
 
-  // Pépite révélée avant l'enregistrement de revealed_race_id (migration 0040) : la course est
-  // retrouvée dans les points du joueur (ligne avec un bonus Pépite sur une course du même sexe).
-  const raceSexById = new Map(
-    (stages ?? []).flatMap((st: any) => ((st.races ?? []) as any[]).map((r) => [r.id as string, r.sex as string | null]))
-  );
-  const pepiteRaceFromLedger = (sex: "F" | "H", athleteId: string): string | null => {
-    const rows = ((ledger ?? []) as any[]).filter((l) => l.race_id && Number(l.breakdown?.pepiteBonus ?? 0) > 0);
-    const exact = rows.find((l) => l.breakdown?.pepiteAthleteId === athleteId);
-    if (exact) return exact.race_id;
-    return rows.find((l) => !l.breakdown?.pepiteAthleteId && raceSexById.get(l.race_id) === sex)?.race_id ?? null;
-  };
-
   const hiddenPepites: HiddenPepite[] | null = userId
-    ? (["F", "H"] as const).map((sex) => {
-        const pepite = pepites.find((p: any) => p.sex === sex);
-        const athlete = pepite ? athleteById.get(pepite.athlete_id) : null;
-        return {
-          sex,
-          name: athlete ? shortName(athlete) : null,
-          nationCode: athlete?.nation_code ?? null,
-          revealed: !!pepite?.bonus_claimed,
-          revealedRaceId: pepite?.bonus_claimed ? pepite?.revealed_race_id ?? pepiteRaceFromLedger(sex, pepite.athlete_id) : null,
-        };
-      })
+    ? ((stages ?? []) as any[])
+        .filter((st) => st.kind === "grand_tour")
+        .map((st) => {
+          const pepite = pepites.find((p: any) => p.stage_id === st.id);
+          const athlete = pepite ? athleteById.get(pepite.athlete_id) : null;
+          const firstLock = ((st.races ?? []) as any[]).map((r) => r.locks_at as string).sort()[0];
+          return {
+            stageId: st.id as string,
+            courseName: (st.name ?? st.location) as string,
+            locked: !!firstLock && new Date(firstLock) <= now,
+            name: athlete ? shortName(athlete) : null,
+            nationCode: athlete?.nation_code ?? null,
+            revealed: !!pepite?.bonus_claimed,
+            revealedRaceId: pepite?.bonus_claimed ? pepite?.revealed_race_id ?? null : null,
+          };
+        })
     : null;
 
   const mapped: CalendarStage[] = (stages ?? []).map((stage: any) => ({

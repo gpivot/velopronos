@@ -39,6 +39,7 @@ export function PredictionForm({
   x2UsesRemaining,
   startOrder = {},
   startGaps = {},
+  lateJoker = false,
 }: {
   raceId: string;
   format: string;
@@ -64,6 +65,8 @@ export function PredictionForm({
   startOrder?: Record<string, number>;
   /** Poursuite : retard au départ en secondes entières par athlète. */
   startGaps?: Record<string, number>;
+  /** VéloPronos : pronostic posé avec le joker retardataire (étape partie, points ÷ 2). */
+  lateJoker?: boolean;
 }) {
   const [selected, setSelected] = useState<string[]>(initialSelection);
   const [cardChoice, setCardChoice] = useState<CardChoice>(activeCard ?? "none");
@@ -142,6 +145,7 @@ export function PredictionForm({
         bonus_x2_used: bonusX2,
         bonus_card_used: cardChoice !== "none" ? cardChoice : quatriemeChoixActive ? "balle_de_pioche" : null,
         bonus_card_target_athlete_id: cardChoice === "ca_farte" ? caFarteTarget : null,
+        ...(lateJoker ? { late_joker: true } : {}),
       },
       { onConflict: "user_id,race_id" }
     );
@@ -174,7 +178,7 @@ export function PredictionForm({
         target: cardChoice === "ca_farte" ? caFarteTarget : null,
       });
       // La carte jouée devient « active » : l'encadré des cartes et le formulaire se mettent à jour.
-      if (cardChoice !== "none" && cardChoice !== activeCard) router.refresh();
+      if ((cardChoice !== "none" && cardChoice !== activeCard) || lateJoker) router.refresh();
     }
   }
 

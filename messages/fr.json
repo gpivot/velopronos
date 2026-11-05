@@ -48,7 +48,7 @@
     "lastResultExtra_pronoParfait": "Prono parfait",
     "lastResultExtra_specialMalus": "Malus étape spéciale",
     "lastResultExtra_aspiration": "Bonus aspiration",
-    "lastResultExtra_pepite": "Bonus Pépite cachée",
+    "lastResultExtra_pepite": "Bonus porteur d'eau",
     "fuseeLabel": "Fusée : {rank, select, 1 {meilleur temps de ski} 2 {2e temps de ski} other {3e temps de ski}}",
     "gachetteLabel": "Gâchette : sans-faute au tir",
     "shootingsLabel": "Fautes au tir : {shots}",
@@ -73,13 +73,14 @@
     "lastResultExtra_equipe": "Carte Équipe",
     "favoriteTeamInvite": "Choisis ton équipe favorite",
     "favoriteTeamInviteHint": "Suis ses victoires et podiums, et prépare la carte bonus Équipe.",
-    "pepiteRevealTitle": "Ta Pépite cachée est révélée !",
-    "pepiteRevealHint": "Premier Top 10 de la saison : ses points s'ajoutent à ton score de l'étape.",
+    "pepiteRevealTitle": "Ton porteur d'eau est révélé !",
+    "pepiteRevealHint": "Premier Top 10 sur ce Grand Tour : ses points s'ajoutent à ton score de l'étape.",
     "pepiteRevealRank": "{rank, selectordinal, one {#er} other {#e}}",
     "lastResultExtra_missingPicks": "Coureurs non pronostiqués (5 tours d'office)",
     "lastResultExtra_fusee": "Carte Fusée",
     "lastResultExtra_gachette": "Carte Gâchette",
-    "lastResultExtra_combatif": "Combatif du jour"
+    "lastResultExtra_combatif": "Combatif du jour",
+    "lastResultExtra_lateJoker": "Joker retardataire (÷ 2)"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses cyclistes.",
@@ -438,7 +439,7 @@
     "noStages": "Aucune course programmée pour le moment.",
     "noPicks": "Pas de pronostic",
     "myRankingTitle": "Mon classement",
-    "playerPepiteRevealed": "{sex, select, F {Pépite cachée Femmes révélée :} other {Pépite cachée Hommes révélée :}}"
+    "playerPepiteRevealed": "Porteur d'eau révélé ({course}) :"
   },
   "Courses": {
     "title": "Ma saison",
@@ -470,11 +471,11 @@
     "jokersPoints": "{points} pts",
     "jokersNotPlayed": "Non jouée",
     "jokersDiscover": "Découvre tes jokers de fin de saison",
-    "pepiteCardTitle": "Pépite cachée",
-    "pepiteCardHint": "Jouée en caché sur toutes les étapes jusqu'à son premier Top 10. Les autres joueurs ne la voient qu'une fois révélée.",
-    "pepiteRevealed": "Révélée",
-    "pepiteNotRevealed": "Pas encore révélée",
-    "pepiteNone": "Pas encore choisie",
+    "pepiteCardTitle": "Porteur d'eau",
+    "pepiteCardHint": "Un outsider caché par Grand Tour, joué sur toutes les étapes jusqu'à son premier Top 10. Les autres joueurs ne le voient qu'une fois révélé.",
+    "pepiteRevealed": "Révélé",
+    "pepiteNotRevealed": "Pas encore révélé",
+    "pepiteNone": "Pas encore choisi",
     "pepiteChoose": "Choisir",
     "pepiteSeeRace": "voir l'étape",
     "favoriteTeamChoose": "Choisir"
@@ -574,7 +575,10 @@
     "offStandingsNotice": "Étape hors classement : elle a son propre classement, mais ses points ne comptent pas pour la saison (pas de dossard rouge, de carte bonus, de ×2 ni de Pépite).",
     "stageNumber": "Étape {number}",
     "prologue": "Prologue",
-    "stageTitle": "{stage} · {type}"
+    "stageTitle": "{stage} · {type}",
+    "lateJokerTitle": "Joker retardataire",
+    "lateJokerHint": "Tu as oublié cette étape ? Tu peux encore la pronostiquer jusqu'à 1 h après le départ, une fois par course. Tes points seront divisés par 2.",
+    "lateJokerBadge": "Joker retardataire · points ÷ 2"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 coureurs",
@@ -611,8 +615,8 @@
     "cardAspiration": "Aspiration",
     "aspirationHint": "Aspiration : sur cette étape, chacun de tes coureurs compte une place plus haut.",
     "aspirationActive": "carte jouée sur cette étape : chacun de tes coureurs compte une place plus haut.",
-    "hiddenPepite": "ta Pépite cachée",
-    "hiddenPepiteError": "Ta Pépite cachée est déjà jouée sur cette étape : retire-la de ton pronostic.",
+    "hiddenPepite": "ton porteur d'eau",
+    "hiddenPepiteError": "Ton porteur d'eau est déjà joué en caché sur cette étape : retire-le de ton pronostic.",
     "searchAthlete": "Rechercher un nom ou un pays (FRA, NOR…)",
     "searchNation": "Rechercher un pays (FRA, NOR…)",
     "searchNoResult": "Aucun résultat",
@@ -969,14 +973,14 @@
     "leader": "Maillot jaune : leader du classement",
     "x2Used": "{used}/{max} bonus ×2 utilisés",
     "raceWins": "{count, plural, one {# étape gagnée} other {# étapes gagnées}} (meilleur pronostiqueur)",
-    "pepite": "{count, plural, one {Pépite cachée révélée} other {# Pépites cachées révélées}}",
+    "pepite": "{count, plural, one {Porteur d'eau révélé} other {# porteurs d'eau révélés}}",
     "pepiteF": "Pépite femmes",
     "pepiteH": "Pépite hommes",
     "helpTitle": "Les pictos des joueurs",
     "helpLeader": "Maillot jaune : le leader du classement général de la saison (ou de la ligue).",
     "helpX2": "Bonus ×2 déjà utilisés sur les 3 de la saison.",
     "helpWins": "Étapes gagnées en terminant meilleur pronostiqueur.",
-    "helpPepite": "Pépite cachée révélée : elle a fait son premier Top 10 et rapporté ses points.",
+    "helpPepite": "Porteur d'eau révélé : il a fait son premier Top 10 du Grand Tour et rapporté ses points.",
     "stageLeader": "Dossard rouge : leader de la course",
     "stageWins": "Dossard rouge : {count, plural, one {# course gagnée} other {# courses gagnées}}",
     "perfectPicks": "{count, plural, one {# prono parfait} other {# pronos parfaits}}",
@@ -1105,6 +1109,15 @@
     "odds": "cote {value}",
     "noRiders": "Les engagés de la course ne sont pas encore connus : reviens un peu avant le départ.",
     "noJerseys": "Pas de pronostic maillot sur cette course.",
-    "points": "{points} pts"
+    "points": "{points} pts",
+    "waterCarrierTitle": "Mon porteur d'eau",
+    "waterCarrierHint": "Un outsider dont toutes les cotes de la course sont d'au moins 30. Personne d'autre ne le voit. Il est ajouté en caché à tous tes pronostics d'étape : à son premier Top 10, ses points de l'étape s'ajoutent à ton score, une seule fois. D'ici là, tu ne peux pas le mettre dans tes pronostics. Modifiable jusqu'au départ de la 1re étape.",
+    "waterCarrierSubmit": "Enregistrer mon porteur d'eau",
+    "waterCarrierSaved": "Porteur d'eau enregistré.",
+    "waterCarrierNotEligible": "Ce coureur n'est pas éligible : toutes ses cotes de la course doivent être d'au moins 30.",
+    "waterCarrierNoOptions": "Aucun coureur éligible pour l'instant : les cotes de la course ne sont pas encore connues.",
+    "waterCarrierHidden": "Caché, pas encore révélé",
+    "waterCarrierRevealed": "Révélé",
+    "waterCarrierRevealedPoints": "Révélé · +{points} pts"
   }
 }

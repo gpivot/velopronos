@@ -104,9 +104,8 @@ export async function getPlayerBadges(supabase: SupabaseClient, seasonId: string
   for (const l of (ledger ?? []) as any[]) if (Number(l.perfect ?? 0) > 0) get(l.user_id).perfectPicks += 1;
   for (const p of (x2 ?? []) as any[]) get(p.user_id).x2Used += 1;
   for (const p of (pepites ?? []) as any[]) {
-    const b = get(p.user_id);
-    b.pepites += 1;
-    if (p.sex === "F" || p.sex === "H") b.pepiteSexes = Array.from(new Set([...(b.pepiteSexes ?? []), p.sex])).sort() as ("F" | "H")[];
+    // VéloPronos : porteurs d'eau révélés (un par Grand Tour), sans mini ♀ / ♂.
+    get(p.user_id).pepites += 1;
   }
   return badges;
 }
