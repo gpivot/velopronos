@@ -179,7 +179,11 @@ Migration **0051** : `streak_counters.stage_id` (clé `(user_id, stage_id)`) et
   fois** un coureur **abandonné** : un pronostic maillot (sauf meilleure équipe) ou le porteur
   d'eau pas encore révélé (le remplaçant doit rester éligible, cotes >= 30). Elle se joue sur la
   page des maillots (rpc `play_chat_noir`).
-- Les cartes du biathlon (Aspiration, Fusée, Gâchette, Talent) ne sont plus proposées. Pas de carte
+- **Aspiration** (`aspiration`, migration 0055, décision de Guillaume du 05/11/2026) : mêmes
+  règles qu'en biathlon, dans sa course : sur une étape de son choix (sauf CLM par équipes),
+  chaque coureur pronostiqué compte une place plus haut. Pas avec le Boost sur la même étape, ni
+  pendant une Oreillette. Proposée dès la 1re série.
+- Les cartes du biathlon Fusée, Gâchette et Talent ne sont plus proposées. Pas de carte
   gagnée sur un prono parfait (*à confirmer*).
 
 ## Pronostics de saison

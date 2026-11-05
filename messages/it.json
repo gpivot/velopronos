@@ -944,7 +944,7 @@
     "desc_balle_de_pioche": "Si attiva subito sulle prossime 3 tappe della corsa: 4 corridori invece di 3, contano i tuoi 3 migliori. I 4 sono bruciati il giorno dopo.",
     "name_aspiration": "Scia",
     "name_equipe": "Squadra",
-    "desc_aspiration": "Tienila in mano: in una tappa individuale a tua scelta, ognuno dei tuoi ciclisti conta una posizione più in alto (un 11º diventa 10º e fa punti).",
+    "desc_aspiration": "Tienila in mano: su una tappa della tua corsa (tranne la cronosquadre), ciascuno dei tuoi corridori conta una posizione più in alto (un 11º diventa 10º e fa punti). Non con il Boost né durante una Radiolina.",
     "desc_equipe": "Grandi giri: si attiva subito; dalla tappa 10, ogni corridore della tua squadra del cuore nel Top 10 ti porta una volta la sua quota, scelto o no.",
     "lockedUntil_aspiration": "Dalla 4ª gara",
     "lockedUntil_equipe": "Grande giro e squadra del cuore (o squadra del giro) scelta",

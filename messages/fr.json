@@ -944,7 +944,7 @@
     "desc_balle_de_pioche": "S'active tout de suite, sur les 3 prochaines étapes de la course : 4 coureurs au lieu de 3, tes 3 meilleurs comptent. Les 4 sont grillés le lendemain.",
     "name_aspiration": "Aspiration",
     "name_equipe": "Équipe",
-    "desc_aspiration": "À garder en main : sur une étape individuelle de ton choix, chacun de tes coureurs compte une place plus haut (un 11e devient 10e et marque).",
+    "desc_aspiration": "À garder en main : sur une étape de ta course (sauf CLM par équipes), chacun de tes coureurs compte une place plus haut (un 11e devient 10e et marque). Pas avec le Boost ni pendant une Oreillette.",
     "desc_equipe": "Grands Tours : s'active tout de suite ; à partir de l'étape 10, chaque coureur de ton équipe de cœur dans le Top 10 te rapporte une fois sa cote en plus, que tu l'aies choisi ou non.",
     "lockedUntil_aspiration": "Dès la 4e course",
     "lockedUntil_equipe": "Grand Tour et équipe de cœur (ou équipe du Grand Tour) choisie",

@@ -174,10 +174,9 @@ describe("cartes de la saison", () => {
     stage("2027-03-05"), // étape d'après : Équipe
   ];
 
-  it("Aspiration dès le départ de la 4e étape, Équipe après les Mondiaux", () => {
+  it("VéloPronos : Aspiration dès la 1re série ; Équipe (biathlon) après les Mondiaux", () => {
     expect(isCardUnlocked("ca_farte", stages, new Date("2026-11-01"))).toBe(true);
-    expect(isCardUnlocked("aspiration", stages, new Date("2027-01-02T11:00:00Z"))).toBe(false);
-    expect(isCardUnlocked("aspiration", stages, new Date("2027-01-02T12:00:00Z"))).toBe(true);
+    expect(isCardUnlocked("aspiration", stages, new Date("2026-11-01"))).toBe(true);
     expect(isCardUnlocked("equipe", stages, new Date("2027-02-20"))).toBe(false);
     expect(isCardUnlocked("equipe", stages, new Date("2027-03-05T12:00:00Z"))).toBe(true);
   });
@@ -194,6 +193,7 @@ describe("cartes de la saison", () => {
       fondue: "offered",
       ca_farte: "justTaken",
       balle_de_pioche: "offered",
+      aspiration: "offered",
       equipe: "locked",
       chat_noir: "offered",
     });

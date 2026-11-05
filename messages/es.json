@@ -944,7 +944,7 @@
     "desc_balle_de_pioche": "Se activa enseguida en las 3 próximas etapas de la carrera: 4 corredores en vez de 3, cuentan tus 3 mejores. Los 4 quedan quemados al día siguiente.",
     "name_aspiration": "Rebufo",
     "name_equipe": "Equipo",
-    "desc_aspiration": "Guárdala en la mano: en una etapa individual que elijas, cada uno de tus ciclistas cuenta un puesto más arriba (un 11.º pasa a 10.º y puntúa).",
+    "desc_aspiration": "Guárdala: en una etapa de tu carrera (salvo CRE), cada uno de tus corredores cuenta un puesto mejor (un 11.º pasa a 10.º y puntúa). No con el Boost ni durante un Pinganillo.",
     "desc_equipe": "Grandes vueltas: se activa enseguida; desde la etapa 10, cada corredor de tu equipo favorito en el Top 10 te da una vez su cuota, lo hayas elegido o no.",
     "lockedUntil_aspiration": "Desde la 4.ª carrera",
     "lockedUntil_equipe": "Gran vuelta y equipo favorito (o equipo de la vuelta) elegido",

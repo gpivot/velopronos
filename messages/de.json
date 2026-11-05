@@ -944,7 +944,7 @@
     "desc_balle_de_pioche": "Sofort aktiv für die nächsten 3 Etappen des Rennens: 4 Fahrer statt 3, deine 3 besten zählen. Alle 4 sind am nächsten Tag gegrillt.",
     "name_aspiration": "Windschatten",
     "name_equipe": "Team",
-    "desc_aspiration": "Auf der Hand behalten: in einem Einzelrennen deiner Wahl zählt jeder deiner Fahrer einen Platz besser (ein 11. wird 10. und punktet).",
+    "desc_aspiration": "Behalte sie: auf einer Etappe deines Rennens (außer Mannschaftszeitfahren) zählt jeder deiner Fahrer einen Platz besser (ein 11. wird 10. und punktet). Nicht mit dem Boost und nicht während eines Funks.",
     "desc_equipe": "Grand Tours: sofort aktiv; ab der 10. Etappe bringt dir jeder Fahrer deines Lieblingsteams in den Top 10 einmal seine Quote, getippt oder nicht.",
     "lockedUntil_aspiration": "Ab der 4. Station",
     "lockedUntil_equipe": "Grand Tour und Lieblingsteam (oder Grand-Tour-Team) gewählt",

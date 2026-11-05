@@ -944,7 +944,7 @@
     "desc_balle_de_pioche": "Activates right away for the next 3 stages of the race: 4 riders instead of 3, your best 3 count. All 4 are grilled the next day.",
     "name_aspiration": "Slipstream",
     "name_equipe": "Team",
-    "desc_aspiration": "Keep it in hand: on an individual stage of your choice, each of your riders counts one place higher (an 11th becomes 10th and scores).",
+    "desc_aspiration": "Keep it in hand: on a stage of your race (except team time trials), each of your riders counts one place higher (11th becomes 10th and scores). Not with the Boost nor during an Earpiece.",
     "desc_equipe": "Grand Tours: activates right away; from stage 10, each rider of your favourite team in the Top 10 earns you their odds once more, picked or not.",
     "lockedUntil_aspiration": "From race 4",
     "lockedUntil_equipe": "Grand Tour and favourite team (or Grand Tour team) chosen",
