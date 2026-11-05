@@ -26,6 +26,8 @@ import { bonusQuestionState, type BonusQuestionRow } from "@/lib/bonusQuestions"
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
 export const dynamic = "force-dynamic";
+// Récupération des résultats par IA (recherche web) : une à deux minutes, au-delà du délai par défaut.
+export const maxDuration = 300;
 
 export default async function AdminRacePage({ params }: { params: Promise<{ raceId: string }> }) {
   const { raceId } = await params;

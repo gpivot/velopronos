@@ -246,6 +246,40 @@ retrait d'un coureur. Le CSV téléchargé reprend le format d'import et se réi
   les fichiers actuels.
 - Une cellule de cote **vide** ne supprime pas la cote existante.
 
+## Résultats d'étape par IA (05/11/2026)
+
+Fiche admin d'une étape > « Récupérer les résultats avec l'IA » (`src/lib/admin/aiStageResults.ts`,
+action `loadAiResults`). Équivalent vélo de l'import IBU du biathlon, qui lit une API officielle
+unique ; en vélo il n'y en a pas, donc Claude (API Anthropic, recherche et lecture web côté
+serveur Anthropic) cherche le résultat et croise les sources **dans l'ordre fixé par Guillaume** :
+0. la page de résultats collée par l'admin, s'il en a une (organisateur ou autre source sûre) :
+   lue en premier, elle prime sur les autres,
+1. site officiel de la course (connu pour les grandes courses, `officialSiteFor`, sinon cherché),
+2. ProCyclingStats,
+3. L'Équipe.
+
+- Demande : **Top 10** de l'étape (ou des équipes sur un CLM par équipes) et **combatif du jour** ;
+  sur une étape **Crevaison**, aussi la place de chaque coureur pronostiqué, même hors Top 10.
+- Réponse JSON convertie au format de l'import CSV : même rapprochement des noms (accents,
+  translittérations), le tableau est pré-rempli, **rien n'est enregistré** avant le clic sur
+  « Enregistrer et calculer les scores ».
+- Saisie (même écran, demande de Guillaume du 05/11/2026) : le **Top 10 place par place**, chaque
+  ligne avec une recherche du coureur (ou de l'équipe) par les premières lettres du prénom ou du
+  nom, sans accents ; un coureur placé n'est plus proposé sur les autres lignes
+  (`src/lib/admin/resultSlots.ts`). Sur une étape **Crevaison**, boutons « + Ajouter une ligne » /
+  « + 10 lignes » après le Top 10 ; ailleurs, les rangs au-delà du Top 10 d'un import sont ignorés.
+  Les colonnes biathlon (écart, tirs, tours de péna, Fusée, Gâchette) ont disparu de l'écran.
+- Alertes en orange : place où les sources divergent (la source prioritaire est retenue), place
+  confirmée par une seule source, résultat provisoire, notes de l'IA. Liens vers les sources lues.
+- Combatif : proposé avec un bouton « L'enregistrer comme combatif » (pas enregistré d'office).
+- Clé `ANTHROPIC_API_KEY` dans `.env.local` et sur Vercel ; modèle `claude-opus-5-5` par défaut,
+  réglable par `ANTHROPIC_MODEL` ; repli automatique sur un autre modèle si la demande est
+  refusée. `maxDuration = 300` sur la page : une recherche prend une à deux minutes.
+- Coût estimé (non mesuré) : environ 0,30 à 0,50 $ par étape avec Opus 5.5 (recherches web +
+  pages lues), à peu près deux fois moins avec Sonnet 5.5.
+- *À confirmer* : Top 10 suffisant (pas besoin des écarts) ; combatif non enregistré d'office ;
+  modèle par défaut (qualité) plutôt que Sonnet (coût).
+
 ## Reste à faire (étapes suivantes)
 
 - Écrans joueur : libellés vélo (coureurs, étapes, types), programme d'une course, pronostic d'une
