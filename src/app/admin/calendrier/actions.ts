@@ -129,7 +129,8 @@ export async function removeSeason(formData: FormData) {
 export async function updateStage(formData: FormData) {
   await requireAdmin();
   const startsOn = String(formData.get("starts_on"));
-  const endsOn = String(formData.get("ends_on"));
+  // Course d'un jour : une seule date, la fin suit le début.
+  const endsOn = formData.get("kind") === "one_day" ? startsOn : String(formData.get("ends_on") || startsOn);
   if (endsOn < startsOn) throw new Error("La date de fin doit être après la date de début.");
   const stageId = String(formData.get("stage_id"));
   const category = stageCategoryFields(formData.get("coefficient"));

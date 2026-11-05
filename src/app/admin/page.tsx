@@ -163,7 +163,7 @@ export default async function AdminCalendarResultsPage() {
                         )}
                       </div>
                       <div className="text-xs text-text-dim">
-                        {formatDateRange(stage.starts_on, stage.ends_on)}
+                        {stage.kind === "one_day" ? formatDateRange(stage.starts_on, stage.starts_on) : formatDateRange(stage.starts_on, stage.ends_on)}
                         {(stage.rest_days ?? []).length > 0 && ` · ${stage.rest_days.length} repos`}
                         {` · ${(stage.stage_riders ?? []).length} engagé(s)`}
                       </div>

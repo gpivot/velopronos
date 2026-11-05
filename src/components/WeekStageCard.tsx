@@ -10,6 +10,7 @@ import { raceTitle } from "@/lib/raceLabel";
 import type { WeekStage, WeekStageRace } from "@/lib/weekStage";
 import type { LastResult } from "@/lib/lastResult";
 import { SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
+import { courseLook, isMultiStage } from "@/lib/velo/courseLook";
 
 /**
  * Encart « L'étape de la semaine » de l'accueil : bandeau de l'étape (drapeau, lieu, dates), puis
@@ -40,36 +41,37 @@ export async function WeekStageCard({
   const day = (date: string) =>
     new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
 
-  // Coefficient 2 = Mondiaux (ou JO) : bandeau doré, comme l'encart de l'étape dans Ma saison.
+  // Coefficient 2 : Monument (ocre) ou Championnats du monde (or), comme dans Ma saison.
   const isChampionship = stage.coefficient === 2 && stage.countsInStandings;
-  // Étape « Autre (×0) », hors classement : bandeau grisé.
+  const isWorlds = isChampionship && stage.look === "worlds";
+  // Course hors classement : bandeau grisé, sans mention (demande de Guillaume du 05/11/2026).
   const isOffStandings = !stage.countsInStandings;
+  const isOneDay = !isMultiStage(stage.look);
 
   return (
     <div className="flex flex-col gap-2">
       <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("weekStageTitle")}</div>
       <div className={`overflow-hidden rounded-2xl border bg-card ${
-          isOffStandings ? "border-dashed border-text-dim/40" : isChampionship ? "border-gold/60" : "border-ice/50"
+          isOffStandings ? "border-dashed border-text-dim/40" : isWorlds ? "border-champ/70" : isChampionship ? "border-gold/60" : "border-ice/50"
         }`}>
         <Link
           href={`/courses?etape=${stage.id}`}
           className={`flex items-center gap-2 px-4 py-2.5 font-display text-[13px] font-bold uppercase tracking-wide ${
-            isOffStandings ? "bg-text-dim/20 text-text-dim" : isChampionship ? "bg-gold text-bg" : "bg-ice text-on-ice"
+            isOffStandings ? "bg-text-dim/20 text-text-dim" : isWorlds ? "bg-champ text-bg" : isChampionship ? "bg-gold text-bg" : "bg-ice text-on-ice"
           }`}
         >
-          <span className="text-base">{nationFlagEmoji(stage.countryCode)}</span>
+          <span className="text-base">{stage.look === "bonus" ? "🏆" : nationFlagEmoji(stage.countryCode)}</span>
           <span className="flex min-w-0 flex-1 flex-col">
-            {isChampionship && <span className="text-[10px] leading-tight tracking-wider opacity-80">{tCourses("worldChampionships")}</span>}
+            {isChampionship && (
+              <span className="text-[10px] leading-tight tracking-wider opacity-80">{tCourses(isWorlds ? "lookWorlds" : "lookMonument")}</span>
+            )}
             <span className="truncate">{stage.location}</span>
           </span>
           {isChampionship && (
             <span className="whitespace-nowrap rounded-full bg-bg/15 px-2 py-0.5 text-[10px]">{t("coefficientBadge")}</span>
           )}
-          {isOffStandings && (
-            <span className="whitespace-nowrap rounded-full border border-text-dim/40 px-2 py-0.5 text-[10px]">×0 · {t("offStandingsBadge")}</span>
-          )}
           <span className="whitespace-nowrap font-semibold normal-case">
-            {stage.startsOn === stage.endsOn ? day(stage.startsOn) : `${day(stage.startsOn)} – ${day(stage.endsOn)}`}
+            {isOneDay || stage.startsOn === stage.endsOn ? day(stage.startsOn) : `${day(stage.startsOn)} – ${day(stage.endsOn)}`}
           </span>
         </Link>
 
@@ -208,6 +210,10 @@ export async function RestWeekCard() {
 export interface NextStage {
   id: string;
   location: string;
+  name?: string | null;
+  kind?: string | null;
+  category?: string | null;
+  coefficient?: number | null;
   country_code: string;
   starts_on: string;
   ends_on: string;
@@ -216,6 +222,7 @@ export interface NextStage {
 /** Petit encart « Prochaine étape » : ouvre Ma saison sur la liste des courses de cette étape. */
 export async function NextStageCard({ stage, locale }: { stage: NextStage; locale: string }) {
   const t = await getTranslations("Home");
+  const look = courseLook(stage);
   const day = (date: string) =>
     new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
   return (
@@ -225,10 +232,10 @@ export async function NextStageCard({ stage, locale }: { stage: NextStage; local
         href={`/courses?etape=${stage.id}`}
         className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3"
       >
-        <span className="text-lg">{nationFlagEmoji(stage.country_code)}</span>
-        <span className="flex-1 truncate text-sm font-semibold">{stage.location}</span>
+        <span className="text-lg">{look === "bonus" ? "🏆" : nationFlagEmoji(stage.country_code)}</span>
+        <span className="flex-1 truncate text-sm font-semibold">{stage.name ?? stage.location}</span>
         <span className="whitespace-nowrap text-xs text-text-dim">
-          {stage.starts_on === stage.ends_on ? day(stage.starts_on) : `${day(stage.starts_on)} – ${day(stage.ends_on)}`}
+          {!isMultiStage(look) || stage.starts_on === stage.ends_on ? day(stage.starts_on) : `${day(stage.starts_on)} – ${day(stage.ends_on)}`}
         </span>
         <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-text-dim" />
       </Link>

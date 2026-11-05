@@ -276,3 +276,21 @@ maillots et le porteur d'eau, le classement avec les résultats retenus). Les ch
 constantes du moteur (barèmes, maillots, combatif, seuil du porteur, résultats retenus). FAQ :
 « relais » et « jokers » remplacés par « maillots » et « joker retardataire ». Mini-écrans de
 l'accueil public avec des coureurs et une étape du Tour.
+
+## Présentation des courses dans Ma saison (05/11/2026)
+
+Demande de Guillaume : `src/lib/velo/courseLook.ts` classe chaque course (Grand Tour, course par
+étapes, Monument, Championnats du monde, Week-end des Champions, course d'un jour).
+
+- **Courses par étapes** : encadré plus haut, coins plus arrondis, contour épais ; mention « Course
+  par étapes · 8 étapes » et la prochaine étape à jouer (la 1re avant le départ).
+- **Grands Tours** : contour à la couleur du maillot de leader et liseré aux couleurs du pays en
+  coin (France, Italie, Espagne ; couleur du maillot pour un autre pays).
+- **Courses d'un jour** : une seule date, ici et dans l'admin (la date de fin suit le début).
+- **Monuments** (×2, ocre, « Monument ») ; **Championnats du monde** (×2, or de Biathlonpronos,
+  `--c-champ`) ; **Week-end des Champions** : 🏆 à la place du drapeau.
+- **Hors classement** : plus de « ×0 · Hors classement » ; contour en pointillés et, une fois la
+  course dépliée, « Cette course ne compte pas pour le classement général. ».
+- **Filtre** en haut de la liste : Toutes, Grands Tours, Courses par étapes, Courses d'un jour
+  (Monuments et Mondiaux compris), Monuments, Championnats (Mondiaux et Week-end des Champions).
+  Seuls les types présents dans la saison sont proposés (*à confirmer*).

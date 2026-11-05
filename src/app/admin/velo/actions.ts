@@ -70,7 +70,7 @@ export async function createVeloCourse(formData: FormData) {
   const category = (COURSE_CATEGORIES as string[]).includes(categoryRaw) ? (categoryRaw as CourseCategory) : null;
   const countryCode = normalizeNationCode(String(formData.get("country_code") ?? "")) ?? "FRA";
   const startsOn = String(formData.get("starts_on"));
-  const endsOn = String(formData.get("ends_on") || startsOn);
+  const endsOn = kind === "one_day" ? startsOn : String(formData.get("ends_on") || startsOn);
   if (!name || !COURSE_KINDS.includes(kind)) throw new Error("Nom ou type de course manquant.");
   if (endsOn < startsOn) throw new Error("La date de fin doit être après la date de début.");
 

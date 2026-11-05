@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { courseLook, type CourseLook } from "./velo/courseLook";
 import { toParisWallTime } from "./displayTimeZone";
 import { getRaceDisplayStatus, type RaceDisplayStatus } from "./raceStatus";
 import { shortAthleteName } from "./athleteName";
@@ -35,6 +36,8 @@ export interface WeekStageRace {
 export interface WeekStage {
   id: string;
   location: string;
+  /** VéloPronos : présentation de la course (Grand Tour, Monument, Mondiaux…). */
+  look: CourseLook;
   countryCode: string;
   coefficient: number;
   /** false : étape « Autre (×0) », hors classement de la saison. */
@@ -98,7 +101,7 @@ export async function getWeekStage(
   now: Date
 ): Promise<WeekStage | null> {
   const today = parisDay(now);
-  const select = "id, location, country_code, coefficient, counts_in_standings, starts_on, ends_on";
+  const select = "id, name, kind, category, location, country_code, coefficient, counts_in_standings, starts_on, ends_on";
   const { data: current } = await supabase
     .from("stages")
     .select(select)
@@ -201,7 +204,8 @@ export async function getWeekStage(
 
   return {
     id: stage.id,
-    location: stage.location,
+    location: (stage as any).name ?? stage.location,
+    look: courseLook(stage as any),
     countryCode: stage.country_code,
     coefficient: stage.coefficient,
     countsInStandings: stage.counts_in_standings !== false,

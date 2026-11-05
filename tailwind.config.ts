@@ -28,6 +28,7 @@ const config: Config = {
         "ice-soft": "oklch(var(--c-ice-soft) / <alpha-value>)",
         gold: "oklch(var(--c-gold) / <alpha-value>)",
         "gold-soft": "oklch(var(--c-gold-soft) / <alpha-value>)",
+        champ: "oklch(var(--c-champ) / <alpha-value>)",
         red: "oklch(var(--c-red) / <alpha-value>)",
         frost: "rgb(var(--c-frost) / <alpha-value>)",
         // Texte posé sur un fond `ice` (sombre en thème sombre, blanc sur le bleu foncé du thème clair).

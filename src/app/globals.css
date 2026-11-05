@@ -54,6 +54,8 @@ body::before {
   --c-ice-soft: 0.32 0.06 90;
   --c-gold: 0.74 0.14 65;
   --c-gold-soft: 0.31 0.05 60;
+  /* Or des Championnats du monde, celui de Biathlonpronos. */
+  --c-champ: 0.84 0.15 90;
   --c-red: 0.62 0.2 25;
   --c-on-ice: 40 27 10;
   --c-on-gold: 33 21 8;
@@ -76,6 +78,7 @@ html.light {
   --c-ice-soft: 0.95 0.02 80;
   --c-gold: 0.72 0.15 80;
   --c-gold-soft: 0.95 0.05 95;
+  --c-champ: 0.7 0.15 85;
   --c-red: 0.58 0.2 25;
   --c-on-ice: 255 255 255;
   --c-on-gold: 40 27 10;

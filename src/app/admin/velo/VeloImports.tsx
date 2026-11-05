@@ -37,8 +37,8 @@ export function VeloImports({ seasonId, courses }: { seasonId: string; courses: 
               ))}
             </select>
             <input name="country_code" defaultValue="FRA" placeholder="Pays (FRA)" className={`${inputClass} w-20`} />
-            <input name="starts_on" type="date" required className={inputClass} />
-            <input name="ends_on" type="date" className={inputClass} />
+            <input name="starts_on" type="date" required title="Début (ou date d'une course d'un jour)" className={inputClass} />
+            <input name="ends_on" type="date" title="Fin (vide pour une course d'un jour)" className={inputClass} />
             <label className="flex items-center gap-1 text-xs text-text-dim">
               <input type="checkbox" name="counts_in_standings" /> compte au classement de la saison
             </label>
