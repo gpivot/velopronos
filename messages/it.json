@@ -1074,5 +1074,33 @@
     "manageHint": "Puoi cambiare idea in qualsiasi momento dal tuo profilo.",
     "invalid": "Questo link non è più valido. Puoi gestire le tue e-mail dal tuo profilo.",
     "toProfile": "Vai al mio profilo"
+  },
+  "Jerseys": {
+    "title": "Le mie maglie",
+    "back": "Torna a La mia stagione",
+    "linkLabel": "I miei pronostici maglie",
+    "linkCount": "{chosen} su {total} scelti",
+    "intro": "Pronostica il vincitore finale di ogni classifica. Modificabile fino alla partenza della 1ª tappa.",
+    "closed": "La corsa è partita: i pronostici maglie sono chiusi.",
+    "pointsRule": "Top 3 finale di ogni maglia: quota ×5 per il vincitore, ×2 per il 2°, ×1 per il 3°.",
+    "combatifRule": "Supercombattivo: +200 se eletto, +50 ogni giorno in cui è il più combattivo.",
+    "jersey_general": "Classifica generale",
+    "jersey_points": "Classifica a punti",
+    "jersey_montagne": "Miglior scalatore",
+    "jersey_jeune": "Miglior giovane",
+    "jersey_combatif": "Supercombattivo",
+    "jersey_equipe": "Miglior squadra",
+    "noPick": "— Nessuna scelta —",
+    "notChosen": "Nessuna scelta",
+    "submit": "Salva le mie maglie",
+    "saving": "Salvataggio…",
+    "saved": "Maglie salvate.",
+    "saveError": "Salvataggio impossibile: forse la corsa è già partita.",
+    "loginRequired": "Crea il tuo account o accedi per pronosticare le maglie.",
+    "searchRider": "Cerca un corridore, una squadra o una nazione",
+    "searchTeam": "Cerca una squadra",
+    "odds": "quota {value}",
+    "noRiders": "I partenti non sono ancora noti: torna poco prima del via.",
+    "noJerseys": "Nessun pronostico maglie per questa corsa."
   }
 }

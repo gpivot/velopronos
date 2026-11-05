@@ -107,10 +107,16 @@ export async function getSeasonView(
 
   const { data: stages, error } = await supabase
     .from("stages")
-    .select("id, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, races(id, format, sex, locks_at, status, special_rule, stage_number, start_city, end_city, distance_km)")
+    .select("id, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, jerseys, races(id, format, sex, locks_at, status, special_rule, stage_number, start_city, end_city, distance_km)")
     .eq("season_id", season.id)
     .order("starts_on", { ascending: true });
   if (error) console.error("getSeasonView:", error.message);
+
+  // Pronostics maillots du joueur (VéloPronos), comptés par course.
+  const { data: jerseyPicks } =
+    userId && isOwner ? await supabase.from("course_predictions").select("stage_id").eq("user_id", userId) : { data: [] as any[] };
+  const jerseyPicksByStage = new Map<string, number>();
+  for (const p of (jerseyPicks ?? []) as any[]) jerseyPicksByStage.set(p.stage_id, (jerseyPicksByStage.get(p.stage_id) ?? 0) + 1);
 
   // Chez un autre joueur, rien sur une course pas encore partie.
   const lockedRaceIds = new Set(
@@ -203,6 +209,8 @@ export async function getSeasonView(
     ends_on: stage.ends_on,
     coefficient: stage.coefficient,
     counts_in_standings: stage.counts_in_standings !== false,
+    jerseys: (stage.jerseys ?? []).length,
+    jerseysPicked: jerseyPicksByStage.get(stage.id) ?? 0,
     opensOn: isPredictionOpen(stage.starts_on, now) ? null : predictionOpensOn(stage.starts_on),
     races: (stage.races ?? [])
       .map((race: any) => ({

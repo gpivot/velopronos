@@ -57,6 +57,15 @@ km » (`src/lib/raceLabel.ts`). L'encadré de la semaine de l'accueil ne montre,
 par étapes, que les étapes de la veille aux 6 jours suivants. Badge des courses ×2 : « Course
 majeure » (monuments, Mondiaux).
 
+## Pronostics maillots (page `/maillots/<course>`)
+
+Lien « Mes pronostics maillots » dans la course dépliée de Ma saison, dès que la course a des
+maillots. Un choix par maillot (coureur, ou équipe pour « meilleure équipe »), parmi les engagés
+qui ont une cote pour ce maillot (tous les engagés si aucun n'en a), favoris d'abord. Modifiable
+jusqu'au départ de la 1re étape (RLS de `course_predictions`), en lecture seule ensuite. Les
+points (Top 3 final : cote ×5/×2/×1 ; super combatif +200 et +50 par jour) arrivent avec le
+moteur vélo. Pastille du général à la couleur de la course (`jersey_color`).
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :

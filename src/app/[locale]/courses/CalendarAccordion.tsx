@@ -44,6 +44,9 @@ export interface CalendarStage {
   counts_in_standings?: boolean;
   /** Jour d'ouverture des pronostics ("2027-01-02") tant qu'ils sont fermés (7 jours avant l'étape), null sinon. */
   opensOn: string | null;
+  /** VéloPronos : nombre de maillots pronostiqués sur la course, et choisis par le joueur. */
+  jerseys?: number;
+  jerseysPicked?: number;
   races: CalendarRace[];
 }
 
@@ -72,6 +75,7 @@ export function CalendarAccordion({
   const t = useTranslations("Courses");
   const tFormat = useTranslations("RaceFormat");
   const tRace = useTranslations("Race");
+  const tJerseys = useTranslations("Jerseys");
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -151,6 +155,20 @@ export function CalendarAccordion({
                   isOffStandings ? "border-dashed border-text-dim/30" : isChampionship ? "border-gold/30" : "border-border"
                 }`}
               >
+                {!readOnly && (stage.jerseys ?? 0) > 0 && (
+                  <Link
+                    href={`/maillots/${stage.id}`}
+                    className="flex items-center gap-3 rounded-xl border border-gold/50 bg-gold-soft px-3.5 py-3"
+                  >
+                    <span className="text-lg">🟡</span>
+                    <span className="flex flex-1 flex-col">
+                      <span className="text-sm font-semibold">{tJerseys("linkLabel")}</span>
+                      <span className="text-xs text-text-dim">
+                        {tJerseys("linkCount", { chosen: stage.jerseysPicked ?? 0, total: stage.jerseys ?? 0 })}
+                      </span>
+                    </span>
+                  </Link>
+                )}
                 {stage.races.length === 0 ? (
                   <div className="px-1.5 py-2 text-[12px] text-text-dim">{t("noRacesInStage")}</div>
                 ) : (

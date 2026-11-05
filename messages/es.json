@@ -1074,5 +1074,33 @@
     "manageHint": "Puedes cambiar de opinión en cualquier momento desde tu perfil.",
     "invalid": "Este enlace ya no es válido. Puedes gestionar tus emails desde tu perfil.",
     "toProfile": "Ir a mi perfil"
+  },
+  "Jerseys": {
+    "title": "Mis maillots",
+    "back": "Volver a Mi temporada",
+    "linkLabel": "Mis pronósticos de maillots",
+    "linkCount": "{chosen} de {total} elegidos",
+    "intro": "Pronostica el ganador final de cada clasificación. Modificable hasta la salida de la 1.ª etapa.",
+    "closed": "La carrera ha empezado: los pronósticos de maillots están cerrados.",
+    "pointsRule": "Top 3 final de cada maillot: cuota ×5 para el ganador, ×2 para el 2.º, ×1 para el 3.º.",
+    "combatifRule": "Supercombativo: +200 si es elegido, +50 cada día que sea el más combativo.",
+    "jersey_general": "Clasificación general",
+    "jersey_points": "Clasificación por puntos",
+    "jersey_montagne": "Mejor escalador",
+    "jersey_jeune": "Mejor joven",
+    "jersey_combatif": "Supercombativo",
+    "jersey_equipe": "Mejor equipo",
+    "noPick": "— Sin elección —",
+    "notChosen": "Sin elección",
+    "submit": "Guardar mis maillots",
+    "saving": "Guardando…",
+    "saved": "Maillots guardados.",
+    "saveError": "No se pudo guardar: puede que la carrera ya haya empezado.",
+    "loginRequired": "Crea tu cuenta o inicia sesión para pronosticar los maillots.",
+    "searchRider": "Buscar un ciclista, equipo o nación",
+    "searchTeam": "Buscar un equipo",
+    "odds": "cuota {value}",
+    "noRiders": "Aún no se conocen los inscritos: vuelve poco antes de la salida.",
+    "noJerseys": "No hay pronósticos de maillots en esta carrera."
   }
 }

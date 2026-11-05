@@ -1074,5 +1074,33 @@
     "manageHint": "You can change your mind at any time in your profile.",
     "invalid": "This link is no longer valid. You can manage your emails from your profile.",
     "toProfile": "Go to my profile"
+  },
+  "Jerseys": {
+    "title": "My jerseys",
+    "back": "Back to My season",
+    "linkLabel": "My jersey predictions",
+    "linkCount": "{chosen} of {total} chosen",
+    "intro": "Predict the final winner of each classification. You can change it until the first stage starts.",
+    "closed": "The race has started: jersey predictions are closed.",
+    "pointsRule": "Final top 3 of each jersey: odds ×5 for the winner, ×2 for 2nd, ×1 for 3rd.",
+    "combatifRule": "Super combative: +200 if elected, +50 each day he is the most combative rider.",
+    "jersey_general": "General classification",
+    "jersey_points": "Points classification",
+    "jersey_montagne": "Best climber",
+    "jersey_jeune": "Best young rider",
+    "jersey_combatif": "Super combative",
+    "jersey_equipe": "Best team",
+    "noPick": "— No pick —",
+    "notChosen": "No pick",
+    "submit": "Save my jerseys",
+    "saving": "Saving…",
+    "saved": "Jerseys saved.",
+    "saveError": "Could not save: the race may already have started.",
+    "loginRequired": "Create your account or sign in to predict the jerseys.",
+    "searchRider": "Search a rider, team or nation",
+    "searchTeam": "Search a team",
+    "odds": "odds {value}",
+    "noRiders": "The start list is not known yet: come back shortly before the start.",
+    "noJerseys": "No jersey predictions for this race."
   }
 }
