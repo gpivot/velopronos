@@ -48,7 +48,7 @@
     "lastResultExtra_pronoParfait": "Pronóstico perfecto",
     "lastResultExtra_specialMalus": "Penalización etapa especial",
     "lastResultExtra_aspiration": "Bonus rebufo",
-    "lastResultExtra_pepite": "Bonus Diamante oculto",
+    "lastResultExtra_pepite": "Bonus gregario",
     "fuseeLabel": "Cohete: {rank, select, 1 {mejor tiempo de esquí} 2 {2.º tiempo de esquí} other {3.er tiempo de esquí}}",
     "gachetteLabel": "Gatillo: tiro sin fallos",
     "shootingsLabel": "Fallos en el tiro: {shots}",
@@ -73,13 +73,14 @@
     "lastResultExtra_equipe": "Carta Equipo",
     "favoriteTeamInvite": "Elige tu equipo favorito",
     "favoriteTeamInviteHint": "Sigue sus victorias y podios, y prepara la carta bonus Equipo.",
-    "pepiteRevealTitle": "¡Tu Diamante oculto se ha revelado!",
-    "pepiteRevealHint": "Primer Top 10 de la temporada: sus puntos se suman a tu puntuación de la etapa.",
+    "pepiteRevealTitle": "¡Tu gregario ha sido revelado!",
+    "pepiteRevealHint": "Primer Top 10 en esta gran vuelta: sus puntos se suman a tu resultado de la etapa.",
     "pepiteRevealRank": "{rank}.º",
     "lastResultExtra_missingPicks": "Ciclistas no pronosticados (5 vueltas cada uno)",
     "lastResultExtra_fusee": "Carta Cohete",
     "lastResultExtra_gachette": "Carta Gatillo",
-    "lastResultExtra_combatif": "Más combativo del día"
+    "lastResultExtra_combatif": "Más combativo del día",
+    "lastResultExtra_lateJoker": "Comodín rezagado (÷ 2)"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de ciclismo.",
@@ -438,7 +439,7 @@
     "noStages": "Todavía no hay carreras programadas.",
     "noPicks": "Sin pronóstico",
     "myRankingTitle": "Mi clasificación",
-    "playerPepiteRevealed": "{sex, select, F {Diamante oculto femenino revelado:} other {Diamante oculto masculino revelado:}}"
+    "playerPepiteRevealed": "Gregario revelado ({course}):"
   },
   "Courses": {
     "title": "Mi temporada",
@@ -470,8 +471,8 @@
     "jokersPoints": "{points} pts",
     "jokersNotPlayed": "No jugada",
     "jokersDiscover": "Descubre tus comodines de fin de temporada",
-    "pepiteCardTitle": "Diamante oculto",
-    "pepiteCardHint": "Se juega en secreto en todas las etapas hasta su primer Top 10. Los demás jugadores solo lo ven una vez revelado.",
+    "pepiteCardTitle": "Gregario",
+    "pepiteCardHint": "Un outsider oculto por gran vuelta, jugado en todas las etapas hasta su primer Top 10. Los demás solo lo ven una vez revelado.",
     "pepiteRevealed": "Revelado",
     "pepiteNotRevealed": "Aún no revelado",
     "pepiteNone": "Aún no elegido",
@@ -574,7 +575,10 @@
     "offStandingsNotice": "Etapa fuera de clasificación: tiene su propia clasificación, pero sus puntos no cuentan para la temporada (sin dorsal rojo, carta bonus, ×2 ni Diamante oculto).",
     "stageNumber": "Etapa {number}",
     "prologue": "Prólogo",
-    "stageTitle": "{stage} · {type}"
+    "stageTitle": "{stage} · {type}",
+    "lateJokerTitle": "Comodín rezagado",
+    "lateJokerHint": "¿Olvidaste esta etapa? Aún puedes pronosticarla hasta 1 h después de la salida, una vez por carrera. Tus puntos se dividirán entre 2.",
+    "lateJokerBadge": "Comodín rezagado · puntos ÷ 2"
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 ciclistas",
@@ -611,8 +615,8 @@
     "cardAspiration": "Rebufo",
     "aspirationHint": "Rebufo: en esta etapa, cada uno de tus ciclistas cuenta un puesto más arriba.",
     "aspirationActive": "carta jugada en esta etapa: cada uno de tus ciclistas cuenta un puesto más arriba.",
-    "hiddenPepite": "tu Diamante oculto",
-    "hiddenPepiteError": "Tu Diamante oculto ya se juega en esta etapa: quítalo de tu pronóstico.",
+    "hiddenPepite": "tu gregario",
+    "hiddenPepiteError": "Tu gregario ya se juega en secreto en esta etapa: quítalo de tu pronóstico.",
     "searchAthlete": "Buscar un nombre o país (FRA, NOR…)",
     "searchNation": "Buscar un país (FRA, NOR…)",
     "searchNoResult": "Sin resultados",
@@ -969,14 +973,14 @@
     "leader": "Maillot amarillo: líder de la clasificación",
     "x2Used": "{used}/{max} bonus ×2 usados",
     "raceWins": "{count, plural, one {# etapa ganada} other {# etapas ganadas}} (mejor pronosticador)",
-    "pepite": "{count, plural, one {Diamante oculto revelado} other {# Diamantes ocultos revelados}}",
+    "pepite": "{count, plural, one {Gregario revelado} other {# gregarios revelados}}",
     "pepiteF": "Diamante femenino",
     "pepiteH": "Diamante masculino",
     "helpTitle": "Los iconos de los jugadores",
     "helpLeader": "Maillot amarillo: el líder de la clasificación general de la temporada (o de la liga).",
     "helpX2": "Bonus ×2 ya usados, de los 3 de la temporada.",
     "helpWins": "Etapas ganadas como mejor pronosticador.",
-    "helpPepite": "Diamante oculto revelado: logró su primer Top 10 y dio sus puntos.",
+    "helpPepite": "Gregario revelado: hizo su primer Top 10 de la gran vuelta y sumó sus puntos.",
     "stageLeader": "Dorsal rojo: líder de la carrera",
     "stageWins": "Dorsal rojo: {count, plural, one {# carrera ganada} other {# carreras ganadas}}",
     "perfectPicks": "{count, plural, one {# pronóstico perfecto} other {# pronósticos perfectos}}",
@@ -1105,6 +1109,15 @@
     "odds": "cuota {value}",
     "noRiders": "Aún no se conocen los inscritos: vuelve poco antes de la salida.",
     "noJerseys": "No hay pronósticos de maillots en esta carrera.",
-    "points": "{points} pts"
+    "points": "{points} pts",
+    "waterCarrierTitle": "Mi gregario",
+    "waterCarrierHint": "Un outsider con todas sus cuotas de la carrera de al menos 30. Nadie más lo ve. Se añade en secreto a todos tus pronósticos de etapa: en su primer Top 10, sus puntos de la etapa se suman a tu resultado, una sola vez. Hasta entonces, no puedes incluirlo en tus pronósticos. Modificable hasta la salida de la 1.ª etapa.",
+    "waterCarrierSubmit": "Guardar mi gregario",
+    "waterCarrierSaved": "Gregario guardado.",
+    "waterCarrierNotEligible": "Este corredor no es elegible: todas sus cuotas de la carrera deben ser de al menos 30.",
+    "waterCarrierNoOptions": "Ningún corredor elegible por ahora: las cuotas de la carrera aún no se conocen.",
+    "waterCarrierHidden": "Oculto, aún no revelado",
+    "waterCarrierRevealed": "Revelado",
+    "waterCarrierRevealedPoints": "Revelado · +{points} pts"
   }
 }

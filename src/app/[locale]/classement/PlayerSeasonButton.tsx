@@ -136,13 +136,13 @@ export function PlayerSeasonButton({
                         <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
                       </div>
                     </div>
-                    {/* Pépite cachée révélée : son nom en haut du pop-up (invisible tant qu'elle ne l'est pas). */}
+                    {/* Porteur d'eau révélé : son nom en haut du pop-up (invisible tant qu'il ne l'est pas). */}
                     {data.pepites
                       ?.filter((p) => p.revealed && p.name)
                       .map((p) => (
-                        <div key={p.sex} className="flex items-center gap-2 border-t border-border pt-2.5 text-[13px] text-text-dim">
-                          <span className="text-base">❄️</span>
-                          {t("playerPepiteRevealed", { sex: p.sex })}
+                        <div key={p.stageId} className="flex items-center gap-2 border-t border-border pt-2.5 text-[13px] text-text-dim">
+                          <span className="text-base">💧</span>
+                          {t("playerPepiteRevealed", { course: p.courseName })}
                           <span className="font-semibold text-ice">
                             {p.nationCode && `${nationFlagEmoji(p.nationCode)} `}
                             {p.name}

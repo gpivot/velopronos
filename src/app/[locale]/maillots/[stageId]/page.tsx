@@ -9,6 +9,8 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { ArrowLeftIcon } from "@/components/icons";
 import { JERSEY_ODDS_FORMAT, JERSEY_TYPES, type JerseyType } from "@/lib/velo/courses";
 import { JerseysForm, type JerseyConfig, type JerseyOption } from "./JerseysForm";
+import { WaterCarrierForm } from "./WaterCarrierForm";
+import { PEPITE_MIN_ODDS } from "@/lib/scoring/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +25,7 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
 
   const { data: course } = await supabase
     .from("stages")
-    .select("id, name, location, country_code, jerseys, jersey_color, races(locks_at)")
+    .select("id, season_id, kind, name, location, country_code, jerseys, jersey_color, races(locks_at)")
     .eq("id", stageId)
     .maybeSingle();
   if (!course) notFound();
@@ -38,7 +40,8 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
   } = await getAuthUser();
   const playerId = user && !user.is_anonymous ? user.id : null;
 
-  const [{ data: entries }, odds, { data: picks }, { data: ledger }] = await Promise.all([
+  const isGrandTour = course.kind === "grand_tour";
+  const [{ data: entries }, odds, { data: picks }, { data: ledger }, { data: waterCarrier }] = await Promise.all([
     supabase
       .from("stage_riders")
       .select("athlete_id, athletes(id, first_name, last_name, nation_code, team_id, teams(id, code, name))")
@@ -59,6 +62,10 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
     playerId
       ? supabase.from("score_ledger").select("jersey, points").eq("user_id", playerId).eq("stage_id", stageId).not("jersey", "is", null)
       : Promise.resolve({ data: [] as any[] }),
+    // Porteur d'eau (Grand Tour) : table pepites, une ligne par joueur et par course (0049).
+    playerId && isGrandTour
+      ? supabase.from("pepites").select("athlete_id, bonus_claimed, revealed_race_id").eq("user_id", playerId).eq("stage_id", stageId).maybeSingle()
+      : Promise.resolve({ data: null as any }),
   ]);
   const pointsByJersey = new Map(((ledger ?? []) as any[]).map((l) => [l.jersey as string, Number(l.points)]));
 
@@ -94,6 +101,42 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
     };
   });
 
+  // Porteur d'eau possible : toutes ses cotes de la course (étapes et maillots) >= 30.
+  const riderOdds = new Map<string, number[]>();
+  for (const o of odds) {
+    if (!o.athlete_id) continue;
+    if (!riderOdds.has(o.athlete_id)) riderOdds.set(o.athlete_id, []);
+    riderOdds.get(o.athlete_id)!.push(o.value);
+  }
+  const waterCarrierOptions: JerseyOption[] = riders
+    .filter((r) => {
+      const values = riderOdds.get(r.id) ?? [];
+      return values.length > 0 && values.every((v) => v >= PEPITE_MIN_ODDS);
+    })
+    .map((r) => ({
+      id: r.id,
+      label: `${nationFlagEmoji(r.nation_code)} ${fullAthleteName(r)}${r.teams?.code ? ` (${r.teams.code})` : ""}`,
+      search: [r.nation_code, r.teams?.code, r.teams?.name].filter(Boolean).join(" "),
+      odds: Math.min(...riderOdds.get(r.id)!),
+    }))
+    .sort(byOdds);
+  // Le porteur déjà choisi reste affiché même s'il n'est plus éligible.
+  if (waterCarrier && !waterCarrierOptions.some((o) => o.id === waterCarrier.athlete_id)) {
+    const r = riders.find((x) => x.id === waterCarrier.athlete_id);
+    if (r) waterCarrierOptions.unshift({ id: r.id, label: `${nationFlagEmoji(r.nation_code)} ${fullAthleteName(r)}`, search: "", odds: null });
+  }
+  let waterCarrierPoints: number | null = null;
+  if (waterCarrier?.bonus_claimed && waterCarrier.revealed_race_id && playerId) {
+    const { data: row } = await supabase
+      .from("score_ledger")
+      .select("breakdown")
+      .eq("user_id", playerId)
+      .eq("race_id", waterCarrier.revealed_race_id)
+      .maybeSingle();
+    const bonus = Number((row?.breakdown as any)?.pepiteBonus ?? 0);
+    waterCarrierPoints = bonus > 0 ? bonus : null;
+  }
+
   const name = course.name ?? course.location;
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col gap-4 px-5 pb-8 pt-6">
@@ -127,7 +170,20 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
           {!playerId ? (
             <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">{t("loginRequired")}</div>
           ) : (
-            <JerseysForm stageId={course.id} configs={configs} locked={isLocked} leaderColor={course.jersey_color ?? null} />
+            <>
+              <JerseysForm stageId={course.id} configs={configs} locked={isLocked} leaderColor={course.jersey_color ?? null} />
+              {isGrandTour && (
+                <WaterCarrierForm
+                  stageId={course.id}
+                  seasonId={course.season_id}
+                  options={waterCarrierOptions}
+                  initialPick={waterCarrier?.athlete_id ?? null}
+                  locked={isLocked}
+                  revealed={!!waterCarrier?.bonus_claimed}
+                  points={waterCarrierPoints}
+                />
+              )}
+            </>
           )}
         </>
       )}

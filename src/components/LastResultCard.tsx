@@ -180,7 +180,7 @@ async function CompactPicks({ picks, extras }: { picks: LastResultPick[]; extras
       ))}
       {extras.map((extra) => (
         <div key={extra.kind} className="flex items-center gap-2 text-[12px] text-text-dim">
-          <span className="w-7 flex-shrink-0 text-center">{extra.kind === "pronoParfait" ? "⭐" : extra.kind === "pepite" ? "❄️" : extra.points < 0 ? "⚠️" : "🏅"}</span>
+          <span className="w-7 flex-shrink-0 text-center">{extra.kind === "pronoParfait" ? "⭐" : extra.kind === "pepite" ? "💧" : extra.points < 0 ? "⚠️" : "🏅"}</span>
           <span className="flex-1">{t(`lastResultExtra_${extra.kind}`)}</span>
           <span className={`whitespace-nowrap font-display text-[12px] font-bold ${extra.points < 0 ? "text-red" : "text-green"}`}>
             {formatPoints(extra.points)}

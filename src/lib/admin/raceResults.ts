@@ -14,6 +14,7 @@ import { COMBATIF_DU_JOUR_BONUS, TOUR_DE_PENA_EMPTY_PICK_LAPS, TOUR_DE_PENA_MALU
 import { clearCurrentOdds, setCurrentOdds } from "./odds";
 import { totalMisses } from "@/lib/shootings";
 import { fetchAll } from "./fetchAll";
+import { applyLateJoker } from "@/lib/velo/lateJoker";
 import {
   cardsOnRace,
   computeEquipeBonus,
@@ -204,7 +205,7 @@ export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<
   const stage = race.stages as any;
 
   // Notation rejouable : les points déjà attribués sur cette course sont effacés d'abord.
-  const frozenPepites = await clearRaceScores(admin, raceId, stage.season_id, race.sex);
+  const frozenPepites = await clearRaceScores(admin, raceId, stage.season_id, stage.id);
 
   const [{ data: results }, { data: predictions }] = await Promise.all([
     admin.from("race_results").select("*").eq("race_id", raceId),
@@ -257,17 +258,17 @@ async function clearRaceScores(
   admin: SupabaseClient,
   raceId: string,
   seasonId: string,
-  sex: string | null
+  stageId: string
 ): Promise<FrozenPepiteBonus[]> {
   const { data: ledger } = await admin.from("score_ledger").select("user_id, breakdown").eq("race_id", raceId);
   const withPepite = (ledger ?? []).filter((row) => (row.breakdown as any)?.pepiteBonus);
   const frozen: FrozenPepiteBonus[] = [];
-  if (withPepite.length > 0 && sex) {
+  // VéloPronos : le porteur d'eau (table pepites) est rattaché à son Grand Tour (stage_id, 0049).
+  if (withPepite.length > 0) {
     const { data: current } = await admin
       .from("pepites")
       .select("user_id, athlete_id, bonus_claimed, revealed_race_id")
-      .eq("season_id", seasonId)
-      .eq("sex", sex)
+      .eq("stage_id", stageId)
       .in("user_id", withPepite.map((row) => row.user_id as string));
     const currentByUser = new Map((current ?? []).map((p) => [p.user_id as string, p]));
     const toReset: string[] = [];
@@ -286,8 +287,7 @@ async function clearRaceScores(
       await admin
         .from("pepites")
         .update({ bonus_claimed: false, revealed_race_id: null })
-        .eq("season_id", seasonId)
-        .eq("sex", sex)
+        .eq("stage_id", stageId)
         .in("user_id", toReset);
     }
   }
@@ -435,6 +435,7 @@ export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: st
 }
 
 /**
+ * VéloPronos : le porteur d'eau (table pepites, un par Grand Tour) reprend la Pépite (§14).
  * §14 — la Pépite est un pronostic caché : sur chaque course individuelle
  * où elle termine dans le Top 10 pour la 1re fois de la saison, son score
  * (cote de la course × multiplicateur de rang, §1) s'ajoute en bonus. Elle
@@ -457,8 +458,8 @@ async function applyPepiteBonuses(
 
   const { data: pepites } = await admin
     .from("pepites")
-    .select("user_id, sex, athlete_id, active_from")
-    .eq("season_id", seasonId)
+    .select("user_id, athlete_id, active_from")
+    .eq("stage_id", stageId)
     .eq("bonus_claimed", false)
     .in("athlete_id", athleteIds);
   const inPlay = (pepites ?? []).filter((p) => !p.active_from || new Date(p.active_from) <= new Date(race.locks_at));
@@ -505,8 +506,7 @@ async function applyPepiteBonuses(
       .from("pepites")
       .update({ bonus_claimed: true, revealed_race_id: raceId })
       .eq("user_id", pepite.user_id)
-      .eq("season_id", seasonId)
-      .eq("sex", pepite.sex);
+      .eq("stage_id", stageId);
   }
 }
 
@@ -649,14 +649,17 @@ async function scoreIndividualPredictions(
           []
         )
       : 0;
-    const totalPoints = result.total + equipeBonus;
+    // Joker retardataire (VéloPronos) : points ÷ 2 ; le porteur d'eau s'ajoute ensuite, entier.
+    const lateJoker = prediction.late_joker === true;
+    const totalPoints = applyLateJoker(result.total + equipeBonus, lateJoker);
+    const lateJokerMalus = totalPoints - (result.total + equipeBonus);
 
     scoreLedgerRows.push({
       user_id: prediction.user_id,
       season_id: stage.season_id,
       race_id: race.id,
       points: totalPoints,
-      breakdown: { ...result.breakdown, ...(equipeBonus ? { equipeBonus } : {}) },
+      breakdown: { ...result.breakdown, ...(equipeBonus ? { equipeBonus } : {}), ...(lateJoker ? { lateJoker: true, lateJokerMalus } : {}) },
     });
     pointsByUserId.set(prediction.user_id, totalPoints);
   }
@@ -717,13 +720,15 @@ async function scoreTeamPredictions(
     });
     // VéloPronos (base44) : le ×2 (perso ou course ×2) double tout, bonus Musette compris.
     const multiplier = stage.coefficient === 2 || (prediction.bonus_x2_used && !offStandings) ? 2 : 1;
-    const total = result.total * multiplier;
+    const lateJoker = prediction.late_joker === true;
+    const total = applyLateJoker(result.total * multiplier, lateJoker);
+    const lateJokerMalus = total - result.total * multiplier;
     scoreLedgerRows.push({
       user_id: prediction.user_id,
       season_id: stage.season_id,
       race_id: race.id,
       points: total,
-      breakdown: { ...result.breakdown, ...(multiplier === 2 ? { veloMultiplier: 2 } : {}) },
+      breakdown: { ...result.breakdown, ...(multiplier === 2 ? { veloMultiplier: 2 } : {}), ...(lateJoker ? { lateJoker: true, lateJokerMalus } : {}) },
     });
     pointsByUserId.set(prediction.user_id, total);
   }
@@ -829,7 +834,7 @@ export async function resetRaceResults(admin: SupabaseClient, raceId: string): P
   const seasonId = (race.stages as any).season_id as string;
 
   if (race.format === "sprint") await restorePursuitOdds(admin, race, seasonId);
-  const frozenPepites = await clearRaceScores(admin, raceId, seasonId, race.sex);
+  const frozenPepites = await clearRaceScores(admin, raceId, seasonId, race.stage_id);
   await restoreFrozenPepiteBonuses(admin, seasonId, raceId, frozenPepites);
 
   const { error: resultsError } = await admin.from("race_results").delete().eq("race_id", raceId);

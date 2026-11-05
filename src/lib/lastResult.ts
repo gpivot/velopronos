@@ -66,7 +66,7 @@ export interface RaceResultRow {
 
 export interface LastResultExtra {
   /** Clé de traduction (Home.lastResultExtra_<kind>). */
-  kind: "top3" | "top5" | "top10" | "pronoParfait" | "specialMalus" | "missingPicks" | "aspiration" | "pepite" | "equipe" | "combatif";
+  kind: "top3" | "top5" | "top10" | "pronoParfait" | "specialMalus" | "missingPicks" | "aspiration" | "pepite" | "equipe" | "combatif" | "lateJoker";
   points: number;
 }
 
@@ -198,6 +198,8 @@ export function computeIndividualExtras(breakdown: IndividualBreakdown): LastRes
     { kind: "aspiration", points: breakdown.aspirationBonus ?? 0 },
     { kind: "equipe", points: breakdown.equipeBonus ?? 0 },
     { kind: "combatif", points: breakdown.combatifBonus ?? 0 },
+    // Joker retardataire (VéloPronos) : la moitié des points retirée.
+    { kind: "lateJoker", points: (breakdown as any).lateJokerMalus ?? 0 },
   ];
   return extras.filter((e) => e.points !== 0);
 }
@@ -368,7 +370,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
         .from("pepites")
         .select("athlete_id")
         .eq("user_id", userId)
-        .eq("season_id", stage.season_id)
+        .eq("stage_id", race.stage_id)
         .eq("bonus_claimed", true);
       const ids = new Set(((claimed ?? []) as any[]).map((p) => p.athlete_id as string));
       pepiteId = resultRows.find((r) => r.athlete_id && r.rank <= 10 && ids.has(r.athlete_id))?.athlete_id ?? null;

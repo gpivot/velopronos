@@ -48,7 +48,7 @@
     "lastResultExtra_pronoParfait": "Volltreffer",
     "lastResultExtra_specialMalus": "Malus Spezialrennen",
     "lastResultExtra_aspiration": "Windschattenbonus",
-    "lastResultExtra_pepite": "Bonus Versteckter Rohdiamant",
+    "lastResultExtra_pepite": "Wasserträger-Bonus",
     "fuseeLabel": "Rakete: {rank, select, 1 {schnellste Laufzeit} 2 {zweitschnellste Laufzeit} other {drittschnellste Laufzeit}}",
     "gachetteLabel": "Abzug: fehlerfreies Schießen",
     "shootingsLabel": "Schießfehler: {shots}",
@@ -73,13 +73,14 @@
     "lastResultExtra_equipe": "Team-Karte",
     "favoriteTeamInvite": "Wähle dein Lieblingsteam",
     "favoriteTeamInviteHint": "Verfolge seine Siege und Podestplätze und bereite die Bonuskarte Team vor.",
-    "pepiteRevealTitle": "Dein versteckter Rohdiamant ist aufgedeckt!",
-    "pepiteRevealHint": "Erste Top-10-Platzierung der Saison: Seine Punkte werden deinem Rennergebnis gutgeschrieben.",
+    "pepiteRevealTitle": "Dein Wasserträger ist enthüllt!",
+    "pepiteRevealHint": "Erste Top 10 bei dieser Grand Tour: seine Punkte kommen zu deinem Etappenergebnis hinzu.",
     "pepiteRevealRank": "{rank}.",
     "lastResultExtra_missingPicks": "Nicht getippte Fahrer (je 5 Strafrunden)",
     "lastResultExtra_fusee": "Karte Rakete",
     "lastResultExtra_gachette": "Karte Abzug",
-    "lastResultExtra_combatif": "Kämpferischster Fahrer des Tages"
+    "lastResultExtra_combatif": "Kämpferischster Fahrer des Tages",
+    "lastResultExtra_lateJoker": "Nachzügler-Joker (÷ 2)"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Radrennen.",
@@ -438,7 +439,7 @@
     "noStages": "Noch keine Rennen geplant.",
     "noPicks": "Kein Tipp",
     "myRankingTitle": "Meine Platzierung",
-    "playerPepiteRevealed": "{sex, select, F {Versteckter Rohdiamant Frauen aufgedeckt:} other {Versteckter Rohdiamant Männer aufgedeckt:}}"
+    "playerPepiteRevealed": "Wasserträger enthüllt ({course}):"
   },
   "Courses": {
     "title": "Meine Saison",
@@ -470,10 +471,10 @@
     "jokersPoints": "{points} Pkt.",
     "jokersNotPlayed": "Nicht gespielt",
     "jokersDiscover": "Entdecke deine Joker zum Saisonende",
-    "pepiteCardTitle": "Versteckter Rohdiamant",
-    "pepiteCardHint": "Verdeckt in jedem Etappe gespielt bis zu seiner ersten Top-10-Platzierung. Die anderen Spieler sehen ihn erst, wenn er aufgedeckt ist.",
-    "pepiteRevealed": "Aufgedeckt",
-    "pepiteNotRevealed": "Noch nicht aufgedeckt",
+    "pepiteCardTitle": "Wasserträger",
+    "pepiteCardHint": "Ein versteckter Außenseiter pro Grand Tour, auf allen Etappen gespielt bis zu seiner ersten Top 10. Die anderen sehen ihn erst nach der Enthüllung.",
+    "pepiteRevealed": "Enthüllt",
+    "pepiteNotRevealed": "Noch nicht enthüllt",
     "pepiteNone": "Noch nicht gewählt",
     "pepiteChoose": "Wählen",
     "pepiteSeeRace": "zum Etappe",
@@ -574,7 +575,10 @@
     "offStandingsNotice": "Etappe außer Wertung: Es hat seine eigene Rangliste, aber seine Punkte zählen nicht für die Saison (kein rotes Trikot, keine Bonuskarte, kein ×2, kein Rohdiamant).",
     "stageNumber": "Etappe {number}",
     "prologue": "Prolog",
-    "stageTitle": "{stage} · {type}"
+    "stageTitle": "{stage} · {type}",
+    "lateJokerTitle": "Nachzügler-Joker",
+    "lateJokerHint": "Etappe vergessen? Du kannst sie noch bis 1 Std. nach dem Start tippen, einmal pro Rennen. Deine Punkte werden halbiert.",
+    "lateJokerBadge": "Nachzügler-Joker · Punkte ÷ 2"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Fahrer",
@@ -611,8 +615,8 @@
     "cardAspiration": "Windschatten",
     "aspirationHint": "Windschatten: in diesem Etappe zählt jeder deiner Fahrer einen Platz besser.",
     "aspirationActive": "Karte auf diesem Etappe gespielt: jeder deiner Fahrer zählt einen Platz besser.",
-    "hiddenPepite": "dein versteckter Rohdiamant",
-    "hiddenPepiteError": "Dein versteckter Rohdiamant wird in diesem Etappe bereits gespielt: Nimm ihn aus deinem Tipp.",
+    "hiddenPepite": "dein Wasserträger",
+    "hiddenPepiteError": "Dein Wasserträger wird auf dieser Etappe bereits verdeckt gespielt: entferne ihn aus deinem Tipp.",
     "searchAthlete": "Name oder Land suchen (FRA, NOR…)",
     "searchNation": "Land suchen (FRA, NOR…)",
     "searchNoResult": "Keine Treffer",
@@ -969,14 +973,14 @@
     "leader": "Gelbes Trikot: Führender der Wertung",
     "x2Used": "{used}/{max} ×2-Boni genutzt",
     "raceWins": "{count, plural, one {# Etappe gewonnen} other {# Etappe gewonnen}} (bester Tipper)",
-    "pepite": "{count, plural, one {Versteckter Rohdiamant aufgedeckt} other {# versteckte Rohdiamanten aufgedeckt}}",
+    "pepite": "{count, plural, one {Wasserträger enthüllt} other {# Wasserträger enthüllt}}",
     "pepiteF": "Rohdiamant Frauen",
     "pepiteH": "Rohdiamant Männer",
     "helpTitle": "Die Spieler-Symbole",
     "helpLeader": "Gelbes Trikot: Führender der Gesamtwertung der Saison (oder der Liga).",
     "helpX2": "Bereits genutzte ×2-Boni, von 3 pro Saison.",
     "helpWins": "Etappe, bei denen der Spieler bester Tipper war.",
-    "helpPepite": "Versteckter Rohdiamant aufgedeckt: erste Top-10-Platzierung, Punkte kassiert.",
+    "helpPepite": "Wasserträger enthüllt: erste Top 10 der Grand Tour, seine Punkte wurden gutgeschrieben.",
     "stageLeader": "Rotes Trikot: Führender der Rennen",
     "stageWins": "Rotes Trikot: {count, plural, one {# Rennen gewonnen} other {# Rennen gewonnen}}",
     "perfectPicks": "{count, plural, one {# perfekter Tipp} other {# perfekte Tipps}}",
@@ -1105,6 +1109,15 @@
     "odds": "Quote {value}",
     "noRiders": "Die Startliste ist noch nicht bekannt: Schau kurz vor dem Start wieder vorbei.",
     "noJerseys": "Keine Trikot-Tipps für dieses Rennen.",
-    "points": "{points} Pkt."
+    "points": "{points} Pkt.",
+    "waterCarrierTitle": "Mein Wasserträger",
+    "waterCarrierHint": "Ein Außenseiter, dessen Quoten für dieses Rennen alle mindestens 30 sind. Niemand sonst sieht ihn. Er wird verdeckt zu all deinen Etappentipps hinzugefügt: bei seiner ersten Top 10 kommen seine Etappenpunkte einmalig zu deinem Ergebnis hinzu. Bis dahin kannst du ihn nicht tippen. Änderbar bis zum Start der 1. Etappe.",
+    "waterCarrierSubmit": "Meinen Wasserträger speichern",
+    "waterCarrierSaved": "Wasserträger gespeichert.",
+    "waterCarrierNotEligible": "Dieser Fahrer ist nicht wählbar: alle seine Quoten für das Rennen müssen mindestens 30 sein.",
+    "waterCarrierNoOptions": "Noch kein wählbarer Fahrer: die Quoten des Rennens sind noch nicht bekannt.",
+    "waterCarrierHidden": "Verdeckt, noch nicht enthüllt",
+    "waterCarrierRevealed": "Enthüllt",
+    "waterCarrierRevealedPoints": "Enthüllt · +{points} Pkt."
   }
 }
