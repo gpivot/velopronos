@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { fetchAll } from "./admin/fetchAll";
-import { areJokersApplied, loadSeasonJokers } from "./jokers";
 import { retainedTotal, type LedgerLine } from "./velo/retainedResults";
 import type { CourseKind } from "./velo/courses";
 
@@ -11,9 +10,8 @@ export interface LeaderboardRow {
 }
 
 /**
- * Classement général : agrégat du score_ledger, jamais recalculé à la main. En fin de saison, une
- * fois les jokers activés par l'admin (`seasons.jokers_applied`), les résultats qu'ils effacent sont
- * retirés du total (cf. src/lib/jokers.ts). Les courses des étapes « Autre (×0) », hors classement,
+ * Classement général : agrégat du score_ledger, jamais recalculé à la main (VéloPronos : plus de
+ * jokers de fin de saison, remplacés par les résultats retenus). Les courses des étapes « Autre (×0) », hors classement,
  * ne comptent pas (`score_ledger.counts_in_standings`, migration 0041).
  *
  * VéloPronos : seuls les résultats retenus comptent (tous les Grands Tours et événements bonus, les
@@ -49,14 +47,6 @@ export async function getLeaderboard(supabase: SupabaseClient, seasonId: string)
   }
   for (const [userId, lines] of Array.from(linesByUserId)) {
     totalsByUserId.get(userId)!.points = retainedTotal(lines, kindByCourseId).points;
-  }
-
-  if (totalsByUserId.size > 0 && (await areJokersApplied(supabase, seasonId))) {
-    const jokers = await loadSeasonJokers(supabase, seasonId, Array.from(totalsByUserId.keys()));
-    for (const [userId, selection] of Array.from(jokers)) {
-      const row = totalsByUserId.get(userId);
-      if (row) row.points = Math.round((row.points + selection.delta) * 10) / 10;
-    }
   }
 
   return Array.from(totalsByUserId.values()).sort((a, b) => b.points - a.points);

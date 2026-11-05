@@ -250,3 +250,16 @@ retrait d'un coureur. Le CSV téléchargé reprend le format d'import et se réi
   étape à la suivante dans la course (la logique héritée « course précédente de la même étape »
   s'applique déjà telle quelle, à vérifier avec les cartes).
 - Back-office : saisie des résultats d'étape et des maillots, combatif du jour.
+
+## Fonctions biathlon retirées de l'interface (05/11/2026)
+
+- `/globes` (pronostics de saison, Pépite de saison, équipe favorite) redirige vers `/coeur`.
+- Jokers de fin de saison : plus appliqués au classement général (remplacés par les résultats
+  retenus), encadré retiré du classement. `src/lib/jokers.ts` reste dans le code, inutilisé.
+- Encadrés Fusée / Gâchette / Talent (série) et invitation aux pronostics de saison de l'accueil
+  retirés ; pronostics de saison retirés de la fiche d'un joueur.
+- Carte « 4e choix » renommée **Oreillette** (fr), Earpiece, Funk, Pinganillo, Radiolina
+  (`balle_de_pioche` en base).
+- Restent dans le code, invisibles en vélo faute de données : relais, tirs et tours de pénalité,
+  import IBU de l'admin, globes de l'admin. La page d'accueil publique, le règlement et la FAQ
+  sont encore à réécrire pour le vélo.
