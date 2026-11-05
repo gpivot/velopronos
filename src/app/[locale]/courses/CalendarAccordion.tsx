@@ -124,16 +124,17 @@ export function CalendarAccordion({
         const nextRace = multiStage ? stage.races.find((r) => r.displayStatus === "upcoming") : undefined;
         const stripes = look === "grand_tour" ? FLAG_STRIPES[stage.country_code] ?? (stage.jerseyColor ? [stage.jerseyColor] : null) : null;
         const accent = look === "grand_tour" ? stage.jerseyColor ?? null : null;
+        // Nombre d'étapes affiché seulement une fois les étapes importées.
+        const stagesCount = stage.races.length > 0 ? ` · ${t("stagesCount", { count: stage.races.length })}` : "";
+        // Mondiaux : pas de mention en majuscules, le nom de la course suffit (demande de Guillaume).
         const eyebrow =
           look === "grand_tour"
-            ? `${t("lookGrandTour")} · ${t("stagesCount", { count: stage.races.length })}`
+            ? `${t("lookGrandTour")}${stagesCount}`
             : look === "stage_race"
-              ? `${t("lookStageRace")} · ${t("stagesCount", { count: stage.races.length })}`
+              ? `${t("lookStageRace")}${stagesCount}`
               : isMonument
                 ? t("lookMonument")
-                : isWorlds
-                  ? t("lookWorlds")
-                  : null;
+                : null;
         return (
           <div
             key={stage.id}
@@ -157,7 +158,7 @@ export function CalendarAccordion({
           >
             {stripes && (
               // Grand Tour : liseré aux couleurs du pays dans le coin, pour en faire un événement.
-              <div aria-hidden className="pointer-events-none absolute -right-9 top-4 w-32 rotate-45 shadow-md">
+              <div aria-hidden className="pointer-events-none absolute -right-11 top-2 w-28 rotate-45 shadow-md">
                 {stripes.map((color, i) => (
                   <div key={i} className="h-[5px]" style={{ backgroundColor: color }} />
                 ))}
