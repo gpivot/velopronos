@@ -6,7 +6,8 @@ import { ClaimCardPicker } from "./ClaimCardPicker";
 import { StageCardPlayer } from "./StageCardPlayer";
 
 /**
- * « Série en cours » d'un joueur : courses d'affilée avec des points, sur 10 pour une carte bonus.
+ * « Série en cours » d'un joueur : VéloPronos, étapes d'affilée avec des points dans la course par
+ * étapes en cours, sur 5 pour une carte bonus jouable dans cette course (migration 0051).
  * Accueil, Ma saison et pop-up d'un joueur du Classement. Avec `cards` (le joueur connecté) :
  * choix de la carte gagnée au 10/10 et rappel de ses cartes (disponibles, actives, utilisées).
  */
@@ -27,9 +28,9 @@ export function StreakCard({
   const remaining = STREAK_TARGET - current;
   const extras = cards && (
     <>
-      {seasonId && cards.unclaimed > 0 && (
+      {seasonId && cards.course && cards.unclaimed > 0 && (
         <ClaimCardPicker
-          seasonId={seasonId}
+          courseId={cards.course.id}
           unclaimed={cards.unclaimed}
           offers={cards.offers}
           autoOpen={autoOpenClaim}

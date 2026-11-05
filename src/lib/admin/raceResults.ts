@@ -5,7 +5,7 @@ import {
   computePepiteBonus,
   computePursuitOdds,
   computeRelayScore,
-  computeSeasonStreaks,
+  computeCourseStreaks,
   fuseeGachetteEligibility,
   type AthleteRaceResult,
   type NationRaceResult,
@@ -375,14 +375,17 @@ async function applyTourDePenaAbsences(
  * Une carte déjà choisie par un joueur reste acquise même si le recalcul lui en retire le crédit.
  */
 export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: string): Promise<void> {
+  // VéloPronos (migration 0051) : une série par course par étapes ou Grand Tour, recomptée course
+  // par course ; les classiques n'en ont pas. Étapes hors classement (×0) : pas de série.
   const { data: races } = await admin
     .from("races")
-    .select("id, locks_at, stages!inner(season_id, counts_in_standings)")
+    .select("id, stage_id, locks_at, stages!inner(season_id, kind, counts_in_standings)")
     .eq("stages.season_id", seasonId)
+    .in("stages.kind", ["stage_race", "grand_tour"])
     .eq("status", "finished")
     .order("locks_at");
-  // Étapes hors classement (×0) : leurs courses ne font ni avancer ni casser la série.
-  const raceIds = (races ?? []).filter((r: any) => r.stages?.counts_in_standings !== false).map((r) => r.id as string);
+  const counted = (races ?? []).filter((r: any) => r.stages?.counts_in_standings !== false);
+  const raceIds = counted.map((r) => r.id as string);
 
   const [predictions, ledger, { data: counters }] = await Promise.all([
     raceIds.length === 0
@@ -399,9 +402,10 @@ export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: st
         .order("id")
         .range(from, to)
     ),
-    admin.from("streak_counters").select("user_id").eq("season_id", seasonId),
+    admin.from("streak_counters").select("user_id, stage_id").eq("season_id", seasonId),
   ]);
 
+  // Points de l'étape hors porteur d'eau (il ne fait ni avancer ni casser la série).
   const ledgerByKey = new Map(
     ledger.map((row) => [
       `${row.user_id}|${row.race_id}`,
@@ -415,22 +419,29 @@ export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: st
     pointsByRace.get(p.race_id)!.set(p.user_id, points);
   }
 
-  const streaks = computeSeasonStreaks(raceIds, pointsByRace);
-  // Un joueur qui n'a plus aucune course notée repart de zéro.
-  for (const c of counters ?? []) {
-    if (!streaks.has(c.user_id)) streaks.set(c.user_id, { currentStreak: 0, cardsEarned: 0 });
+  const racesByCourse = new Map<string, string[]>();
+  for (const r of counted) {
+    const list = racesByCourse.get(r.stage_id as string) ?? [];
+    list.push(r.id as string);
+    racesByCourse.set(r.stage_id as string, list);
   }
-  if (streaks.size === 0) return;
+  const rows: Array<{ user_id: string; season_id: string; stage_id: string; current_streak: number; cards_earned: number }> = [];
+  const seen = new Set<string>();
+  for (const [courseId, courseRaceIds] of Array.from(racesByCourse)) {
+    for (const [userId, s] of Array.from(computeCourseStreaks(courseRaceIds, pointsByRace))) {
+      rows.push({ user_id: userId, season_id: seasonId, stage_id: courseId, current_streak: s.currentStreak, cards_earned: s.cardsEarned });
+      seen.add(`${userId}|${courseId}`);
+    }
+  }
+  // Un compteur sans plus aucune étape notée (résultats effacés) repart de zéro.
+  for (const c of (counters ?? []) as any[]) {
+    if (!seen.has(`${c.user_id}|${c.stage_id}`)) {
+      rows.push({ user_id: c.user_id, season_id: seasonId, stage_id: c.stage_id, current_streak: 0, cards_earned: 0 });
+    }
+  }
+  if (rows.length === 0) return;
 
-  const { error } = await admin.from("streak_counters").upsert(
-    [...streaks.entries()].map(([userId, s]) => ({
-      user_id: userId,
-      season_id: seasonId,
-      current_streak: s.currentStreak,
-      cards_earned: s.cardsEarned,
-    })),
-    { onConflict: "user_id,season_id" }
-  );
+  const { error } = await admin.from("streak_counters").upsert(rows, { onConflict: "user_id,stage_id" });
   if (error) throw new Error(error.message);
 }
 

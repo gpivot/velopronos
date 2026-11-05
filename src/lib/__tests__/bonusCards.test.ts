@@ -36,18 +36,35 @@ const races: CardRace[] = [
   race("sprintH2", "sprint", "H", 9),
 ];
 
+// VéloPronos : un Grand Tour (étapes e1 à e5, CLM par équipes en e3) et une autre course.
+const etape = (id: string, day: number, format = "sprint", stage_id = "tour"): CardRace => ({
+  id,
+  format,
+  sex: "H",
+  locks_at: new Date(Date.UTC(2027, 6, day, 12)).toISOString(),
+  status: "upcoming",
+  stage_id,
+});
+const tour: CardRace[] = [
+  etape("e1", 1),
+  etape("e2", 2, "montagne"),
+  etape("e3", 3, "clm_equipes"),
+  etape("e4", 4),
+  etape("e5", 5, "clm"),
+  etape("autre1", 6, "sprint", "autre"),
+];
+
 const card = (over: Partial<CardRow>): CardRow => ({ id: "c", card_type: "balle_de_pioche", status: "available", used_on_race_id: null, ...over });
 
-describe("quatriemeChoixWindow", () => {
-  it("couvre la course d'activation puis 2 courses par sexe, relais exclus", () => {
-    expect(quatriemeChoixWindow("sprintF", races)).toEqual(["sprintF", "sprintH", "poursuiteF", "poursuiteH"]);
-    expect(quatriemeChoixWindow("sprintH", races)).toEqual(["sprintH", "poursuiteF", "poursuiteH", "sprintF2"]);
+describe("quatriemeChoixWindow (VéloPronos)", () => {
+  it("couvre l'étape d'activation puis les 2 suivantes de la course, CLM par équipes exclu", () => {
+    expect(quatriemeChoixWindow("e1", tour)).toEqual(["e1", "e2", "e4"]);
+    expect(quatriemeChoixWindow("e2", tour)).toEqual(["e2", "e4", "e5"]);
   });
 
-  it("déborde sur l'étape suivante et se raccourcit en fin de saison", () => {
-    // Poursuites H et F au même horaire : la course d'activation passe en premier.
-    expect(quatriemeChoixWindow("poursuiteH", races)).toEqual(["poursuiteH", "poursuiteF", "sprintF2", "sprintH2"]);
-    expect(quatriemeChoixWindow("sprintH2", races)).toEqual(["sprintH2"]);
+  it("ne déborde pas sur la course suivante et se raccourcit en fin de course", () => {
+    expect(quatriemeChoixWindow("e4", tour)).toEqual(["e4", "e5"]);
+    expect(quatriemeChoixWindow("e3", tour)).toEqual([]);
   });
 
   it("jamais sur un relais", () => {
@@ -59,26 +76,16 @@ describe("cartes jouées", () => {
   const played = [card({ id: "q", status: "used", used_on_race_id: "sprintF" })];
 
   it("le 4e choix s'applique à toute sa fenêtre", () => {
-    expect(cardsOnRace("poursuiteH", played, races).quatriemeChoix?.id).toBe("q");
-    expect(cardsOnRace("sprintF2", played, races).quatriemeChoix).toBeNull();
+    const quatre = [card({ id: "q", status: "used", used_on_race_id: "e1" })];
+    expect(cardsOnRace("e4", quatre, tour).quatriemeChoix?.id).toBe("q");
+    expect(cardsOnRace("e5", quatre, tour).quatriemeChoix).toBeNull();
   });
 
-  it("Ça farte se pose pendant un 4e choix, pas Aspiration", () => {
-    const cards = [...played, card({ id: "f", card_type: "ca_farte" }), card({ id: "a", card_type: "aspiration" })];
-    expect(canPlayCard("ca_farte", "poursuiteF", cards, races)).toBe(true);
-    expect(canPlayCard("aspiration", "poursuiteF", cards, races)).toBe(false);
-    expect(canPlayCard("ca_farte", "relaisMixte", cards, races)).toBe(false);
-
-    // Ça farte et Aspiration ne vont pas sur la même course.
-    const farteOnSprint = [card({ id: "f", card_type: "ca_farte", status: "used", used_on_race_id: "sprintF2" }), card({ id: "a", card_type: "aspiration" })];
-    expect(canPlayCard("aspiration", "sprintF2", farteOnSprint, races)).toBe(false);
-
-    // Une Aspiration posée plus loin empêche un 4e choix dont la fenêtre la couvrirait, pas un Ça farte.
-    const withAspiration = [card({ id: "a", card_type: "aspiration", status: "used", used_on_race_id: "poursuiteH" }), card({ id: "q2" })];
-    expect(canPlayCard("balle_de_pioche", "sprintF", withAspiration, races)).toBe(false);
-    expect(canPlayCard("balle_de_pioche", "sprintF2", withAspiration, races)).toBe(true);
-    const withFarte = [card({ id: "f", card_type: "ca_farte", status: "used", used_on_race_id: "poursuiteH" }), card({ id: "q2" })];
-    expect(canPlayCard("balle_de_pioche", "sprintF", withFarte, races)).toBe(true);
+  it("le Boost se pose pendant un 4e choix, seulement dans la course de la carte, jamais sur un CLM par équipes", () => {
+    const cards = [card({ id: "q", status: "used", used_on_race_id: "e1", course_id: "tour" }), card({ id: "f", card_type: "ca_farte", course_id: "tour" })];
+    expect(canPlayCard("ca_farte", "e2", cards, tour)).toBe(true);
+    expect(canPlayCard("ca_farte", "e3", cards, tour)).toBe(false);
+    expect(canPlayCard("ca_farte", "autre1", cards, tour)).toBe(false);
   });
 
   it("refuse une carte qu'on n'a pas", () => {
@@ -110,9 +117,9 @@ describe("describeCard", () => {
 
   it("disponible, active puis utilisée", () => {
     expect(describeCard(card({}), races, now).state).toBe("available");
-    expect(describeCard(card({ status: "used", used_on_race_id: "sprintF" }), races, now)).toMatchObject({
+    expect(describeCard(card({ status: "used", used_on_race_id: "e1" }), tour, new Date(Date.UTC(2027, 6, 2, 13)))).toMatchObject({
       state: "active",
-      windowSize: 4,
+      windowSize: 3,
       windowStarted: 2,
     });
     const finished = races.map((r) => ({ ...r, status: "finished" }));
@@ -180,35 +187,28 @@ describe("cartes de la saison", () => {
     expect(isCardUnlocked("equipe", noChamps, new Date("2027-02-20"))).toBe(false);
   });
 
-  it("pas la même carte deux 10/10 de suite", () => {
+  it("pas la même carte deux séries de suite (VéloPronos : Grillade, Boost, 4e choix)", () => {
     const offers = offeredCards("ca_farte", stages, new Date("2026-12-01"));
     expect(Object.fromEntries(offers.map((o) => [o.type, o.state]))).toEqual({
       fondue: "offered",
       ca_farte: "justTaken",
       balle_de_pioche: "offered",
-      aspiration: "locked",
-      equipe: "locked",
-      fusee: "offered",
-      gachette: "offered",
-      talent: "locked",
     });
   });
 
-  it("Talent seulement après une pépite révélée ; réglages admin (désactivée, hors période)", () => {
+  it("réglages admin (désactivée, hors période)", () => {
     const now = new Date("2026-12-01");
     const offers = offeredCards(null, stages, now, {
-      hasRevealedPepite: true,
       settings: [
-        { card_type: "fusee", enabled: false, available_from: null, available_until: null },
-        { card_type: "gachette", enabled: true, available_from: "2027-01-01T00:00:00Z", available_until: null },
+        { card_type: "fondue", enabled: false, available_from: null, available_until: null },
+        { card_type: "balle_de_pioche", enabled: true, available_from: "2027-01-01T00:00:00Z", available_until: null },
         { card_type: "ca_farte", enabled: true, available_from: "2026-11-01T00:00:00Z", available_until: "2026-12-31T00:00:00Z" },
       ],
     });
     const byType = Object.fromEntries(offers.map((o) => [o.type, o.state]));
-    expect(byType.fusee).toBeUndefined();
-    expect(byType.gachette).toBe("unavailable");
+    expect(byType.fondue).toBeUndefined();
+    expect(byType.balle_de_pioche).toBe("unavailable");
     expect(byType.ca_farte).toBe("offered");
-    expect(byType.talent).toBe("offered");
   });
 
   it("Équipe couvre toutes les courses restantes, relais compris", () => {
@@ -294,7 +294,7 @@ describe("Mondiaux / JO et cumul avec Ça farte (Guillaume, 04/11/2026)", () => 
   const before = new Date(Date.UTC(2026, 10, 30));
   const worlds: CardRace[] = races.map((r) => (r.stage_id === "etape1" ? { ...r, coefficient: 2 } : r));
 
-  it("aucune carte aux Mondiaux, le 4e choix saute leurs courses", () => {
+  it("aucune carte sur une course ×2, ni de 4e choix", () => {
     const cards = [card({ id: "c", card_type: "ca_farte" }), card({ id: "f", card_type: "fusee" })];
     expect(canPlayCard("ca_farte", "sprintF", cards, worlds)).toBe(false);
     expect(canPlayCard("ca_farte", "sprintF2", cards, worlds)).toBe(true);

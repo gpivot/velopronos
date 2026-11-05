@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeSeasonStreaks, updateStreak } from "../streak";
+import { computeCourseStreaks, computeSeasonStreaks, updateStreak } from "../streak";
 
 describe("updateStreak", () => {
   it("incrémente la série quand la course rapporte des points", () => {
@@ -11,8 +11,8 @@ describe("updateStreak", () => {
     expect(updateStreak(7, -30)).toEqual({ currentStreak: 0, cardEarned: false });
   });
 
-  it("attribue une carte bonus à la 10e course consécutive et repart de zéro", () => {
-    expect(updateStreak(9, 10)).toEqual({ currentStreak: 0, cardEarned: true });
+  it("attribue une carte bonus à la 5e étape consécutive (VéloPronos) et repart de zéro", () => {
+    expect(updateStreak(4, 10)).toEqual({ currentStreak: 0, cardEarned: true });
   });
 });
 
@@ -29,7 +29,7 @@ describe("computeSeasonStreaks", () => {
       ])
     );
     const streaks = computeSeasonStreaks(races, pointsByRace);
-    expect(streaks.get("alice")).toEqual({ currentStreak: 2, cardsEarned: 1 });
+    expect(streaks.get("alice")).toEqual({ currentStreak: 2, cardsEarned: 2 });
     expect(streaks.get("bob")).toEqual({ currentStreak: 0, cardsEarned: 0 });
   });
 
@@ -42,5 +42,17 @@ describe("computeSeasonStreaks", () => {
     );
     expect(before.get("u")?.currentStreak).toBe(3);
     expect(corrected.get("u")?.currentStreak).toBe(1);
+  });
+});
+
+describe("computeCourseStreaks", () => {
+  it("une étape oubliée casse la série dans la course", () => {
+    const races = ["e1", "e2", "e3", "e4", "e5", "e6"];
+    const pointsByRace = new Map(
+      races.map((raceId, i) => [raceId, new Map([["alice", 5], ...(i === 2 ? [] : [["bob", 5] as [string, number]])])])
+    );
+    const streaks = computeCourseStreaks(races, pointsByRace);
+    expect(streaks.get("alice")).toEqual({ currentStreak: 1, cardsEarned: 1 });
+    expect(streaks.get("bob")).toEqual({ currentStreak: 3, cardsEarned: 0 });
   });
 });

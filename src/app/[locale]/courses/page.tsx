@@ -5,12 +5,11 @@ import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getSeasonView, pickDefaultOpenStageId, type HiddenPepite } from "@/lib/seasonView";
-import { HiddenPepiteCard } from "@/components/HiddenPepiteCard";
 import { getClock } from "@/lib/clock";
 import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { CalendarAccordion, type CalendarStage } from "./CalendarAccordion";
 import { CalendarImportButton } from "./CalendarImportButton";
-import { SeasonPredictionsAccordion, type SeasonPick } from "./SeasonPredictionsAccordion";
+import type { SeasonPick } from "./SeasonPredictionsAccordion";
 import { StreakCard } from "@/components/StreakCard";
 import type { PlayerCards } from "@/lib/bonusCards";
 
@@ -105,9 +104,8 @@ export default async function CoursesPage({
 
         {isAdmin && seasonId && <CalendarImportButton seasonId={seasonId} />}
 
-        {seasonPicks && <SeasonPredictionsAccordion picks={seasonPicks} open={seasonPicksOpen} favoriteTeam={favoriteTeam} />}
-
-        {pepites && <HiddenPepiteCard pepites={pepites} />}
+        {/* VéloPronos : plus de pronostics de saison ; le porteur d'eau s'affiche dans son Grand Tour
+            (calendrier). L'équipe de cœur et la nation favorite reviendront ici. */}
 
         {streak != null && <StreakCard current={streak} cards={cards ?? undefined} seasonId={seasonId ?? undefined} />}
 

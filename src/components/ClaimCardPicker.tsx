@@ -14,12 +14,13 @@ const AUTO_OPEN_KEY = "bp-claim-card-shown";
  * la carte. `autoOpen` (accueil) l'ouvre de lui-même, une fois par visite.
  */
 export function ClaimCardPicker({
-  seasonId,
+  courseId,
   unclaimed,
   offers,
   autoOpen = false,
 }: {
-  seasonId: string;
+  /** Course par étapes où la carte a été gagnée (VéloPronos). */
+  courseId: string;
   unclaimed: number;
   offers: PlayerCards["offers"];
   autoOpen?: boolean;
@@ -44,7 +45,7 @@ export function ClaimCardPicker({
   async function claim(cardType: string) {
     setSaving(true);
     setError(null);
-    const { error: claimError } = await createClient().rpc("claim_bonus_card", { p_season_id: seasonId, p_card_type: cardType });
+    const { error: claimError } = await createClient().rpc("claim_course_card", { p_stage_id: courseId, p_card_type: cardType });
     setSaving(false);
     if (claimError) {
       console.error(claimError);

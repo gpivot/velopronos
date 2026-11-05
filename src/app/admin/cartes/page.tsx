@@ -89,7 +89,7 @@ export default async function AdminCardsPage() {
                     className="rounded border border-border bg-bg px-2 py-1 text-sm text-text"
                   />
                 </label>
-                {(type === "aspiration" || type === "equipe") && (
+                {((type as string) === "aspiration" || (type as string) === "equipe") && (
                   <label className="flex items-center gap-2">
                     <input type="checkbox" name="force_unlock" defaultChecked={setting?.force_unlock ?? false} />
                     Débloquer tout de suite

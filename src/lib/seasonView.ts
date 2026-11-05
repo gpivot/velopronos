@@ -105,7 +105,7 @@ export async function getSeasonView(
     userId
       ? supabase.from("pepites").select("stage_id, athlete_id, bonus_claimed, revealed_race_id").eq("user_id", userId).eq("season_id", season.id)
       : Promise.resolve({ data: [] as any[] }),
-    userId ? getCurrentStreak(supabase, season.id, userId) : Promise.resolve(null),
+    userId ? getCurrentStreak(supabase, season.id, userId, now) : Promise.resolve(null),
     userId ? getPlayerCards(supabase, season.id, userId, now) : Promise.resolve(null),
   ]);
 
@@ -214,6 +214,10 @@ export async function getSeasonView(
     counts_in_standings: stage.counts_in_standings !== false,
     jerseys: (stage.jerseys ?? []).length,
     jerseysPicked: jerseyPicksByStage.get(stage.id) ?? 0,
+    waterCarrier: (() => {
+      const wc = hiddenPepites?.find((p) => p.stageId === stage.id);
+      return wc ? { name: wc.name, nationCode: wc.nationCode, revealed: wc.revealed, locked: wc.locked } : null;
+    })(),
     opensOn: isPredictionOpen(stage.starts_on, now) ? null : predictionOpensOn(stage.starts_on),
     races: (stage.races ?? [])
       .map((race: any) => ({

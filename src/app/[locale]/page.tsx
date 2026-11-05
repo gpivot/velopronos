@@ -91,7 +91,7 @@ async function getHomeData(): Promise<HomeData> {
       : Promise.resolve({ data: null }),
     // « Derniers résultats » et « À suivre » seulement sans étape cette semaine : l'encadré de l'étape les remplace.
     user && !weekStage ? getLastResults(supabase, season.id, user.id, now) : Promise.resolve([]),
-    user ? getCurrentStreak(supabase, season.id, user.id) : Promise.resolve(null),
+    user ? getCurrentStreak(supabase, season.id, user.id, now) : Promise.resolve(null),
     user ? getPlayerCards(supabase, season.id, user.id, now) : Promise.resolve(null),
     user && weekStage
       ? Promise.all(
@@ -112,13 +112,8 @@ async function getHomeData(): Promise<HomeData> {
 
   // Lectures indépendantes les unes des autres : lancées en même temps plutôt qu'à la suite.
   const [seasonPicksBeforeStart, { data: nextStage }, canChooseFavoriteTeam, favoriteTeamStats, predicted] = await Promise.all([
-    // Aussi masquée dès le verrouillage des pronostics de saison (début de saison, cf. /globes), pour ne pas inviter vers une page fermée.
-    user && (startedRaces ?? 0) === 0 && new Date(season.starts_on) > now
-      ? Promise.all([
-          supabase.from("season_predictions").select("category", { count: "exact", head: true }).eq("user_id", user.id).eq("season_id", season.id),
-          supabase.from("pepites").select("sex", { count: "exact", head: true }).eq("user_id", user.id).eq("season_id", season.id),
-        ]).then(([{ count: globes }, { count: pepites }]) => (globes ?? 0) + (pepites ?? 0))
-      : Promise.resolve(null),
+    // VéloPronos : plus de pronostics de saison (globes, Pépite) à saisir avant le départ.
+    Promise.resolve(null as number | null),
     supabase
       .from("stages")
       .select("id, location, country_code, starts_on, ends_on")

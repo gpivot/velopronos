@@ -112,18 +112,20 @@ Mes maillots.
 Même mécanique que la Pépite cachée de Biathlonpronos (décision de Guillaume), dans la même table
 `pepites`, rattachée à sa course (migration **0049** : colonne `stage_id`, clé `(user_id,
 stage_id)`). Un porteur par joueur et par **Grand Tour**, choisi sur la page Mes maillots du Grand
-Tour, en bas ; rappel dans Ma saison (encadré 💧, un par Grand Tour).
+Tour, en bas ; rappel dans le bloc du Grand Tour du calendrier de Ma saison (ligne 💧), plus
+d'encadré à part (demande de Guillaume du 05/11/2026). Le « super porteur d'eau » de saison reste
+une idée en réserve, rien n'est codé.
 
 - Éligible : coureur engagé dont **toutes les cotes de la course** (types d'étape et maillots) sont
-  d'au moins 30 (≥ 30 comme la Pépite ; le règlement base44 dit « > 30 », *à confirmer*).
+  d'au moins 30 (≥ 30 comme la Pépite, confirmé par Guillaume le 05/11/2026).
 - **Modifiable jusqu'au départ de la 1re étape**, figé ensuite (la Pépite est définitive dès le
   choix ; ici rien n'est encore joué avant le départ, *à confirmer*). Un porteur ne peut pas être
   retiré après le départ.
 - Joué en caché sur toutes les étapes du Grand Tour (pas dans les pronostics du joueur) : à son
   **premier Top 10**, ses points de l'étape (cote du type d'étape × multiplicateur de rang)
   s'ajoutent au score de l'étape du joueur, **même sans pronostic sur l'étape**, une seule fois,
-  hors ×2 et hors joker (comme la Pépite ; base44 ne le comptait qu'aux joueurs qui avaient
-  pronostiqué l'étape, *à confirmer*). Pas de révélation sur un CLM par équipes.
+  hors ×2 et hors joker (comme la Pépite, confirmé par Guillaume le 05/11/2026 ; base44 ne le
+  comptait qu'aux joueurs qui avaient pronostiqué l'étape). Pas de révélation sur un CLM par équipes.
 - Badge 💧 au classement (pour l'instant au général ; règle prévue : seulement dans le classement
   du Grand Tour concerné, à faire avec le classement de saison).
 - La carte Talent (biathlon) ne peut plus le modifier (`play_talent_card` refuse).
@@ -137,11 +139,47 @@ Les points du pronostic sont **divisés par 2** (arrondi à l'entier inférieur,
 le ×2 de course et les bonus ; le porteur d'eau s'ajoute ensuite, entier. Ligne « Joker
 retardataire (÷ 2) » dans le détail des points (`breakdown.lateJokerMalus`).
 
-Choix pragmatiques (*à confirmer*) : pas de ×2 perso ni de carte jouée avec le joker ; un pronostic
+Pas de ×2 perso ni de carte jouée avec le joker (confirmé par Guillaume le 05/11/2026). Choix
+pragmatiques (*à confirmer*) : un pronostic
 posé avant le départ ne peut pas devenir un pronostic joker ; le joueur voit déjà les pronostics
 des autres (publics au départ), la division par 2 compense.
 
-Reste à faire : cartes vélo, classement de saison (résultats retenus), textes du règlement.
+## Séries et cartes bonus (par course)
+
+Décision de Guillaume du 05/11/2026 (règle base44) : **la série et les cartes sont propres à
+chaque course par étapes** (courses par étapes et Grands Tours ; pas de série sur les classiques).
+Migration **0051** : `streak_counters.stage_id` (clé `(user_id, stage_id)`) et
+`bonus_cards.course_id`.
+
+- **Série de 5** étapes d'affilée avec des points (porteur d'eau non compté) = une carte. Une étape
+  oubliée casse la série d'un joueur qui a déjà pronostiqué la course. Elle repart de zéro à chaque
+  course. Recalculée à chaque notation (`recomputeSeasonStreaks`, `computeCourseStreaks`).
+- Une carte se choisit (`claim_course_card`) et se joue **seulement dans sa course** ; non jouée,
+  elle est perdue à la fin de la course. Une même carte pas deux séries de suite dans la course.
+- Encadré « Série en cours » (accueil, Ma saison, Classement) : celle de la course par étapes en
+  cours, sinon de la prochaine (`getCardCourse`).
+- Cartes proposées pour l'instant :
+  - **Boost ×3** (`ca_farte` en base) : ×3 sur un coureur, sur une étape de son choix, pas avec
+    son ×2 ;
+  - **4e choix** (`balle_de_pioche`) : s'active à la prochaine étape, pour **3 étapes** de la course
+    (règle base44 ; le CLM par équipes est sauté), 4 coureurs dont les 3 meilleurs comptent ; les
+    4 sont grillés le lendemain (le grillage reprend tout le pronostic) ;
+  - **Grillade** (`fondue`) : dégrille une fois ses coureurs sur l'étape de son choix.
+- Pas de carte sur un CLM par équipes, ni sur une course ×2, ni hors classement. Pas de carte avec
+  le joker retardataire.
+- À venir : **Équipe** (base44 : à partir de l'étape 10, chaque coureur de l'équipe de cœur dans
+  le Top 10 rapporte sa cote ; donc Grands Tours seulement, *à confirmer*) et **Chat noir**
+  (corriger un maillot ou le porteur d'eau après un abandon, jusqu'au 1er jour de repos), avec
+  l'équipe de cœur et la nation favorite. Les cartes du biathlon (Aspiration, Fusée, Gâchette,
+  Talent) ne sont plus proposées. Pas de carte gagnée sur un prono parfait (*à confirmer*).
+
+## Pronostics de saison
+
+Plus de pronostics de saison en vélo (demande de Guillaume du 05/11/2026), hormis l'équipe de cœur
+et la nation favorite, à venir : l'encadré des globes et l'invitation de l'accueil sont retirés.
+
+Reste à faire : cartes Équipe et Chat noir, équipe de cœur et nation favorite, classement de
+saison (résultats retenus), textes du règlement.
 
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
