@@ -36,7 +36,7 @@ import type { BonusCardEffect } from "./scoring/types";
  */
 /** VéloPronos : première étape où la carte Équipe rapporte (règle base44). */
 export const EQUIPE_FROM_STAGE_NUMBER = 10;
-export const CLAIMABLE_CARD_TYPES = ["fondue", "ca_farte", "balle_de_pioche", "equipe", "chat_noir"] as const;
+export const CLAIMABLE_CARD_TYPES = ["fondue", "ca_farte", "balle_de_pioche", "aspiration", "equipe", "chat_noir"] as const;
 export type ClaimableCardType = (typeof CLAIMABLE_CARD_TYPES)[number];
 /** Cartes jouées par le joueur sur une course de son choix depuis le formulaire de pronostic. */
 export type RaceCardType = "ca_farte" | "aspiration";
@@ -477,7 +477,8 @@ export const EQUIPE_FALLBACK_UNLOCK_STAGE = 7;
  * Mondiaux/JO (coefficient 2), la 7e à défaut.
  */
 export function cardUnlockStageIndex(type: string, stages: CardStage[]): number | null {
-  if (type === "aspiration") return ASPIRATION_UNLOCK_STAGE - 1;
+  // VéloPronos : l'Aspiration se prend dès la 1re série de la course (décision du 05/11/2026).
+  if (type === "aspiration") return null;
   if (type === "equipe") {
     const sorted = [...stages].sort((a, b) => a.starts_on.localeCompare(b.starts_on));
     const championships = sorted.findIndex((s) => s.coefficient === 2);

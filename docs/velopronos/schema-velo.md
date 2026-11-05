@@ -179,7 +179,11 @@ Migration **0051** : `streak_counters.stage_id` (clé `(user_id, stage_id)`) et
   fois** un coureur **abandonné** : un pronostic maillot (sauf meilleure équipe) ou le porteur
   d'eau pas encore révélé (le remplaçant doit rester éligible, cotes >= 30). Elle se joue sur la
   page des maillots (rpc `play_chat_noir`).
-- Les cartes du biathlon (Aspiration, Fusée, Gâchette, Talent) ne sont plus proposées. Pas de carte
+- **Aspiration** (`aspiration`, migration 0055, décision de Guillaume du 05/11/2026) : mêmes
+  règles qu'en biathlon, dans sa course : sur une étape de son choix (sauf CLM par équipes),
+  chaque coureur pronostiqué compte une place plus haut. Pas avec le Boost sur la même étape, ni
+  pendant une Oreillette. Proposée dès la 1re série.
+- Les cartes du biathlon Fusée, Gâchette et Talent ne sont plus proposées. Pas de carte
   gagnée sur un prono parfait (*à confirmer*).
 
 ## Pronostics de saison
@@ -263,3 +267,12 @@ retrait d'un coureur. Le CSV téléchargé reprend le format d'import et se réi
 - Restent dans le code, invisibles en vélo faute de données : relais, tirs et tours de pénalité,
   import IBU de l'admin, globes de l'admin. La page d'accueil publique, le règlement et la FAQ
   sont encore à réécrire pour le vélo.
+
+## Règlement, FAQ et accueil public (05/11/2026)
+
+Page `/regles` réécrite pour le vélo (5 chapitres : les bases avec le CLM par équipes, les bonus
+avec le ×2 par course, les courses majeures et le joker retardataire, les étapes spéciales, les
+maillots et le porteur d'eau, le classement avec les résultats retenus). Les chiffres viennent des
+constantes du moteur (barèmes, maillots, combatif, seuil du porteur, résultats retenus). FAQ :
+« relais » et « jokers » remplacés par « maillots » et « joker retardataire ». Mini-écrans de
+l'accueil public avec des coureurs et une étape du Tour.

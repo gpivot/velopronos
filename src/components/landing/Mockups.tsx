@@ -37,17 +37,17 @@ function ScreenTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   );
 }
 
-/** 1 — Le pronostic : 3 biathlètes, leurs cotes, le compte à rebours. */
+/** 1 — Le pronostic : 3 coureurs, leurs cotes, le compte à rebours. */
 export async function PickMockup() {
   const t = await getTranslations("Landing");
   const picks = [
-    { flag: "🇫🇷", name: "L. Jeanmonnot", odds: 8 },
-    { flag: "🇫🇷", name: "J. Braisaz-Bouchet", odds: 12 },
-    { flag: "🇸🇰", name: "P. Fialkova", odds: 22 },
+    { flag: "🇸🇮", name: "T. Pogačar", odds: 8 },
+    { flag: "🇩🇰", name: "J. Vingegaard", odds: 12 },
+    { flag: "🇫🇷", name: "L. Martinez", odds: 22 },
   ];
   return (
     <Phone>
-      <ScreenTitle eyebrow="Kontiolahti 🇫🇮" title={t("mockRace")} />
+      <ScreenTitle eyebrow="Tour de France 🇫🇷" title={t("mockRace")} />
       <div className="relative self-start rounded-full bg-ice-soft px-3 py-1 font-display text-[11px] font-bold text-ice">
         ⏱ {t("mockCountdown")} 02:14:30
         <Pin n={3} className="-right-3 -top-2" />
@@ -77,12 +77,12 @@ export async function PickMockup() {
 export async function ScoreMockup() {
   const t = await getTranslations("Landing");
   const rows = [
-    { rank: 1, flag: "🇫🇷", name: "L. Jeanmonnot", odds: 8, mult: 25, mine: true },
-    { rank: 2, flag: "🇫🇷", name: "J. Braisaz-Bouchet", odds: 12, mult: 18, mine: true },
-    { rank: 3, flag: "🇫🇷", name: "J. Simon", odds: 6, mult: 13, mine: false },
-    { rank: 4, flag: "🇸🇪", name: "E. Öberg", odds: 5, mult: 10, mine: false },
-    { rank: 5, flag: "🇮🇹", name: "L. Vittozzi", odds: 4, mult: 7, mine: false },
-    { rank: 6, flag: "🇸🇰", name: "P. Fialkova", odds: 22, mult: 5, mine: true },
+    { rank: 1, flag: "🇸🇮", name: "T. Pogačar", odds: 8, mult: 25, mine: true },
+    { rank: 2, flag: "🇩🇰", name: "J. Vingegaard", odds: 12, mult: 18, mine: true },
+    { rank: 3, flag: "🇧🇪", name: "R. Evenepoel", odds: 6, mult: 13, mine: false },
+    { rank: 4, flag: "🇸🇮", name: "P. Roglič", odds: 5, mult: 10, mine: false },
+    { rank: 5, flag: "🇪🇸", name: "J. Ayuso", odds: 4, mult: 7, mine: false },
+    { rank: 6, flag: "🇫🇷", name: "L. Martinez", odds: 22, mult: 5, mine: true },
   ];
   return (
     <Phone>
@@ -125,18 +125,18 @@ export async function ScoreMockup() {
 export async function LeagueMockup() {
   const t = await getTranslations("Landing");
   const rows = [
-    { name: "Marie_Ski", pts: 2840, yellow: true, red: false },
-    { name: "PapyCarabine", pts: 2715, yellow: false, red: true },
+    { name: "Marie_Velo", pts: 2840, yellow: true, red: false },
+    { name: "PapyDanseuse", pts: 2715, yellow: false, red: true },
     { name: t("mockYou"), pts: 2690, yellow: false, red: false, me: true },
     { name: "Léa.velo", pts: 2410, yellow: false, red: false },
     { name: "Toto74", pts: 1985, yellow: false, red: false },
   ];
   return (
     <Phone>
-      <ScreenTitle eyebrow={t("mockLeagueEyebrow")} title="🏔️ Les Fondus du tir" />
+      <ScreenTitle eyebrow={t("mockLeagueEyebrow")} title="🏔️ Les Grimpeurs du dimanche" />
       <div className="relative flex items-center justify-between rounded-xl border border-dashed border-ice/60 bg-ice-soft px-3 py-2">
         <span className="text-[11px] text-text-dim">{t("mockLeagueCode")}</span>
-        <span className="font-display text-[13px] font-extrabold tracking-widest text-ice">FONDUS7</span>
+        <span className="font-display text-[13px] font-extrabold tracking-widest text-ice">GRIMPE7</span>
         <span className="rounded-full bg-ice px-2.5 py-0.5 font-display text-[10px] font-bold text-on-ice">{t("mockShare")}</span>
         <Pin n={1} className="-right-2 -top-2.5" />
       </div>
