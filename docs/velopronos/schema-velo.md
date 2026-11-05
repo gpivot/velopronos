@@ -92,11 +92,23 @@ Moteur hérité (`computeIndividualRaceScore`) avec l'option `veloRules` :
   dont le super combatif pronostiqué est ce coureur ; une étape déjà notée est renotée ;
 - étapes spéciales : **Crevaison** (−position de chaque coureur hors Top 10) et **Crise de foie**
   (3/2/1 coureurs hors Top 10 → −300/−100/−30) reprennent le Brouillard et le T'es collé.
-- **À confirmer** : le Boost (×3) reste non cumulable avec un ×2, comme en biathlon (base44
-  cumulait ×3 puis ×2). Le quota de ×2 n'est contrôlé que par l'écran, comme avant.
+- Le Boost (×3) n'est **pas cumulable** avec un ×2, comme en biathlon (confirmé par Guillaume le
+  05/11/2026 ; base44 cumulait ×3 puis ×2). Le quota de ×2 n'est contrôlé que par l'écran.
 
-Reste à faire : points des maillots en fin de course, super combatif final (+200), porteur d'eau,
-joker retardataire, cartes vélo, classement de saison (résultats retenus), textes du règlement.
+## Points des maillots (fin de course)
+
+Admin > fiche de la course > « Podiums finaux des maillots » : podium (1-2-3) de chaque maillot,
+le vainqueur seul pour le super combatif (`course_jersey_results`). Chaque enregistrement
+recalcule les points du maillot (`src/lib/velo/jerseyScoring.ts`) : **cote du maillot × 5 / × 2 /
+× 1** pour le coureur (ou l'équipe) pronostiqué selon sa place, **+200** au super combatif
+vainqueur, sans cote. Cote retenue : celle en vigueur au départ de la 1re étape (sinon la cote
+actuelle ; absente = 1, comme base44). Une ligne de `score_ledger` par joueur et par maillot
+(`stage_id` + `jersey`), comptée dans le classement général ; migration **0048** : ces lignes
+suivent le drapeau « hors classement » de leur course. Le joueur voit ses points sur la page
+Mes maillots.
+
+Reste à faire : porteur d'eau, joker retardataire, cartes vélo, classement de saison (résultats
+retenus), textes du règlement.
 
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 

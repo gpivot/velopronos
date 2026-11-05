@@ -1104,6 +1104,7 @@
     "searchTeam": "Chercher une équipe",
     "odds": "cote {value}",
     "noRiders": "Les engagés de la course ne sont pas encore connus : reviens un peu avant le départ.",
-    "noJerseys": "Pas de pronostic maillot sur cette course."
+    "noJerseys": "Pas de pronostic maillot sur cette course.",
+    "points": "{points} pts"
   }
 }

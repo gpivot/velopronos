@@ -1104,6 +1104,7 @@
     "searchTeam": "Buscar un equipo",
     "odds": "cuota {value}",
     "noRiders": "Aún no se conocen los inscritos: vuelve poco antes de la salida.",
-    "noJerseys": "No hay pronósticos de maillots en esta carrera."
+    "noJerseys": "No hay pronósticos de maillots en esta carrera.",
+    "points": "{points} pts"
   }
 }

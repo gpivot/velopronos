@@ -20,6 +20,8 @@ export interface JerseyConfig {
   isTeam: boolean;
   options: JerseyOption[];
   initialPick: string | null;
+  /** Points marqués une fois le podium final saisi, null avant. */
+  points?: number | null;
 }
 
 /** Pastille du maillot : couleur du leader de la course pour le général, couleurs classiques ailleurs. */
@@ -106,8 +108,11 @@ export function JerseysForm({
               <span className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t(`jersey_${c.jersey}`)}</span>
             </div>
             {locked ? (
-              <div className="rounded-xl border border-border bg-card px-3 py-2.5 text-sm">
-                {current ? `${current.label}${current.odds != null ? ` · ${t("odds", { value: current.odds })}` : ""}` : t("notChosen")}
+              <div className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5 text-sm">
+                <span className="flex-1">
+                  {current ? `${current.label}${current.odds != null ? ` · ${t("odds", { value: current.odds })}` : ""}` : t("notChosen")}
+                </span>
+                {c.points != null && <span className="font-display font-bold text-ice">{t("points", { points: c.points })}</span>}
               </div>
             ) : (
               <>

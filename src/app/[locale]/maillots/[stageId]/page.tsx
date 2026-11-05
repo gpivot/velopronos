@@ -38,7 +38,7 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
   } = await getAuthUser();
   const playerId = user && !user.is_anonymous ? user.id : null;
 
-  const [{ data: entries }, odds, { data: picks }] = await Promise.all([
+  const [{ data: entries }, odds, { data: picks }, { data: ledger }] = await Promise.all([
     supabase
       .from("stage_riders")
       .select("athlete_id, athletes(id, first_name, last_name, nation_code, team_id, teams(id, code, name))")
@@ -55,7 +55,12 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
     playerId
       ? supabase.from("course_predictions").select("jersey, athlete_id, team_id").eq("user_id", playerId).eq("stage_id", stageId)
       : Promise.resolve({ data: [] as any[] }),
+    // Points des maillots une fois le podium final saisi (score_ledger, une ligne par maillot).
+    playerId
+      ? supabase.from("score_ledger").select("jersey, points").eq("user_id", playerId).eq("stage_id", stageId).not("jersey", "is", null)
+      : Promise.resolve({ data: [] as any[] }),
   ]);
+  const pointsByJersey = new Map(((ledger ?? []) as any[]).map((l) => [l.jersey as string, Number(l.points)]));
 
   const oddsOf = new Map<string, number>();
   for (const o of odds) oddsOf.set(`${o.athlete_id ?? o.team_id}|${o.format}`, o.value);
@@ -80,7 +85,13 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
           }));
     // Les coureurs (ou équipes) avec une cote pour ce maillot d'abord ; tous si personne n'en a.
     const withOdds = options.filter((o) => o.odds != null);
-    return { jersey, isTeam: jersey === "equipe", options: (withOdds.length > 0 ? withOdds : options).sort(byOdds), initialPick: pickByJersey.get(jersey) ?? null };
+    return {
+      jersey,
+      isTeam: jersey === "equipe",
+      options: (withOdds.length > 0 ? withOdds : options).sort(byOdds),
+      initialPick: pickByJersey.get(jersey) ?? null,
+      points: pointsByJersey.get(jersey) ?? null,
+    };
   });
 
   const name = course.name ?? course.location;
