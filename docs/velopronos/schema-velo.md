@@ -267,3 +267,12 @@ retrait d'un coureur. Le CSV téléchargé reprend le format d'import et se réi
 - Restent dans le code, invisibles en vélo faute de données : relais, tirs et tours de pénalité,
   import IBU de l'admin, globes de l'admin. La page d'accueil publique, le règlement et la FAQ
   sont encore à réécrire pour le vélo.
+
+## Règlement, FAQ et accueil public (05/11/2026)
+
+Page `/regles` réécrite pour le vélo (5 chapitres : les bases avec le CLM par équipes, les bonus
+avec le ×2 par course, les courses majeures et le joker retardataire, les étapes spéciales, les
+maillots et le porteur d'eau, le classement avec les résultats retenus). Les chiffres viennent des
+constantes du moteur (barèmes, maillots, combatif, seuil du porteur, résultats retenus). FAQ :
+« relais » et « jokers » remplacés par « maillots » et « joker retardataire ». Mini-écrans de
+l'accueil public avec des coureurs et une étape du Tour.

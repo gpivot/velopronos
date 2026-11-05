@@ -1,43 +1,36 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { PageHeader } from "@/components/PageHeader";
-import { LeaderBib, StageLeaderBib, YoungBib } from "@/components/PlayerBadgesRow";
-import { CrystalGlobeIcon } from "@/components/SeasonCategoryIcon";
+import { LeaderBib, StageLeaderBib } from "@/components/PlayerBadgesRow";
 import { ScoreMockup } from "@/components/landing/Mockups";
-import {
-  COMBINATION_BONUS,
-  GROS_GLOBE_MULTIPLIERS,
-  PETIT_GLOBE_MULTIPLIERS,
-  RANK_MULTIPLIERS,
-  RELAY_RANK_MULTIPLIERS,
-  TES_COLLE_MALUS,
-  TOUR_DE_PENA_MALUS_PER_LAP,
-} from "@/lib/scoring/constants";
+import { COMBATIF_DU_JOUR_BONUS, COMBINATION_BONUS, PEPITE_MIN_ODDS, RANK_MULTIPLIERS, STREAK_TARGET, TES_COLLE_MALUS } from "@/lib/scoring/constants";
+import { JERSEY_PODIUM_MULTIPLIERS, SUPER_COMBATIF_BONUS } from "@/lib/velo/jerseyScoring";
+import { RETAINED_ONE_DAY, RETAINED_STAGE_RACES } from "@/lib/velo/retainedResults";
 
+// VéloPronos (05/11/2026) : chapitres réécrits pour le vélo (relais, poursuite, globes, Pépite,
+// jokers, Fusée/Gâchette retirés ; maillots, porteur d'eau, joker retardataire, résultats retenus).
 // Page Règlement, refondue le 02/11/2026 dans le style de l'accueil visiteur : 5 chapitres
 // (les bases, les bonus, les courses spéciales, la saison, le classement), chaque règle en carte
 // avec un picto, une phrase courte et un visuel (barème en tuiles, frise, exemple chiffré). Les
 // chiffres viennent des constantes du moteur de scoring, pour ne jamais diverger du calcul réel.
 
-const CHAPTERS = ["basics", "boosts", "special", "season", "standings"] as const;
+const CHAPTERS = ["basics", "boosts", "special", "course", "standings"] as const;
 type Chapter = (typeof CHAPTERS)[number];
 const CHAPTER_EMOJI: Record<Chapter, string> = {
   basics: "🎯",
   boosts: "⚡",
   special: "⚠️",
-  season: "🌐",
+  course: "🚴",
   standings: "🏆",
 };
 
 const CARDS = [
   { type: "fondue", emoji: "🍖" },
   { type: "ca_farte", emoji: "🔥" },
-  { type: "balle_de_pioche", emoji: "🃏" },
-  { type: "aspiration", emoji: "💨", tag: "cardFrom4" },
-  { type: "equipe", emoji: "👥", tag: "cardAfterWorlds" },
-  { type: "fusee", emoji: "🚀" },
-  { type: "gachette", emoji: "🎯" },
-  { type: "talent", emoji: "❄️" },
+  { type: "balle_de_pioche", emoji: "🎧" },
+  { type: "aspiration", emoji: "💨" },
+  { type: "equipe", emoji: "👥", tag: "cardGrandTour" },
+  { type: "chat_noir", emoji: "🐈‍⬛", tag: "cardGrandTour" },
 ] as const;
 
 export default async function ReglesPage() {
@@ -53,6 +46,7 @@ export default async function ReglesPage() {
     fourth: tCards("name_balle_de_pioche"),
     aspiration: tCards("name_aspiration"),
     fondue: tCards("name_fondue"),
+    target: String(STREAK_TARGET),
   };
   const rank = (n: number) => t("rank", { rank: n });
 
@@ -157,8 +151,8 @@ export default async function ReglesPage() {
               {(
                 [
                   ["sprint", "burntPicked", "border-ice/50 bg-ice-soft text-ice", "✅"],
-                  ["poursuite", "burntBurnt", "border-red/50 bg-red/10 text-red", "🔥"],
-                  ["mass_start", "burntBack", "border-green/40 bg-green/10 text-green", "↩️"],
+                  ["montagne", "burntBurnt", "border-red/50 bg-red/10 text-red", "🔥"],
+                  ["clm", "burntBack", "border-green/40 bg-green/10 text-green", "↩️"],
                 ] as const
               ).map(([format, state, cls, icon], i) => (
                 <div key={format} className="relative flex flex-col gap-1">
@@ -167,7 +161,7 @@ export default async function ReglesPage() {
                   </span>
                   <div className={`flex flex-col items-center gap-0.5 rounded-xl border px-1 py-2 ${cls}`}>
                     <span className="text-lg leading-none">{icon}</span>
-                    <span className="text-[11px] font-semibold text-text">L. Jeanmonnot</span>
+                    <span className="text-[11px] font-semibold text-text">T. Pogačar</span>
                     <span className="font-display text-[10px] font-extrabold uppercase tracking-wide">{t(state)}</span>
                   </div>
                 </div>
@@ -189,7 +183,7 @@ export default async function ReglesPage() {
               </div>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {(["sprint", "poursuite", "individuel", "mass_start"] as const).map((f) => (
+              {(["sprint", "montagne", "baroudeurs", "clm", "clm_equipes"] as const).map((f) => (
                 <span key={f} className="rounded-full border border-border bg-card2 px-2.5 py-1 font-display text-[11px] font-bold">
                   {tFormat(f)}
                 </span>
@@ -198,30 +192,7 @@ export default async function ReglesPage() {
             <p className="text-[12px] leading-relaxed text-text-dim">🗓️ {t("oddsWhen")}</p>
           </RuleCard>
 
-          <RuleCard emoji="⏱️" title={t("pursuitTitle")} body={t("pursuitBody")}>
-            <Label>{t("pursuitExample")}</Label>
-            <div className="grid grid-cols-3 gap-1.5 text-center">
-              {(
-                [
-                  ["+12 s", 10],
-                  ["+42 s", 20],
-                  ["+1:10", 25],
-                ] as const
-              ).map(([gap, odds]) => (
-                <div key={gap} className="rounded-xl bg-ice-soft py-2">
-                  <div className="text-[11px] text-text-dim">{gap}</div>
-                  <div className="font-display text-[13px] font-extrabold text-ice">
-                    {t("oddsShort")} {odds}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </RuleCard>
-
-          <RuleCard emoji="🤝" title={t("relayTitle")} body={t("relayBody")}>
-            <Label>{t("relayScale")}</Label>
-            <Scale multipliers={RELAY_RANK_MULTIPLIERS} rank={rank} />
-          </RuleCard>
+          <RuleCard emoji="👥" title={t("ttTitle")} body={t("ttBody")} />
         </ChapterBlock>
 
         {/* ───────────── 2. Les bonus ───────────── */}
@@ -229,17 +200,24 @@ export default async function ReglesPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <RuleCard emoji="⚡" title={t("x2Title")} body={t("x2Body")}>
               <div className="flex items-center gap-2">
-                <span className="text-xl tracking-widest">⚡⚡⚡</span>
+                <span className="text-xl">⚡</span>
                 <span className="font-display text-[12px] font-bold text-ice">{t("x2Count")}</span>
               </div>
             </RuleCard>
-            <RuleCard emoji="🌍" title={t("worldsTitle")} body={t("worldsBody")}>
+            <RuleCard emoji="🏆" title={t("majorsTitle")} body={t("majorsBody")}>
               <div className="flex items-center gap-2 font-display text-[12px] font-bold">
-                <span className="rounded-full bg-gold-soft px-2.5 py-1 text-gold">{t("worldsAuto")}</span>
-                <span className="rounded-full bg-red/10 px-2.5 py-1 text-red">{t("worldsNever")}</span>
+                <span className="rounded-full bg-gold-soft px-2.5 py-1 text-gold">{t("majorsAuto")}</span>
+                <span className="rounded-full bg-red/10 px-2.5 py-1 text-red">{t("majorsNever")}</span>
               </div>
             </RuleCard>
           </div>
+
+          <RuleCard emoji="⏰" title={t("jokerTitle")} body={t("jokerBody")}>
+            <div className="flex flex-wrap gap-2 font-display text-[12px] font-bold">
+              <span className="rounded-full bg-ice-soft px-2.5 py-1 text-ice">{t("jokerCount")}</span>
+              <span className="rounded-full bg-red/10 px-2.5 py-1 text-red">{t("jokerHalf")}</span>
+            </div>
+          </RuleCard>
 
           <RuleCard emoji="❓" title={t("questionsTitle")} body={t("questionsBody")}>
             <div className="grid grid-cols-2 gap-2">
@@ -258,9 +236,9 @@ export default async function ReglesPage() {
             </div>
           </RuleCard>
 
-          <RuleCard emoji="🔟" title={t("streakTitle")} body={t("streakBody")}>
+          <RuleCard emoji="🔥" title={t("streakTitle")} body={t("streakBody")}>
             <div className="flex items-center gap-1" aria-hidden>
-              {Array.from({ length: 10 }, (_, i) => (
+              {Array.from({ length: STREAK_TARGET }, (_, i) => (
                 <span
                   key={i}
                   className="flex h-6 flex-1 items-center justify-center rounded-md bg-gradient-to-br from-blue to-teal font-display text-[10px] font-extrabold text-white"
@@ -294,9 +272,8 @@ export default async function ReglesPage() {
         <ChapterBlock id="special" index={3} eyebrow={t("ch_special_eyebrow")} title={t("ch_special_title")}>
           <p className="-mt-2 text-center text-[13px] text-text-dim">{t("specialIntro")}</p>
           <div className="grid gap-3 sm:grid-cols-2">
-            <SpecialCard emoji="🎯" name={tFormat("specialRule_tour_de_pena")} value={`${TOUR_DE_PENA_MALUS_PER_LAP} pts`} body={t("penaDesc")} />
-            <SpecialCard emoji="🌫️" name={tFormat("specialRule_brouillard")} value={t("fogValue")} body={t("fogDesc")} />
-            <SpecialCard emoji="😬" name={tFormat("specialRule_tes_colle")} body={t("colleDesc")}>
+            <SpecialCard emoji="🛞" name={tFormat("specialRule_brouillard")} value={t("fogValue")} body={t("fogDesc")} />
+            <SpecialCard emoji="🤢" name={tFormat("specialRule_tes_colle")} body={t("colleDesc")}>
               <div className="mt-1 grid grid-cols-2 gap-1">
                 {(
                   [
@@ -323,62 +300,39 @@ export default async function ReglesPage() {
           </div>
         </ChapterBlock>
 
-        {/* ───────────── 4. La saison ───────────── */}
-        <ChapterBlock id="season" index={4} eyebrow={t("ch_season_eyebrow")} title={t("ch_season_title")}>
-          <RuleCard emoji="🌐" title={t("globesTitle")} body={t("globesBody")}>
-            <div className="grid grid-cols-2 gap-2">
-              {(["women", "men"] as const).map((sex) => (
-                <div key={sex} className="flex flex-col gap-1 rounded-xl border border-border bg-card2 px-3 py-2">
-                  <span className="font-display text-[11px] font-extrabold uppercase tracking-wide text-text-dim">{t(sex)}</span>
-                  <span className="flex items-center gap-1 text-[12px]">
-                    <CrystalGlobeIcon className="h-4 w-4" /> {t("globeBig")}
-                  </span>
-                  <span className="flex items-center gap-1 text-[12px]">
-                    <YoungBib /> {t("globeYoung")}
-                  </span>
-                  <span className="text-[12px]">🏳️ {t("globeNation")}</span>
-                </div>
-              ))}
+        {/* ───────────── 4. Les courses par étapes ───────────── */}
+        <ChapterBlock id="course" index={4} eyebrow={t("ch_course_eyebrow")} title={t("ch_course_title")}>
+          <RuleCard emoji="👕" title={t("jerseysTitle")} body={t("jerseysBody")}>
+            <Label>{t("jerseysScale")}</Label>
+            <Scale multipliers={JERSEY_PODIUM_MULTIPLIERS} rank={rank} cols="grid-cols-3" />
+            <div className="flex flex-wrap gap-2 font-display text-[12px] font-bold">
+              <span className="rounded-full bg-green/10 px-2.5 py-1 text-green">
+                {t("combatifFinal", { points: SUPER_COMBATIF_BONUS })}
+              </span>
+              <span className="rounded-full bg-green/10 px-2.5 py-1 text-green">
+                {t("combatifDaily", { points: COMBATIF_DU_JOUR_BONUS })}
+              </span>
             </div>
-            <Label>
-              <CrystalGlobeIcon className="inline h-4 w-4 align-middle" /> {t("globeBigScale")}
-            </Label>
-            <Scale multipliers={GROS_GLOBE_MULTIPLIERS} rank={rank} />
-            <Label>
-              <span className="inline-flex items-center gap-1 align-middle">
-                <YoungBib /> 🏳️
-              </span>{" "}
-              {t("globeSmallScale")}
-            </Label>
-            <Scale multipliers={PETIT_GLOBE_MULTIPLIERS} rank={rank} cols="grid-cols-3" />
           </RuleCard>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <RuleCard emoji="❄️" title={t("pepiteTitle")} body={t("pepiteBody")}>
+            <RuleCard emoji="💧" title={t("porteurTitle")} body={t("porteurBody")}>
               <span className="self-start rounded-full bg-gold-soft px-2.5 py-1 font-display text-[12px] font-bold text-gold">
-                {t("pepiteOdds")}
+                {t("porteurOdds", { odds: PEPITE_MIN_ODDS })}
               </span>
             </RuleCard>
-            <RuleCard emoji="🃏" title={t("jokersTitle")} body={t("jokersBody")}>
-              <div className="grid grid-cols-2 gap-2 text-center">
-                <div className="rounded-xl bg-ice-soft py-2">
-                  <div className="font-display text-xl font-extrabold text-ice">3</div>
-                  <div className="text-[11px] text-text-dim">{t("jokersIndividual")}</div>
-                </div>
-                <div className="rounded-xl bg-ice-soft py-2">
-                  <div className="font-display text-xl font-extrabold text-ice">2</div>
-                  <div className="text-[11px] text-text-dim">{t("jokersRelay")}</div>
-                </div>
-              </div>
-              <p className="text-[12px] text-text-dim">👀 {t("jokersPreview")}</p>
-            </RuleCard>
+            <RuleCard emoji="❤️" title={t("heartTitle")} body={t("heartBody")} />
           </div>
         </ChapterBlock>
 
         {/* ───────────── 5. Le classement ───────────── */}
         <ChapterBlock id="standings" index={5} eyebrow={t("ch_standings_eyebrow")} title={t("ch_standings_title")}>
           <div className="grid gap-3 sm:grid-cols-3">
-            <StandingCard icon={<LeaderBib className="h-9 w-9" />} title={t("generalTitle")} body={t("generalBody")} />
+            <StandingCard
+              icon={<LeaderBib className="h-9 w-9" />}
+              title={t("generalTitle")}
+              body={t("generalBody", { stageRaces: RETAINED_STAGE_RACES, oneDay: RETAINED_ONE_DAY })}
+            />
             <StandingCard icon={<StageLeaderBib className="h-9 w-9" />} title={t("stageTitle")} body={t("stageBody")} />
             <StandingCard icon={<span className="text-3xl leading-none">👥</span>} title={t("leaguesTitle")} body={t("leaguesBody")} />
           </div>
@@ -398,7 +352,7 @@ export default async function ReglesPage() {
                 {tBadges("helpPerfect")}
               </li>
               <li className="flex gap-2">
-                <span className="w-5 text-center text-[14px]">❄️</span>
+                <span className="w-5 text-center text-[14px]">💧</span>
                 {tBadges("helpPepite")}
               </li>
             </ul>
