@@ -122,6 +122,24 @@ export async function getSeasonView(
   const jerseyPicksByStage = new Map<string, number>();
   for (const p of (jerseyPicks ?? []) as any[]) jerseyPicksByStage.set(p.stage_id, (jerseyPicksByStage.get(p.stage_id) ?? 0) + 1);
 
+  // WE des Champions (migration 0056) : championnats par événement et pronostics du joueur.
+  const bonusStageIds = (stages ?? []).filter((st: any) => st.kind === "bonus_event").map((st: any) => st.id as string);
+  const championsByStage = new Map<string, { done: number; total: number }>();
+  if (bonusStageIds.length) {
+    const { data: champs } = await supabase.from("champion_championships").select("id, stage_id").in("stage_id", bonusStageIds);
+    const stageOfChamp = new Map(((champs ?? []) as any[]).map((c) => [c.id as string, c.stage_id as string]));
+    for (const id of bonusStageIds) championsByStage.set(id, { done: 0, total: 0 });
+    for (const sid of stageOfChamp.values()) championsByStage.get(sid)!.total += 1;
+    if (userId && isOwner && stageOfChamp.size) {
+      const { data: mine } = await supabase
+        .from("champion_predictions")
+        .select("championship_id")
+        .eq("user_id", userId)
+        .in("championship_id", [...stageOfChamp.keys()]);
+      for (const p of (mine ?? []) as any[]) championsByStage.get(stageOfChamp.get(p.championship_id)!)!.done += 1;
+    }
+  }
+
   // Chez un autre joueur, rien sur une course pas encore partie.
   const lockedRaceIds = new Set(
     (stages ?? []).flatMap((s: any) => (s.races ?? []) as any[]).filter((r) => new Date(r.locks_at) <= now).map((r) => r.id as string)
@@ -217,6 +235,7 @@ export async function getSeasonView(
     counts_in_standings: stage.counts_in_standings !== false,
     jerseys: (stage.jerseys ?? []).length,
     jerseysPicked: jerseyPicksByStage.get(stage.id) ?? 0,
+    champions: championsByStage.get(stage.id),
     waterCarrier: (() => {
       const wc = hiddenPepites?.find((p) => p.stageId === stage.id);
       return wc ? { name: wc.name, nationCode: wc.nationCode, revealed: wc.revealed, locked: wc.locked } : null;

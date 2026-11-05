@@ -127,7 +127,20 @@ export async function getRacesStandings(
   courseId: string | null = null
 ): Promise<StandingsRow[]> {
   const raceIds = races.map((r) => r.id);
-  if (raceIds.length === 0) return buildStandings([], members, null);
+  if (raceIds.length === 0) {
+    // WE des Champions (migration 0056) : pas d'étape, seul le score final de l'événement.
+    if (!courseId) return buildStandings([], members, null);
+    const { data: bonusRows } = await supabase
+      .from("score_ledger")
+      .select("user_id, points, profiles(pseudo)")
+      .eq("stage_id", courseId)
+      .not("bonus_kind", "is", null);
+    return buildStandings(
+      ((bonusRows ?? []) as any[]).map((r) => ({ userId: r.user_id, pseudo: r.profiles?.pseudo ?? "?", points: Number(r.points) })),
+      members,
+      null
+    );
+  }
   const lockedRaces = races.filter((r) => r.displayStatus !== "upcoming");
 
   const [{ data: ledger, error }, { data: predictions }, bonusLedger, { data: jerseyLedger }] = await Promise.all([
