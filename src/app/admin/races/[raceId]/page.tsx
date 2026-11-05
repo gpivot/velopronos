@@ -45,7 +45,35 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
   let candidates: CandidateRow[];
 
-  if (isRelay) {
+  const isTeamRace = race.format === "clm_equipes";
+
+  if (isTeamRace) {
+    // CLM par équipes : les équipes qui ont une cote « CLM par équipes » pour la course.
+    const resultByTeamId = new Map((existingResults ?? []).map((r) => [r.team_id, r]));
+    const { data: odds } = await admin
+      .from("odds")
+      .select("team_id, value, teams(code, name)")
+      .eq("stage_id", race.stage_id)
+      .eq("format", race.format)
+      .is("valid_until", null)
+      .not("team_id", "is", null);
+    candidates = (odds ?? [])
+      .map((o: any) => {
+        const existing = resultByTeamId.get(o.team_id);
+        return {
+          id: o.team_id,
+          name: o.teams?.name ?? o.team_id,
+          subtitle: o.teams?.code ?? "",
+          nationCode: o.teams?.code ?? "",
+          nationName: o.teams?.name ?? undefined,
+          odds: o.value,
+          existingResult: existing
+            ? { rank: existing.rank, timeGapSeconds: null, penaltyLaps: 0, shootings: null, skiRank: null, isGachette: false }
+            : undefined,
+        };
+      })
+      .sort((a, b) => a.odds - b.odds);
+  } else if (isRelay) {
     const resultByNationCode = new Map((existingResults ?? []).map((r) => [r.nation_code, r]));
 
     const { data: odds } = await admin
@@ -191,15 +219,15 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
       {candidates.length === 0 ? (
         <p className="text-sm text-text-dim">
-          {race.format === "clm_equipes"
-            ? "CLM par équipes : la saisie des résultats par équipe arrive avec les règles vélo."
+          {isTeamRace
+            ? "Aucune équipe n'a de cote « CLM par équipes » pour cette course (onglet Coureurs & cotes, ou import des équipes) : impossible de noter l'étape."
             : "Aucune cote de ce type d'étape pour les coureurs de la course (onglet Calendrier, import des coureurs) : impossible de noter l'étape."}
         </p>
       ) : (
         <ResultsForm
           key={`${race.status}-${(existingResults ?? []).length}`}
           raceId={raceId}
-          mode={isRelay ? "nation" : "athlete"}
+          mode={isTeamRace ? "team" : isRelay ? "nation" : "athlete"}
           format={race.format}
           specialRule={race.special_rule}
           candidates={candidates}

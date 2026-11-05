@@ -30,6 +30,8 @@ export interface ResultEntryInput {
   athleteId?: string;
   /** Relais — la nation prend la place de l'athlète. */
   nationCode?: string;
+  /** CLM par équipes (VéloPronos) — l'équipe prend la place du coureur. */
+  teamId?: string;
   rank: number;
   timeGapSeconds?: number;
   penaltyLaps?: number;
@@ -74,6 +76,7 @@ export async function saveRaceResults(
         ski_rank: fuseeGachetteEligibility(race.format).fusee && e.skiRank != null && e.skiRank > 0 ? e.skiRank : null,
         athlete_id: e.athleteId ?? null,
         nation_code: e.nationCode ?? null,
+        team_id: e.teamId ?? null,
         rank: e.rank,
         time_gap_seconds: e.timeGapSeconds ?? null,
         // Tours de péna = nombre de fautes au tir, repris des tirs s'ils n'ont pas été saisis à part.
@@ -210,9 +213,12 @@ export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<
 
   let scoredPredictions = 0;
   if (predictions && predictions.length > 0) {
-    const pointsByUserId = RELAY_FORMATS.includes(race.format)
-      ? await scoreRelayPredictions(admin, race, stage, results ?? [], predictions)
-      : await scoreIndividualPredictions(admin, race, stage, results ?? [], predictions);
+    const pointsByUserId =
+      race.format === "clm_equipes"
+        ? await scoreTeamPredictions(admin, race, stage, results ?? [], predictions)
+        : RELAY_FORMATS.includes(race.format)
+          ? await scoreRelayPredictions(admin, race, stage, results ?? [], predictions)
+          : await scoreIndividualPredictions(admin, race, stage, results ?? [], predictions);
     scoredPredictions = pointsByUserId.size;
   }
 
@@ -644,6 +650,73 @@ async function scoreIndividualPredictions(
   const { error } = await admin.from("score_ledger").upsert(scoreLedgerRows, { onConflict: "user_id,race_id" });
   if (error) throw new Error(error.message);
 
+  return pointsByUserId;
+}
+
+/**
+ * CLM par équipes (VéloPronos) : 3 équipes pronostiquées (predictions.team_ids), notées comme
+ * 3 coureurs d'une étape normale : rang × cote « CLM par équipes », bonus Musette (Top 10/5/3),
+ * Prono parfait, puis ×2 (perso ou course ×2) sur le tout, Musette comprise. Ni carte ni étape
+ * spéciale (règle base44).
+ */
+async function scoreTeamPredictions(
+  admin: SupabaseClient,
+  race: any,
+  stage: any,
+  results: any[],
+  predictions: any[]
+): Promise<Map<string, number>> {
+  const { data: odds } = await admin
+    .from("odds")
+    .select("team_id, value")
+    .eq("stage_id", stage.id)
+    .eq("format", race.format)
+    .is("valid_until", null)
+    .not("team_id", "is", null);
+  const oddsByTeamId: Record<string, number> = {};
+  for (const o of odds ?? []) oddsByTeamId[o.team_id as string] = o.value;
+
+  const teamResults: AthleteRaceResult[] = results
+    .filter((r) => r.team_id)
+    .map((r) => ({ athleteId: r.team_id as string, rank: r.rank, penaltyLaps: 0, skiRank: null, isFusee: false, isGachette: false }));
+
+  const offStandings = stage.counts_in_standings === false;
+  const scoreLedgerRows = [];
+  const pointsByUserId = new Map<string, number>();
+  for (const prediction of predictions) {
+    const teamIds: string[] = prediction.team_ids ?? [];
+    if (teamIds.length === 0) continue;
+    const result = computeIndividualRaceScore({
+      predictedAthleteIds: teamIds,
+      results: teamResults,
+      oddsByAthleteId: oddsByTeamId,
+      athleteTeamByAthleteId: {},
+      specialRule: null,
+      stageCoefficient: 1,
+      bonusX2Active: false,
+      card: { type: "none" },
+      favoriteTeam: null,
+      raceCountryCode: stage.country_code,
+      nationalDayTeam: null,
+      raceFormat: race.format,
+      stageCards: { fusee: false, gachette: false },
+    });
+    // VéloPronos (base44) : le ×2 (perso ou course ×2) double tout, bonus Musette compris.
+    const multiplier = stage.coefficient === 2 || (prediction.bonus_x2_used && !offStandings) ? 2 : 1;
+    const total = result.total * multiplier;
+    scoreLedgerRows.push({
+      user_id: prediction.user_id,
+      season_id: stage.season_id,
+      race_id: race.id,
+      points: total,
+      breakdown: { ...result.breakdown, ...(multiplier === 2 ? { veloMultiplier: 2 } : {}) },
+    });
+    pointsByUserId.set(prediction.user_id, total);
+  }
+  if (scoreLedgerRows.length > 0) {
+    const { error } = await admin.from("score_ledger").upsert(scoreLedgerRows, { onConflict: "user_id,race_id" });
+    if (error) throw new Error(error.message);
+  }
   return pointsByUserId;
 }
 

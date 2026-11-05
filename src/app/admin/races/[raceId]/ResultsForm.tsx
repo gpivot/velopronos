@@ -58,7 +58,8 @@ export function ResultsForm({
   candidates,
 }: {
   raceId: string;
-  mode: "athlete" | "nation";
+  /** team : CLM par équipes (VéloPronos), une ligne par équipe. */
+  mode: "athlete" | "nation" | "team";
   format: string;
   specialRule: string | null;
   candidates: CandidateRow[];
@@ -72,6 +73,8 @@ export function ResultsForm({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isAthleteMode = mode === "athlete";
+  const isTeamMode = mode === "team";
+  const csvMode = mode === "team" ? "nation" : mode;
   // VéloPronos : ni écart (cote poursuite), ni tir, ni tour de péna, ni cartes Fusée / Gâchette.
   const showTimeGap = false;
   const showShootings = false;
@@ -90,7 +93,7 @@ export function ResultsForm({
   /** Le CSV (fichier ou IBU) remplace la saisie à l'écran ; rien n'est enregistré avant le clic sur le bouton. */
   function applyCsv(csvText: string, source: string, extraWarnings: string[] = []) {
     try {
-      const parsed = parseResultsCsv(csvText, mode, candidates);
+      const parsed = parseResultsCsv(csvText, csvMode, candidates);
       const empty: RowState = { rank: "", timeGapSeconds: "", shootings: "", penaltyLaps: "", skiRank: "", isGachette: false };
       setRows(Object.fromEntries(candidates.map((c) => [c.id, parsed.rows[c.id] ?? empty])));
       setResult(null);
@@ -125,7 +128,7 @@ export function ResultsForm({
   }
 
   function downloadCsv() {
-    const blob = new Blob([buildResultsCsv(mode, candidates, rows)], { type: "text/csv;charset=utf-8" });
+    const blob = new Blob([buildResultsCsv(csvMode, candidates, rows)], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -143,7 +146,8 @@ export function ResultsForm({
       .filter(([, row]) => row.rank.trim() !== "")
       .map(([id, row]) => ({
         athleteId: isAthleteMode ? id : undefined,
-        nationCode: isAthleteMode ? undefined : id,
+        nationCode: mode === "nation" ? id : undefined,
+        teamId: isTeamMode ? id : undefined,
         rank: Number(row.rank),
         // Virgule ou point acceptés (« 34,5 », « +1:02,3 »).
         timeGapSeconds: parseTimeGap(row.timeGapSeconds) ?? undefined,
@@ -162,6 +166,7 @@ export function ResultsForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <SubmitBar submitting={submitting} result={result} />
 
+      {!isTeamMode && (
       <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">Importer les résultats en CSV</div>
         <p className="text-xs text-text-dim">
@@ -199,12 +204,13 @@ export function ResultsForm({
           </div>
         )}
       </div>
+      )}
 
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-left text-xs text-text-dim">
-              <th className="px-3 py-2">{isAthleteMode ? "Coureur" : "Nation"}</th>
+              <th className="px-3 py-2">{isAthleteMode ? "Coureur" : isTeamMode ? "Équipe" : "Nation"}</th>
               <th className="px-3 py-2">Cote</th>
               <th className="px-3 py-2">Rang</th>
               {showTimeGap && <th className="px-3 py-2">Écart (s)</th>}

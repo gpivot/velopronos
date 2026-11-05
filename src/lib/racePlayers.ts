@@ -75,23 +75,28 @@ export async function getOngoingBoard(
 ): Promise<OngoingBoardRow[]> {
   const [leaderboard, { data: predictions }] = await Promise.all([
     getLeaderboard(supabase, seasonId),
-    supabase.from("predictions").select("user_id, athlete_ids, nation_code, profiles(pseudo)").eq("race_id", raceId),
+    supabase.from("predictions").select("user_id, athlete_ids, nation_code, team_ids, profiles(pseudo)").eq("race_id", raceId),
   ]);
-  const rows = ((predictions ?? []) as any[]).filter((p) => (p.athlete_ids?.length ?? 0) > 0 || p.nation_code);
+  const rows = ((predictions ?? []) as any[]).filter((p) => (p.athlete_ids?.length ?? 0) > 0 || p.nation_code || (p.team_ids?.length ?? 0) > 0);
+  const teamIds = Array.from(new Set(rows.flatMap((p) => p.team_ids ?? []))) as string[];
   const athleteIds = Array.from(new Set(rows.flatMap((p) => p.athlete_ids ?? []))) as string[];
   const nationCodes = Array.from(new Set(rows.map((p) => p.nation_code).filter(Boolean))) as string[];
-  const [{ data: athletes }, { data: nations }] = await Promise.all([
+  const [{ data: athletes }, { data: nations }, { data: teams }] = await Promise.all([
     athleteIds.length ? supabase.from("athletes").select("id, first_name, last_name").in("id", athleteIds) : Promise.resolve({ data: [] as any[] }),
     nationCodes.length ? supabase.from("nations").select("code, name").in("code", nationCodes) : Promise.resolve({ data: [] as any[] }),
+    teamIds.length ? supabase.from("teams").select("id, name").in("id", teamIds) : Promise.resolve({ data: [] as any[] }),
   ]);
   const athleteById = new Map((athletes ?? []).map((a: any) => [a.id as string, a]));
   const nationName = new Map((nations ?? []).map((n: any) => [n.code as string, n.name as string]));
+  const teamName = new Map((teams ?? []).map((x: any) => [x.id as string, x.name as string]));
   return buildOngoingBoard(
     leaderboard,
     rows.map((p) => ({
       userId: p.user_id,
       pseudo: p.profiles?.pseudo ?? "?",
-      picks: p.nation_code
+      picks: (p.team_ids?.length ?? 0) > 0
+        ? (p.team_ids as string[]).map((id) => teamName.get(id) ?? "?").join(", ")
+        : p.nation_code
         ? nationName.get(p.nation_code) ?? p.nation_code
         : (p.athlete_ids ?? []).map((id: string) => shortAthleteName(athleteById.get(id))).join(", "),
     }))

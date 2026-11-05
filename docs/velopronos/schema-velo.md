@@ -70,9 +70,14 @@ moteur vélo. Pastille du général à la couleur de la course (`jersey_color`).
 
 Le joueur choisit **3 équipes** parmi celles qui ont une cote « CLM par équipes » pour la course
 (onglet admin Coureurs & cotes, ou import des équipes), enregistrées dans `predictions.team_ids`.
-Bonus ×2 possible comme sur une étape normale. Affichées dans Ma saison et l'encadré de la
-semaine. **Pas encore** : saisie du résultat par équipe (il faudra `race_results.team_id`),
-points, et pronostics des autres joueurs pendant/après l'étape (moteur vélo).
+Bonus ×2 possible comme sur une étape normale. Affichées dans Ma saison, l'encadré de la
+semaine et le tableau des joueurs pendant l'étape.
+
+Résultat : l'admin classe les équipes sur la fiche de l'étape (migration **0047**,
+`race_results.team_id` ; pas d'import CSV). Points comme 3 coureurs d'une étape normale (rang ×
+cote CLME, Musette, Prono parfait), puis **×2 sur le tout, Musette comprise** (règle base44 ; le
+moteur hérité du biathlon ne double pas la Musette sur les autres étapes, à aligner avec le
+moteur vélo). Ni carte ni étape spéciale.
 
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
