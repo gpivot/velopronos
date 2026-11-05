@@ -62,8 +62,8 @@ export async function WeekStageCard({
         >
           <span className="text-base">{stage.look === "bonus" ? "🏆" : nationFlagEmoji(stage.countryCode)}</span>
           <span className="flex min-w-0 flex-1 flex-col">
-            {isChampionship && (
-              <span className="text-[10px] leading-tight tracking-wider opacity-80">{tCourses(isWorlds ? "lookWorlds" : "lookMonument")}</span>
+            {isChampionship && !isWorlds && (
+              <span className="text-[10px] leading-tight tracking-wider opacity-80">{tCourses("lookMonument")}</span>
             )}
             <span className="truncate">{stage.location}</span>
           </span>
