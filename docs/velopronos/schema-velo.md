@@ -79,6 +79,25 @@ cote CLME, Musette, Prono parfait), puis **×2 sur le tout, Musette comprise** (
 moteur hérité du biathlon ne double pas la Musette sur les autres étapes, à aligner avec le
 moteur vélo). Ni carte ni étape spéciale.
 
+## Points d'une étape (moteur vélo, 1re partie)
+
+Moteur hérité (`computeIndividualRaceScore`) avec l'option `veloRules` :
+- barème rang × cote du type d'étape (Top 10), Musette +20/+50/+100, Prono parfait +200 qui la
+  remplace : inchangés ;
+- **×2 sur le tout** (bonus perso ou course ×2) : coureurs, Musette, Prono parfait et combatif du
+  jour (règle base44 ; en biathlon la Musette n'est pas doublée) ;
+- **bonus ×2 perso : 1 par course par étapes** (Grand Tour ou course par étapes), aucun sur une
+  classique ; jamais sur une étape spéciale ni une course ×2 ;
+- **combatif du jour** : l'admin le désigne sur la fiche de l'étape ; +50 (×2 compris) aux joueurs
+  dont le super combatif pronostiqué est ce coureur ; une étape déjà notée est renotée ;
+- étapes spéciales : **Crevaison** (−position de chaque coureur hors Top 10) et **Crise de foie**
+  (3/2/1 coureurs hors Top 10 → −300/−100/−30) reprennent le Brouillard et le T'es collé.
+- **À confirmer** : le Boost (×3) reste non cumulable avec un ×2, comme en biathlon (base44
+  cumulait ×3 puis ×2). Le quota de ×2 n'est contrôlé que par l'écran, comme avant.
+
+Reste à faire : points des maillots en fin de course, super combatif final (+200), porteur d'eau,
+joker retardataire, cartes vélo, classement de saison (résultats retenus), textes du règlement.
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :

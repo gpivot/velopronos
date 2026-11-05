@@ -153,11 +153,14 @@ export function computeIndividualRaceScore(
   // Les valeurs par biathlète du breakdown restent brutes ; le total, lui, est multiplié.
   const fuseeGachetteBonus = (fuseeCardBonus + gachetteCardBonus) * cardMultiplier;
 
+  // VéloPronos : Musette, Prono parfait et combatif du jour passent aussi au ×2 (règle base44).
+  const bonusMultiplier = input.veloRules ? globalMultiplier : 1;
+  const combatifBonus = (input.combatifBonus ?? 0) * bonusMultiplier;
   const total =
     Object.values(perAthlete).reduce((sum, v) => sum + v, 0) +
     fuseeGachetteBonus +
-    combinationBonus +
-    pronoParfaitBonus +
+    (combinationBonus + pronoParfaitBonus) * bonusMultiplier +
+    combatifBonus +
     specialMalus;
 
   return {
@@ -165,8 +168,9 @@ export function computeIndividualRaceScore(
     perAthlete,
     breakdown: {
       base,
-      combinationBonus,
-      pronoParfaitBonus,
+      combinationBonus: combinationBonus * bonusMultiplier,
+      pronoParfaitBonus: pronoParfaitBonus * bonusMultiplier,
+      ...(combatifBonus ? { combatifBonus } : {}),
       specialMalus,
       ...(missingPicks > 0 ? { missingPicks } : {}),
       fuseeGachetteBonus,

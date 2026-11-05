@@ -78,7 +78,8 @@
     "pepiteRevealRank": "{rank, selectordinal, one {#er} other {#e}}",
     "lastResultExtra_missingPicks": "Coureurs non pronostiqués (5 tours d'office)",
     "lastResultExtra_fusee": "Carte Fusée",
-    "lastResultExtra_gachette": "Carte Gâchette"
+    "lastResultExtra_gachette": "Carte Gâchette",
+    "lastResultExtra_combatif": "Combatif du jour"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses cyclistes.",
@@ -594,7 +595,7 @@
     "emptySlot": "À choisir",
     "bonusX2Activate": "Activer mon bonus ×2",
     "bonusX2Active": "Bonus ×2 activé",
-    "bonusX2Remaining": "{count, plural, =0 {Plus aucun bonus ×2 disponible} one {# bonus ×2 encore disponible} other {# bonus ×2 encore disponibles}} cette saison",
+    "bonusX2Remaining": "{count, plural, =0 {Plus aucun bonus ×2 disponible} one {# bonus ×2 encore disponible} other {# bonus ×2 encore disponibles}} sur cette course",
     "bonusX2Cancel": "Retirer",
     "unsavedHint": "Modification pas encore enregistrée : valide pour la prendre en compte.",
     "chooseFour": "Choisis 3 ou 4 coureurs",

@@ -66,7 +66,7 @@ export interface RaceResultRow {
 
 export interface LastResultExtra {
   /** Clé de traduction (Home.lastResultExtra_<kind>). */
-  kind: "top3" | "top5" | "top10" | "pronoParfait" | "specialMalus" | "missingPicks" | "aspiration" | "pepite" | "equipe";
+  kind: "top3" | "top5" | "top10" | "pronoParfait" | "specialMalus" | "missingPicks" | "aspiration" | "pepite" | "equipe" | "combatif";
   points: number;
 }
 
@@ -122,6 +122,7 @@ interface IndividualBreakdown {
   base?: Record<string, number>;
   combinationBonus?: number;
   pronoParfaitBonus?: number;
+  combatifBonus?: number;
   specialMalus?: number;
   /** Tour de péna : biathlètes non pronostiqués (5 tours d'office chacun, déjà dans specialMalus). */
   missingPicks?: number;
@@ -196,6 +197,7 @@ export function computeIndividualExtras(breakdown: IndividualBreakdown): LastRes
     { kind: breakdown.missingPicks ? "missingPicks" : "specialMalus", points: breakdown.specialMalus ?? 0 },
     { kind: "aspiration", points: breakdown.aspirationBonus ?? 0 },
     { kind: "equipe", points: breakdown.equipeBonus ?? 0 },
+    { kind: "combatif", points: breakdown.combatifBonus ?? 0 },
   ];
   return extras.filter((e) => e.points !== 0);
 }

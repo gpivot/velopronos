@@ -63,6 +63,13 @@ export interface IndividualRaceScoringInput {
    * fixes par biathlète compté, ajoutés au total sans aucun multiplicateur.
    */
   stageCards?: { fusee: boolean; gachette: boolean };
+  /**
+   * VéloPronos (règle base44) : le ×2 (bonus perso ou course ×2) s'applique aussi aux bonus Musette
+   * et Prono parfait et au bonus du combatif du jour, pas seulement aux coureurs.
+   */
+  veloRules?: boolean;
+  /** VéloPronos : +50 si le super combatif pronostiqué par le joueur est le combatif du jour. */
+  combatifBonus?: number;
 }
 
 export interface IndividualRaceScoringResult {
@@ -74,6 +81,8 @@ export interface IndividualRaceScoringResult {
     base: Record<string, number>;
     combinationBonus: number;
     pronoParfaitBonus: number;
+    /** VéloPronos : bonus du combatif du jour (×2 compris). */
+    combatifBonus?: number;
     specialMalus: number;
     /** Tour de péna : biathlètes non pronostiqués (5 tours d'office chacun), déjà compris dans specialMalus. */
     missingPicks?: number;

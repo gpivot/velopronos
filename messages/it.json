@@ -78,7 +78,8 @@
     "pepiteRevealRank": "{rank}º",
     "lastResultExtra_missingPicks": "Ciclisti non pronosticati (5 giri ciascuno)",
     "lastResultExtra_fusee": "Carta Razzo",
-    "lastResultExtra_gachette": "Carta Grilletto"
+    "lastResultExtra_gachette": "Carta Grilletto",
+    "lastResultExtra_combatif": "Più combattivo del giorno"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di ciclismo.",
@@ -594,7 +595,7 @@
     "emptySlot": "Da scegliere",
     "bonusX2Activate": "Attiva il mio bonus ×2",
     "bonusX2Active": "Bonus ×2 attivato",
-    "bonusX2Remaining": "{count, plural, =0 {Nessun bonus ×2 rimasto} one {Ancora # bonus ×2 disponibile} other {Ancora # bonus ×2 disponibili}} in questa stagione",
+    "bonusX2Remaining": "{count, plural, =0 {Nessun bonus ×2 rimasto} one {Ancora # bonus ×2 disponibile} other {Ancora # bonus ×2 disponibili}} per questa corsa",
     "bonusX2Cancel": "Rimuovi",
     "unsavedHint": "Modifica non ancora salvata: conferma per applicarla.",
     "chooseFour": "Scegli 3 o 4 ciclisti",

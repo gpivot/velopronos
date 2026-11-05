@@ -78,7 +78,8 @@
     "pepiteRevealRank": "{rank}.",
     "lastResultExtra_missingPicks": "Nicht getippte Fahrer (je 5 Strafrunden)",
     "lastResultExtra_fusee": "Karte Rakete",
-    "lastResultExtra_gachette": "Karte Abzug"
+    "lastResultExtra_gachette": "Karte Abzug",
+    "lastResultExtra_combatif": "Kämpferischster Fahrer des Tages"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Radrennen.",
@@ -594,7 +595,7 @@
     "emptySlot": "Auswählen",
     "bonusX2Activate": "Meinen ×2-Bonus aktivieren",
     "bonusX2Active": "×2-Bonus aktiviert",
-    "bonusX2Remaining": "{count, plural, =0 {Kein ×2-Bonus mehr verfügbar} one {Noch # ×2-Bonus verfügbar} other {Noch # ×2-Boni verfügbar}} in dieser Saison",
+    "bonusX2Remaining": "{count, plural, =0 {Kein ×2-Bonus mehr verfügbar} one {Noch # ×2-Bonus verfügbar} other {Noch # ×2-Boni verfügbar}} für dieses Rennen",
     "bonusX2Cancel": "Entfernen",
     "unsavedHint": "Änderung noch nicht gespeichert: bestätige, um sie zu übernehmen.",
     "chooseFour": "Wähle 3 oder 4 Fahrer",
