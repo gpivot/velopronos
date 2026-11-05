@@ -167,16 +167,18 @@ Migration **0051** : `streak_counters.stage_id` (clé `(user_id, stage_id)`) et
   - **Grillade** (`fondue`) : dégrille une fois ses coureurs sur l'étape de son choix.
 - Pas de carte sur un CLM par équipes, ni sur une course ×2, ni hors classement. Pas de carte avec
   le joker retardataire.
-- **Équipe** (`equipe`, migration 0052) : Grands Tours seulement (*à confirmer*), et seulement
+- **Équipe** (`equipe`, migration 0052) : Grands Tours seulement (confirmé par Guillaume), et seulement
   avec une équipe de cœur choisie. Elle s'active à la prochaine étape ; à partir de l'**étape 10**,
   sur chaque étape restante de la course (CLM par équipes exclu), chaque coureur de l'équipe de
   cœur dans le Top 10 rapporte une fois sa cote arrondie (1 sans cote), qu'il soit pronostiqué ou
   non (`computeTeamCardBonus`).
-- **Chat noir** (`chat_noir`, 0052) : gardée en main. Une fois la course partie et jusqu'au départ
-  de l'étape 10 (faute de jours de repos dans la base, l'étape 10 tient lieu de 1er jour de repos,
-  *à confirmer*), elle remplace **une fois** un coureur **abandonné** : un pronostic maillot (sauf
-  meilleure équipe) ou le porteur d'eau pas encore révélé (le remplaçant doit rester éligible,
-  cotes >= 30). Elle se joue sur la page des maillots (rpc `play_chat_noir`).
+- **Chat noir** (`chat_noir`, 0052 et 0053) : gardée en main. Une fois la course partie et jusqu'au
+  **1er jour de repos à partir de l'étape 8** (décision de Guillaume du 05/11/2026 : le départ de
+  la 1re étape n° >= 9 qui suit un jour sans course, heure de Paris ; ex. Tour 2027, repos à J4
+  ignoré ; sans repos repéré, départ de l'étape 10 ; `chat_noir_deadline`), elle remplace **une
+  fois** un coureur **abandonné** : un pronostic maillot (sauf meilleure équipe) ou le porteur
+  d'eau pas encore révélé (le remplaçant doit rester éligible, cotes >= 30). Elle se joue sur la
+  page des maillots (rpc `play_chat_noir`).
 - Les cartes du biathlon (Aspiration, Fusée, Gâchette, Talent) ne sont plus proposées. Pas de carte
   gagnée sur un prono parfait (*à confirmer*).
 
@@ -189,7 +191,8 @@ et la nation favorite : l'encadré des globes est retiré.
 ligne `favorite_teams` par joueur et par saison, `team_id` pour l'équipe de cœur (carte Équipe),
 `nation_code` pour la nation favorite (Fête nationale, victoires sur l'accueil). Les deux se
 choisissent séparément, à tout moment de la saison, et chaque choix est **définitif** (trigger
-`favorite_teams_fill_only`) ; *à confirmer* (base44 permettait-il d'en changer ?). La colonne `sex`
+`favorite_teams_fill_only`, confirmé par Guillaume). Piste ouverte : une équipe de cœur propre à
+un Grand Tour, au choix du joueur. La colonne `sex`
 reste à 'H' (pas de nation favorite par sexe en vélo).
 
 ## Classement de saison : résultats retenus

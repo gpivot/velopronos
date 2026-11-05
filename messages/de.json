@@ -969,7 +969,7 @@
     "name_fondue": "Grillfest",
     "desc_fondue": "Behalte sie: entgrillt deine Fahrer einmal, auf einer Etappe deiner Wahl in diesem Rennen.",
     "name_chat_noir": "Schwarze Katze",
-    "desc_chat_noir": "Behalte sie: ersetzt einen deiner Trikot-Tipps (außer bestes Team) oder deinen Wasserträger, wenn sein Fahrer aufgibt, bis zum Start der 10. Etappe.",
+    "desc_chat_noir": "Behalte sie: ersetzt einen deiner Trikot-Tipps (außer bestes Team) oder deinen Wasserträger, wenn sein Fahrer aufgibt, bis zum ersten Ruhetag ab der 8. Etappe.",
     "lockedUntil_chat_noir": "Noch nicht"
   },
   "Badges": {
@@ -1124,7 +1124,7 @@
     "waterCarrierRevealedPoints": "Enthüllt · +{points} Pkt.",
     "waterCarrierChoose": "Wähle deinen versteckten Außenseiter für diese Grand Tour",
     "chatNoirTitle": "Karte Schwarze Katze",
-    "chatNoirHint": "Einer deiner Fahrer hat aufgegeben: ersetze ihn einmal, bis zum Start der 10. Etappe.",
+    "chatNoirHint": "Einer deiner Fahrer hat aufgegeben: ersetze ihn einmal, bis zum ersten Ruhetag ab der 8. Etappe.",
     "chatNoirReplace": "Ersetzen",
     "chatNoirError": "Ersetzen nicht möglich.",
     "chatNoirAbandoned": "aufgegeben"

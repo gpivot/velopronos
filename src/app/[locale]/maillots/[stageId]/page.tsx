@@ -10,6 +10,7 @@ import { ArrowLeftIcon } from "@/components/icons";
 import { JERSEY_ODDS_FORMAT, JERSEY_TYPES, type JerseyType } from "@/lib/velo/courses";
 import { JerseysForm, type JerseyConfig, type JerseyOption } from "./JerseysForm";
 import { WaterCarrierForm } from "./WaterCarrierForm";
+import { chatNoirDeadline } from "@/lib/velo/chatNoir";
 import { ChatNoirForm, type ChatNoirTarget } from "./ChatNoirForm";
 import { PEPITE_MIN_ODDS } from "@/lib/scoring/constants";
 
@@ -151,14 +152,10 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
   }
 
   // Chat noir : remplace un coureur abandonné (maillot hors équipe, ou porteur d'eau pas encore
-  // révélé), une fois la course partie et jusqu'au départ de l'étape 10 (à confirmer).
+  // révélé), une fois la course partie et jusqu'au 1er jour de repos à partir de l'étape 8.
   const abandoned = new Set(((entries ?? []) as any[]).filter((e) => e.abandoned_race_id).map((e) => e.athlete_id as string));
-  const stage10Lock =
-    ((course.races ?? []) as Array<{ locks_at: string; stage_number: number | null }>)
-      .filter((r) => (r.stage_number ?? 0) >= 10)
-      .map((r) => r.locks_at)
-      .sort()[0] ?? null;
-  const chatNoirOpen = !!chatNoirCard && isLocked && (stage10Lock == null || new Date(stage10Lock) > now);
+  const chatNoirLimit = chatNoirDeadline((course.races ?? []) as Array<{ locks_at: string; stage_number: number | null }>);
+  const chatNoirOpen = !!chatNoirCard && isLocked && (chatNoirLimit == null || new Date(chatNoirLimit) > now);
   const labelOf = (id: string) => {
     const r = riders.find((x) => x.id === id);
     return r ? `${nationFlagEmoji(r.nation_code)} ${fullAthleteName(r)}` : "?";

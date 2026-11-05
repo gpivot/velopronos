@@ -969,7 +969,7 @@
     "name_fondue": "Parrillada",
     "desc_fondue": "Guárdala: libera una vez a tus corredores quemados, en la etapa que elijas de esta carrera.",
     "name_chat_noir": "Gato negro",
-    "desc_chat_noir": "Guárdala: sustituye uno de tus pronósticos de maillots (salvo mejor equipo) o tu gregario si su corredor abandona, hasta la salida de la etapa 10.",
+    "desc_chat_noir": "Guárdala: sustituye uno de tus pronósticos de maillots (salvo mejor equipo) o tu gregario si su corredor abandona, hasta el primer día de descanso a partir de la etapa 8.",
     "lockedUntil_chat_noir": "Todavía no"
   },
   "Badges": {
@@ -1124,7 +1124,7 @@
     "waterCarrierRevealedPoints": "Revelado · +{points} pts",
     "waterCarrierChoose": "Elige tu outsider oculto para esta gran vuelta",
     "chatNoirTitle": "Carta Gato negro",
-    "chatNoirHint": "Uno de tus corredores ha abandonado: sustitúyelo una vez, hasta la salida de la etapa 10.",
+    "chatNoirHint": "Uno de tus corredores ha abandonado: sustitúyelo una vez, hasta el primer día de descanso a partir de la etapa 8.",
     "chatNoirReplace": "Sustituir",
     "chatNoirError": "No se pudo sustituir.",
     "chatNoirAbandoned": "abandono"

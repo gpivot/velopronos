@@ -969,7 +969,7 @@
     "name_fondue": "Barbecue",
     "desc_fondue": "Keep it in hand: ungrills your riders once, on the stage of your choice in this race.",
     "name_chat_noir": "Black cat",
-    "desc_chat_noir": "Keep it in hand: replaces one of your jersey picks (except best team) or your water carrier if their rider abandons, until the start of stage 10.",
+    "desc_chat_noir": "Keep it in hand: replaces one of your jersey picks (except best team) or your water carrier if their rider abandons, until the first rest day from stage 8 on.",
     "lockedUntil_chat_noir": "Not yet"
   },
   "Badges": {
@@ -1124,7 +1124,7 @@
     "waterCarrierRevealedPoints": "Revealed · +{points} pts",
     "waterCarrierChoose": "Choose your hidden outsider for this Grand Tour",
     "chatNoirTitle": "Black cat card",
-    "chatNoirHint": "One of your riders has abandoned: replace them once, until the start of stage 10.",
+    "chatNoirHint": "One of your riders has abandoned: replace them once, until the first rest day from stage 8 on.",
     "chatNoirReplace": "Replace",
     "chatNoirError": "Could not replace.",
     "chatNoirAbandoned": "abandoned"
