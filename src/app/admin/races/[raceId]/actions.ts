@@ -129,7 +129,7 @@ export interface AiImportState {
  * Résultats de l'étape cherchés par l'IA sur le web (site officiel, ProCyclingStats, L'Équipe),
  * au format CSV, pour pré-remplir le formulaire (rien n'est enregistré).
  */
-export async function loadAiResults(raceId: string, officialUrl?: string): Promise<AiImportState> {
+export async function loadAiResults(raceId: string, referenceUrl?: string): Promise<AiImportState> {
   await requireAdmin();
   const admin = createAdminClient();
   const { data: race } = await admin
@@ -161,7 +161,8 @@ export async function loadAiResults(raceId: string, officialUrl?: string): Promi
       startCity: race.start_city,
       endCity: race.end_city,
       teamTimeTrial,
-      officialUrl: officialUrl?.trim() || officialSiteFor(courseName),
+      officialUrl: officialSiteFor(courseName),
+      referenceUrl: referenceUrl?.trim() || null,
       topN: 10,
       extraRiders,
     });

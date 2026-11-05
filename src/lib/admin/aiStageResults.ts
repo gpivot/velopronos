@@ -49,8 +49,10 @@ export interface AiStageQuery {
   endCity?: string | null;
   /** CLM par équipes : classement des équipes. */
   teamTimeTrial: boolean;
-  /** Site officiel (saisi par l'admin, sinon connu, sinon cherché par l'IA). */
+  /** Site officiel de la course (connu, sinon cherché par l'IA). */
   officialUrl?: string | null;
+  /** Page de résultats donnée par l'admin (organisateur ou autre source sûre) : lue en premier. */
+  referenceUrl?: string | null;
   /** Places à donner (10 suffit pour le barème). */
   topN: number;
   /** Étape Crevaison : coureurs pronostiqués dont il faut aussi la place, même hors Top N. */
@@ -85,7 +87,11 @@ export function buildAiPrompt(q: AiStageQuery): string {
     q.stageNumber == null ? "one-day race" : q.stageNumber === 0 ? "prologue" : `stage ${q.stageNumber}`;
   const route = [q.startCity, q.endCity].filter(Boolean).join(" → ");
   const official = q.officialUrl ? `the official race website (${q.officialUrl})` : "the official race website (find it)";
-  const sources = [official, ...RESULT_SOURCES.map((s) => `${s.name} (${s.domain})`)];
+  const sources = [
+    ...(q.referenceUrl ? [`the results page given by the game admin, a trusted source (${q.referenceUrl}): read it first`] : []),
+    official,
+    ...RESULT_SOURCES.map((s) => `${s.name} (${s.domain})`),
+  ];
   const subject = q.teamTimeTrial ? "teams" : "riders";
 
   return [
