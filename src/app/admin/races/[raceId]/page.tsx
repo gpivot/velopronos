@@ -168,7 +168,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
       </form>
 
       <form action={updateRaceOpinion} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
-        <div className="text-sm font-semibold">L&apos;avis de Biathlonpronos</div>
+        <div className="text-sm font-semibold">L&apos;avis de VéloPronos</div>
         <input type="hidden" name="race_id" value={race.id} />
         <textarea
           name="opinion"

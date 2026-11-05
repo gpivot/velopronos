@@ -143,7 +143,7 @@ export default function SignInPage() {
             <LogoMark className="h-8 w-8" />
           </div>
           <div className="font-display text-2xl font-extrabold">
-            <span className="text-frost">Biathlon</span>
+            <span className="text-frost">Vélo</span>
             <span className="text-ice">Pronos</span>
           </div>
         </div>

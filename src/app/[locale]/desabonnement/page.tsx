@@ -24,7 +24,7 @@ export default async function UnsubscribePage({
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-5 px-5 py-10 text-center">
       <div className="font-display text-xl font-extrabold">
-        Biathlon<span className="text-ice">Pronos</span>
+        Vélo<span className="text-ice">Pronos</span>
       </div>
       <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
         <div className="font-display text-lg font-bold">{t("title")}</div>

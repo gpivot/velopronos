@@ -34,7 +34,7 @@ export default async function AdminConversationPage({ params }: { params: { user
         {messages.map((m) =>
           m.from_admin ? (
             <div key={m.id} className="ml-16 self-end rounded-2xl bg-ice px-4 py-3 text-on-ice">
-              <div className="font-display text-[12px] font-bold">Biathlonpronos</div>
+              <div className="font-display text-[12px] font-bold">VéloPronos</div>
               <p className="whitespace-pre-wrap break-words text-[14px]">{m.body}</p>
               <div className="mt-1 text-right text-[11px] opacity-70">
                 {format.format(new Date(m.created_at))} · {m.read_at ? "lu" : "pas encore lu"}

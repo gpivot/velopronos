@@ -6,8 +6,8 @@
  *   - NEXT_PUBLIC_SITE_URL (facultatif) : adresse du site, pour les liens des e-mails.
  */
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.biathlonpronos.fr").replace(/\/$/, "");
-const DEFAULT_FROM = "Biathlonpronos <notifications@biathlonpronos.fr>";
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.velopronos.fr").replace(/\/$/, "");
+const DEFAULT_FROM = "VéloPronos <notifications@velopronos.fr>";
 
 export interface OutgoingEmail {
   to: string;
@@ -103,17 +103,17 @@ export interface EmailLayout {
 
 /** Gabarit commun, aux couleurs des e-mails de connexion (fond nuit, carte, liseré or). */
 export function renderEmail(layout: EmailLayout): { html: string; text: string } {
-  const html = `<div style="background:#0A0F1C;padding:24px;font-family:Arial,sans-serif;text-align:center"><div style="max-width:440px;margin:auto;background:#121D33;border-radius:18px;padding:24px;border-bottom:6px solid #F2C94C;text-align:left"><div style="text-align:center"><b style="font-size:22px;color:#EAF6FF">Biathlon<span style="color:#3FD3DC">Pronos</span></b></div><h2 style="margin:18px 0 10px;color:#ffffff;font-size:19px">${escapeHtml(
+  const html = `<div style="background:#1C140F;padding:24px;font-family:Arial,sans-serif;text-align:center"><div style="max-width:440px;margin:auto;background:#2B2018;border-radius:18px;padding:24px;border-bottom:6px solid #F2C94C;text-align:left"><div style="text-align:center"><b style="font-size:22px;color:#F6EEDC">Vélo<span style="color:#F5D33A">Pronos</span></b></div><h2 style="margin:18px 0 10px;color:#ffffff;font-size:19px">${escapeHtml(
     layout.title
-  )}</h2><div style="color:#C9D6EC;font-size:15px;line-height:1.5">${layout.bodyHtml}</div><div style="text-align:center;margin:22px 0 4px"><a href="${escapeHtml(
+  )}</h2><div style="color:#E3D6BE;font-size:15px;line-height:1.5">${layout.bodyHtml}</div><div style="text-align:center;margin:22px 0 4px"><a href="${escapeHtml(
     layout.button.url
-  )}" style="display:inline-block;background:#3FD3DC;color:#0A0F1C;font-weight:bold;text-decoration:none;border-radius:12px;padding:12px 22px">${escapeHtml(
+  )}" style="display:inline-block;background:#F5D33A;color:#1C140F;font-weight:bold;text-decoration:none;border-radius:12px;padding:12px 22px">${escapeHtml(
     layout.button.label
-  )}</a></div></div><p style="max-width:440px;margin:16px auto 0;color:#90A3C4;font-size:12px;line-height:1.5">${escapeHtml(
+  )}</a></div></div><p style="max-width:440px;margin:16px auto 0;color:#B8A88F;font-size:12px;line-height:1.5">${escapeHtml(
     layout.footer
-  )}<br><a href="${escapeHtml(layout.manageUrl)}" style="color:#90A3C4">${escapeHtml(layout.manageLabel)}</a> · <a href="${escapeHtml(
+  )}<br><a href="${escapeHtml(layout.manageUrl)}" style="color:#B8A88F">${escapeHtml(layout.manageLabel)}</a> · <a href="${escapeHtml(
     layout.unsubscribeUrl
-  )}" style="color:#90A3C4">${escapeHtml(layout.unsubscribeLabel)}</a></p></div>`;
+  )}" style="color:#B8A88F">${escapeHtml(layout.unsubscribeLabel)}</a></p></div>`;
   const text = `${layout.title}\n\n${layout.bodyText}\n\n${layout.button.label} : ${layout.button.url}\n\n${layout.footer}\n${layout.manageLabel} : ${layout.manageUrl}\n${layout.unsubscribeLabel} : ${layout.unsubscribeUrl}`;
   return { html, text };
 }
