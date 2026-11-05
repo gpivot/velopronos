@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import { loadIbuResults, submitResults, type SubmitResultsState } from "./actions";
 import type { ResultEntryInput } from "@/lib/admin/raceResults";
-import { fuseeGachetteEligibility } from "@/lib/scoring/fuseeGachette";
 import {
   ATHLETE_RESULTS_HEADERS,
   NATION_RESULTS_HEADERS,
@@ -73,11 +72,13 @@ export function ResultsForm({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isAthleteMode = mode === "athlete";
-  const showTimeGap = isAthleteMode && format === "sprint";
-  const showPenaltyLaps = isAthleteMode && specialRule === "tour_de_pena";
-  // §15 — cartes Fusée (top 3 du temps de ski) et Gâchette (sans-faute) : tous les formats individuels.
-  const showFusee = isAthleteMode && fuseeGachetteEligibility(format).fusee;
-  const showGachette = isAthleteMode && fuseeGachetteEligibility(format).gachette;
+  // VéloPronos : ni écart (cote poursuite), ni tir, ni tour de péna, ni cartes Fusée / Gâchette.
+  const showTimeGap = false;
+  const showShootings = false;
+  const showPenaltyLaps = false;
+  const showFusee = false;
+  const showGachette = false;
+  void specialRule;
 
   function updateRow(id: string, patch: Partial<RowState>) {
     setRows((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
@@ -162,28 +163,10 @@ export function ResultsForm({
       <SubmitBar submitting={submitting} result={result} />
 
       <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
-        <div className="text-sm font-semibold">Récupérer les résultats</div>
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={handleIbu}
-            disabled={ibuLoading}
-            className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice disabled:opacity-60"
-          >
-            {ibuLoading ? "Lecture du site IBU..." : "Récupérer les résultats officiels IBU"}
-          </button>
-          <input
-            value={ibuRaceId}
-            onChange={(e) => setIbuRaceId(e.target.value)}
-            placeholder="Identifiant IBU (facultatif)"
-            title="À renseigner seulement si la course n'est pas retrouvée automatiquement, ex. BT2627SWRLCP01SWSP (visible dans l'adresse de la course sur biathlonresults.com)"
-            className="w-60 rounded border border-border bg-bg px-2 py-1.5 text-xs"
-          />
-        </div>
-        <div className="mt-2 border-t border-border/50 pt-3 text-xs font-semibold text-text-dim">ou importer un CSV</div>
+        <div className="text-sm font-semibold">Importer les résultats en CSV</div>
         <p className="text-xs text-text-dim">
           {isAthleteMode
-            ? "Une ligne par athlète classé. Nom et Prénom (ou une colonne Athlète avec le nom complet) sont retrouvés sans tenir compte des accents ni de la casse ; Nation départage les homonymes. Écart en secondes ou m:ss.s (utile au sprint pour la cote poursuite), Tirs = fautes tir par tir (« 0+1+0+2 », sert aussi de Tours de péna si cette colonne est vide), Fusée et Gâchette à « oui » (ou une colonne Fautes : 0 = Gâchette). DNF/DNS : laisser le rang vide."
+            ? "Une ligne par coureur classé (le Top 10 suffit ; plus loin pour les étapes Crevaison et Crise de foie). Nom et Prénom (ou une colonne Athlète avec le nom complet) sont retrouvés sans tenir compte des accents ni de la casse ; Nation départage les homonymes. Les autres colonnes sont ignorées. Abandon ou non-partant : laisser le rang vide."
             : "Une ligne par nation classée, Nation en code à 3 lettres (NOR) ou en toutes lettres, Tirs = fautes de l'équipe au couché et au debout (« 2+5 »)."}{" "}
           Le CSV remplit le tableau ci-dessous : rien n&apos;est enregistré avant ta validation.
         </p>
@@ -221,13 +204,15 @@ export function ResultsForm({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-left text-xs text-text-dim">
-              <th className="px-3 py-2">{isAthleteMode ? "Athlète" : "Nation"}</th>
+              <th className="px-3 py-2">{isAthleteMode ? "Coureur" : "Nation"}</th>
               <th className="px-3 py-2">Cote</th>
               <th className="px-3 py-2">Rang</th>
               {showTimeGap && <th className="px-3 py-2">Écart (s)</th>}
-              <th className="px-3 py-2" title={`Fautes au tir, tir par tir (${shootingCount(format)} tirs), ex. ${shootingCount(format) === 2 ? "0+1" : "0+1+0+2"}`}>
-                Tirs
-              </th>
+              {showShootings && (
+                <th className="px-3 py-2" title={`Fautes au tir, tir par tir (${shootingCount(format)} tirs), ex. ${shootingCount(format) === 2 ? "0+1" : "0+1+0+2"}`}>
+                  Tirs
+                </th>
+              )}
               {showPenaltyLaps && <th className="px-3 py-2" title="Vide : nombre de fautes au tir">Tours de péna</th>}
               {showFusee && (
                 <th className="px-3 py-2" title="Rang au temps de ski : 1, 2 ou 3 (carte Fusée : 100 / 50 / 20 pts)">
@@ -266,7 +251,7 @@ export function ResultsForm({
                       />
                     </td>
                   )}
-                  <td className="px-3 py-2">
+                  {showShootings && <td className="px-3 py-2">
                     <input
                       type="text"
                       value={row.shootings}
@@ -276,7 +261,7 @@ export function ResultsForm({
                         row.shootings.trim() !== "" && !parseShootings(row.shootings) ? "border-red" : "border-border"
                       }`}
                     />
-                  </td>
+                  </td>}
                   {showPenaltyLaps && (
                     <td className="px-3 py-2">
                       <input

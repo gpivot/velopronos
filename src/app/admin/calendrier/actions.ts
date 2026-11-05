@@ -2,12 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { isSpecialRuleAllowed } from "../_components/labels";
+import { fromDateTimeLocalParis, isSpecialRuleAllowed, stageFormFields } from "../_components/labels";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { importCalendarCsv } from "@/lib/admin/calendarImport";
 import { deleteStage, recomputeSeasonStreaks } from "@/lib/admin/raceResults";
 import { stageCategoryFields } from "@/lib/stageCategory";
+import { COURSE_CATEGORIES, COURSE_KINDS, JERSEY_TYPES } from "@/lib/velo/courses";
 import type { CsvActionResult } from "../_components/CsvImportPanel";
 
 export async function createSeason(formData: FormData) {
@@ -68,33 +69,23 @@ export async function createStage(formData: FormData) {
 
 export async function createRace(formData: FormData) {
   await requireAdmin();
-  const sex = String(formData.get("sex"));
   const specialRule = String(formData.get("special_rule"));
   const format = String(formData.get("format"));
-  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle ; Fête nationale : seulement sur une course individuelle.");
+  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Pas de règle spéciale sur un CLM par équipes.");
 
   const admin = createAdminClient();
   const stageId = String(formData.get("stage_id"));
   if (specialRule !== "") {
     const { data: stage } = await admin.from("stages").select("coefficient").eq("id", stageId).single();
-    if (stage?.coefficient === 2) throw new Error("Pas de course malus ni de Fête nationale sur les Mondiaux / JO (étape à coefficient 2).");
+    if (stage?.coefficient === 2) throw new Error("Pas d'étape malus ni de Fête nationale sur une course ×2 (monuments, Mondiaux).");
   }
-
-  // L'input datetime-local ne porte pas de fuseau ; on le traite comme UTC
-  // (cohérent avec supabase/seed.sql) pour éviter toute ambiguïté serveur.
-  const locksAt = `${String(formData.get("locks_at"))}:00Z`;
-
-  // relais_h/relais_f encodent déjà le sexe dans leur libellé ("Relais
-  // Hommes"/"Relais Femmes") — le stocker en plus produirait un affichage
-  // redondant ("Relais Femmes Femmes") pour aucun bénéfice fonctionnel.
-  const isSexEncodedInFormat = format === "relais_h" || format === "relais_f";
-  const isMixed = format === "relais_mixte" || format === "relais_mixte_simple";
 
   const { error } = await admin.from("races").insert({
     stage_id: stageId,
     format,
-    sex: sex === "" || isSexEncodedInFormat || isMixed ? null : sex,
-    locks_at: locksAt,
+    sex: "H",
+    ...stageFormFields(formData),
+    locks_at: fromDateTimeLocalParis(String(formData.get("locks_at"))),
     special_rule: specialRule === "" ? null : specialRule,
     status: "upcoming",
   });
@@ -134,7 +125,7 @@ export async function removeSeason(formData: FormData) {
   revalidatePath("/admin", "layout");
 }
 
-/** Modifie les infos d'une étape (lieu, pays, dates, catégorie ×1 / ×2 / ×0), comme le crayon des courses. */
+/** Modifie les infos d'une course (nom, pays, dates, ×1 / ×2 / ×0, type, catégorie, maillots). */
 export async function updateStage(formData: FormData) {
   await requireAdmin();
   const startsOn = String(formData.get("starts_on"));
@@ -146,15 +137,17 @@ export async function updateStage(formData: FormData) {
   // Mondiaux / JO : pas de course spéciale (décision de Guillaume, 04/11/2026).
   if (category.coefficient === 2) {
     const { count } = await admin.from("races").select("id", { count: "exact", head: true }).eq("stage_id", stageId).not("special_rule", "is", null);
-    if (count) throw new Error("Cette étape a des courses malus ou Fête nationale : retire-les avant de passer l'étape en Mondiaux / JO (coefficient 2).");
+    if (count) throw new Error("Cette course a des étapes malus ou Fête nationale : retire-les avant de la passer à ×2.");
   }
 
   const { data: before } = await admin.from("stages").select("season_id, counts_in_standings").eq("id", stageId).single();
   const { error } = await admin
     .from("stages")
     .update({
+      name: String(formData.get("location")).trim(),
       location: String(formData.get("location")).trim(),
       country_code: String(formData.get("country_code")),
+      ...courseFormFields(formData),
       starts_on: startsOn,
       ends_on: endsOn,
       ...category,
@@ -170,4 +163,18 @@ export async function updateStage(formData: FormData) {
   revalidatePath("/admin", "layout");
   revalidatePath("/", "layout");
   redirect("/admin");
+}
+
+/** Champs vélo d'une course (type, catégorie, couleur du maillot de leader, maillots pronostiqués). */
+function courseFormFields(formData: FormData) {
+  const kind = String(formData.get("kind") ?? "");
+  const category = String(formData.get("category") ?? "");
+  const color = String(formData.get("jersey_color") ?? "").trim();
+  const jerseys = formData.getAll("jerseys").map(String).filter((j) => (JERSEY_TYPES as string[]).includes(j));
+  return {
+    ...((COURSE_KINDS as string[]).includes(kind) ? { kind } : {}),
+    category: (COURSE_CATEGORIES as string[]).includes(category) ? category : null,
+    jersey_color: /^#[0-9a-fA-F]{6}$/.test(color) ? color : null,
+    jerseys,
+  };
 }

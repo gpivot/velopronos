@@ -11,7 +11,7 @@ import {
   RELAY_FORMATS,
   SPECIAL_RULES,
   raceLabel,
-  toDateTimeLocalUtc,
+  toDateTimeLocalParis,
 } from "../../_components/labels";
 import { ConfirmButton } from "../../_components/ConfirmButton";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
@@ -33,12 +33,12 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
   const { data: race } = await admin
     .from("races")
-    .select("*, stages(location, season_id, coefficient)")
+    .select("*, stages(name, location, season_id, coefficient)")
     .eq("id", raceId)
     .single();
   if (!race) notFound();
 
-  const stage = race.stages as { location: string; season_id: string; coefficient: number };
+  const stage = race.stages as { name: string | null; location: string; season_id: string; coefficient: number };
   const isRelay = RELAY_FORMATS.includes(race.format);
 
   const { data: existingResults } = await admin.from("race_results").select("*").eq("race_id", raceId);
@@ -128,7 +128,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
       <BackLinks raceId={race.id} />
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-xl font-bold">
-          {raceLabel(race)} — {stage.location}
+          {raceLabel(race)} — {stage.name ?? stage.location}
         </h1>
         <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${RACE_STATUS_STYLES[displayStatus]}`}>
           {RACE_STATUS_LABELS[displayStatus]}
@@ -136,9 +136,10 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
       </div>
 
       <form action={updateRace} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
-        <div className="text-sm font-semibold">Infos de la course</div>
+        <div className="text-sm font-semibold">Infos de l&apos;étape</div>
         <input type="hidden" name="race_id" value={race.id} />
         <div className="flex flex-wrap gap-2">
+          <input name="stage_number" type="number" min={0} defaultValue={race.stage_number ?? ""} placeholder="N°" title="Numéro (0 = prologue)" className={`${inputClass} w-16`} />
           <select name="format" defaultValue={race.format} className={inputClass}>
             {RACE_FORMATS.map((f) => (
               <option key={f.value} value={f.value}>
@@ -146,17 +147,16 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
               </option>
             ))}
           </select>
-          <select name="sex" defaultValue={race.sex ?? ""} className={inputClass}>
-            <option value="F">Femmes</option>
-            <option value="H">Hommes</option>
-            <option value="">— (relais)</option>
-          </select>
+          <input name="start_city" defaultValue={race.start_city ?? ""} placeholder="Départ" className={inputClass} />
+          <input name="end_city" defaultValue={race.end_city ?? ""} placeholder="Arrivée" className={inputClass} />
+          <input name="distance_km" type="number" step="0.1" min={0} defaultValue={race.distance_km ?? ""} placeholder="km" className={`${inputClass} w-20`} />
+          <input name="elevation_m" type="number" min={0} defaultValue={race.elevation_m ?? ""} placeholder="D+ (m)" className={`${inputClass} w-24`} />
           <input
             name="locks_at"
             type="datetime-local"
             required
-            defaultValue={toDateTimeLocalUtc(race.locks_at)}
-            title="Heure de départ (= verrouillage), en UTC"
+            defaultValue={toDateTimeLocalParis(race.locks_at)}
+            title="Heure de départ (= verrouillage), heure de Paris"
             className={inputClass}
           />
           <SpecialRuleSelect defaultValue={race.special_rule ?? ""} defaultFormat={race.format} championship={stage.coefficient === 2} className={inputClass} />
@@ -164,7 +164,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
             Enregistrer
           </button>
         </div>
-        <p className="text-xs text-text-dim">Heure de départ en UTC : c&apos;est aussi l&apos;heure de verrouillage des pronostics.</p>
+        <p className="text-xs text-text-dim">Heure de départ en heure de Paris : c&apos;est aussi l&apos;heure de verrouillage des pronostics.</p>
       </form>
 
       <form action={updateRaceOpinion} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
@@ -174,11 +174,11 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           name="opinion"
           rows={4}
           defaultValue={race.opinion ?? ""}
-          placeholder="Ton commentaire sur la course (favoris, pièges, météo…)"
+          placeholder="Ton commentaire sur l'étape (favoris, pièges, météo…)"
           className={`${inputClass} w-full`}
         />
         <div className="flex items-center justify-between gap-3">
-          <p className="text-xs text-text-dim">Affiché dans un encadré sur la page de la course. Laisse vide pour masquer la rubrique.</p>
+          <p className="text-xs text-text-dim">Affiché dans un encadré sur la page de l&apos;étape. Laisse vide pour masquer la rubrique.</p>
           <button type="submit" className="flex-shrink-0 rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Enregistrer
           </button>
@@ -191,8 +191,9 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
       {candidates.length === 0 ? (
         <p className="text-sm text-text-dim">
-          Aucune cote saisie pour ce format (voir Athlètes & cotes) —
-          impossible de noter la course.
+          {race.format === "clm_equipes"
+            ? "CLM par équipes : la saisie des résultats par équipe arrive avec les règles vélo."
+            : "Aucune cote de ce type d'étape pour les coureurs de la course (onglet Calendrier, import des coureurs) : impossible de noter l'étape."}
         </p>
       ) : (
         <ResultsForm
@@ -210,7 +211,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           <form action={resetResults}>
             <input type="hidden" name="race_id" value={race.id} />
             <ConfirmButton
-              message="Réinitialiser les résultats de cette course ? Les résultats saisis et les points des joueurs sur cette course seront effacés."
+              message="Réinitialiser les résultats de cette étape ? Les résultats saisis et les points des joueurs sur cette étape seront effacés."
               className="rounded border border-gold/60 px-4 py-1.5 text-sm text-gold hover:bg-gold/10"
             >
               Réinitialiser les résultats
@@ -221,10 +222,10 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           <input type="hidden" name="race_id" value={race.id} />
           <input type="hidden" name="redirect" value="1" />
           <ConfirmButton
-            message="Supprimer cette course ? Ses pronostics, résultats et points seront effacés."
+            message="Supprimer cette étape ? Ses pronostics, résultats et points seront effacés."
             className="rounded border border-red/50 px-4 py-1.5 text-sm text-red hover:bg-red/10"
           >
-            Supprimer la course
+            Supprimer l&apos;étape
           </ConfirmButton>
         </form>
       </div>
@@ -277,7 +278,7 @@ function BackLinks({ raceId }: { raceId: string }) {
         className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-semibold text-frost hover:text-ice"
       >
         <ArrowLeftIcon className="h-4 w-4" />
-        Voir la course et son classement
+        Voir l&apos;étape et son classement
       </Link>
       <Link href="/admin" className="text-sm text-text-dim underline">
         Retour au calendrier

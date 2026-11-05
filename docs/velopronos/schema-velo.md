@@ -28,7 +28,7 @@ correctifs communs avec Biathlonpronos restent applicables (`docs/correctifs-par
 Les lectures de cotes de la page de pronostic, du dernier résultat, de la fiche admin d'une étape
 et du calcul des points filtrent désormais sur `stage_id` (la course de l'étape).
 
-## Imports (admin > « Courses vélo (imports) »)
+## Imports (admin > « Calendrier & résultats », en bas de page)
 
 Code : `src/lib/velo/imports.ts`, tests : `src/lib/__tests__/veloImports.test.ts`. Tous
 ré-exécutables (mise à jour sans doublon). Testés de bout en bout sur un Postgres local avec les
