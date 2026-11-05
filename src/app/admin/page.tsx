@@ -159,7 +159,7 @@ export default async function AdminCalendarResultsPage() {
                         <span className="ml-2 text-xs font-normal text-text-dim">{COURSE_KIND_LABELS[stage.kind as CourseKind] ?? ""}</span>
                         {stage.coefficient === 2 && <span className="ml-2 text-xs text-gold">×2</span>}
                         {stage.counts_in_standings === false && (
-                          <span className="ml-2 text-xs text-text-dim">×0 · hors classement</span>
+                          <span className="ml-2 text-xs text-text-dim">Autre (×0, hors classement)</span>
                         )}
                       </div>
                       <div className="text-xs text-text-dim">

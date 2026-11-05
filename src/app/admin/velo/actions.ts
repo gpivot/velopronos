@@ -86,7 +86,7 @@ export async function createVeloCourse(formData: FormData) {
     starts_on: startsOn,
     ends_on: endsOn,
     coefficient: courseCoefficient(name, category),
-    counts_in_standings: formData.get("counts_in_standings") === "on",
+    counts_in_standings: formData.get("off_standings") !== "on",
     jerseys: defaultJerseys(kind),
     jersey_color: defaultJerseyColor(name, kind),
   });
