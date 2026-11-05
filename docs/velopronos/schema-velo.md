@@ -192,7 +192,17 @@ choisissent séparément, à tout moment de la saison, et chaque choix est **dé
 `favorite_teams_fill_only`) ; *à confirmer* (base44 permettait-il d'en changer ?). La colonne `sex`
 reste à 'H' (pas de nation favorite par sexe en vélo).
 
-Reste à faire : classement de saison (résultats retenus), textes du règlement.
+## Classement de saison : résultats retenus
+
+`getLeaderboard` (src/lib/leaderboard.ts) ne garde que les résultats retenus
+(`src/lib/velo/retainedResults.ts`) : tous les Grands Tours et événements bonus, les **2 meilleures**
+courses par étapes et les **8 meilleures** classiques. Une course vaut la somme de ses lignes
+`score_ledger` (étapes et maillots). Les lignes sans course (questions bonus) comptent toujours.
+Le classement d'une course entière (onglet Classement, filtre course sans étape choisie) ajoute
+les points de ses maillots. Le picto du porteur d'eau révélé ne s'affiche que dans le classement
+de son Grand Tour (`badgesInCourse`), plus dans celui de la saison.
+
+Reste à faire : textes du règlement.
 
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 

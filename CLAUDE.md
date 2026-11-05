@@ -6,7 +6,8 @@
 confirmer), et `docs/velopronos/schema-velo.md` (tables héritées avec un sens vélo : `stages` =
 courses, `races` = étapes ; migrations 0044-0045, imports CSV). Correctifs communs aux deux apps : `docs/correctifs-partages.md`.
 Règles : ne jamais copier la liste des joueurs dans le dépôt ; consigner les interprétations
-« à confirmer » dans la documentation ; ne pousser sur GitHub que sur demande.
+« à confirmer » dans la documentation ; ne pousser sur GitHub que sur demande. Toujours donner le
+SQL de chaque migration directement dans la conversation, prêt à coller (demande du 05/11/2026).
 
 La suite de ce fichier décrit Biathlonpronos, dont tout le code est hérité. Elle sera réécrite au
 fil de l'adaptation au vélo.
