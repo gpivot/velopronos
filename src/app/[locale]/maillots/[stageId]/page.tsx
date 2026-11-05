@@ -11,6 +11,7 @@ import { JERSEY_ODDS_FORMAT, JERSEY_TYPES, type JerseyType } from "@/lib/velo/co
 import { JerseysForm, type JerseyConfig, type JerseyOption } from "./JerseysForm";
 import { WaterCarrierForm } from "./WaterCarrierForm";
 import { chatNoirDeadline } from "@/lib/velo/chatNoir";
+import { GrandTourTeamForm } from "./GrandTourTeamForm";
 import { ChatNoirForm, type ChatNoirTarget } from "./ChatNoirForm";
 import { PEPITE_MIN_ODDS } from "@/lib/scoring/constants";
 
@@ -43,7 +44,7 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
   const playerId = user && !user.is_anonymous ? user.id : null;
 
   const isGrandTour = course.kind === "grand_tour";
-  const [{ data: entries }, odds, { data: picks }, { data: ledger }, { data: waterCarrier }, { data: chatNoirCard }] = await Promise.all([
+  const [{ data: entries }, odds, { data: picks }, { data: ledger }, { data: waterCarrier }, { data: chatNoirCard }, { data: heartRow }, { data: gtTeam }] = await Promise.all([
     supabase
       .from("stage_riders")
       .select("athlete_id, abandoned_race_id, athletes(id, first_name, last_name, nation_code, team_id, teams(id, code, name))")
@@ -79,6 +80,13 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
           .eq("status", "available")
           .limit(1)
           .maybeSingle()
+      : Promise.resolve({ data: null as any }),
+    // Équipe de cœur et équipe propre à ce Grand Tour (carte Équipe, migrations 0052 et 0054).
+    playerId && isGrandTour
+      ? supabase.from("favorite_teams").select("teams(name)").eq("user_id", playerId).eq("season_id", course.season_id).maybeSingle()
+      : Promise.resolve({ data: null as any }),
+    playerId && isGrandTour
+      ? supabase.from("course_heart_teams").select("team_id").eq("user_id", playerId).eq("stage_id", stageId).maybeSingle()
       : Promise.resolve({ data: null as any }),
   ]);
   const pointsByJersey = new Map(((ledger ?? []) as any[]).map((l) => [l.jersey as string, Number(l.points)]));
@@ -211,6 +219,15 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
             <>
               {chatNoirCard && chatNoirTargets.length > 0 && <ChatNoirForm cardId={chatNoirCard.id} targets={chatNoirTargets} />}
               <JerseysForm stageId={course.id} configs={configs} locked={isLocked} leaderColor={course.jersey_color ?? null} />
+              {isGrandTour && teams.size > 0 && (
+                <GrandTourTeamForm
+                  stageId={course.id}
+                  teams={Array.from(teams.values()).sort((a, b) => a.name.localeCompare(b.name))}
+                  heartTeamName={(heartRow as any)?.teams?.name ?? null}
+                  initialTeamId={gtTeam?.team_id ?? null}
+                  locked={isLocked}
+                />
+              )}
               {isGrandTour && (
                 <WaterCarrierForm
                   stageId={course.id}

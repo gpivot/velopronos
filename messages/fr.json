@@ -947,7 +947,7 @@
     "desc_aspiration": "À garder en main : sur une étape individuelle de ton choix, chacun de tes coureurs compte une place plus haut (un 11e devient 10e et marque).",
     "desc_equipe": "Grands Tours : s'active tout de suite ; à partir de l'étape 10, chaque coureur de ton équipe de cœur dans le Top 10 te rapporte une fois sa cote en plus, que tu l'aies choisi ou non.",
     "lockedUntil_aspiration": "Dès la 4e course",
-    "lockedUntil_equipe": "Grand Tour et équipe de cœur choisie",
+    "lockedUntil_equipe": "Grand Tour et équipe de cœur (ou équipe du Grand Tour) choisie",
     "justTaken": "Prise à la dernière série",
     "name_fusee": "Fusée",
     "name_gachette": "Gâchette",
@@ -1127,7 +1127,11 @@
     "chatNoirHint": "Un de tes coureurs a abandonné : remplace-le une fois, jusqu'au 1er jour de repos à partir de l'étape 8.",
     "chatNoirReplace": "Remplacer",
     "chatNoirError": "Remplacement impossible.",
-    "chatNoirAbandoned": "abandon"
+    "chatNoirAbandoned": "abandon",
+    "gtTeamTitle": "Mon équipe sur ce Grand Tour",
+    "gtTeamHint": "Pour la carte Équipe : garde ton équipe de cœur ou choisis-en une autre pour ce Grand Tour seulement, jusqu'au départ de la 1re étape.",
+    "gtTeamKeepHeart": "Mon équipe de cœur ({team})",
+    "gtTeamNoHeart": "Mon équipe de cœur (pas encore choisie)"
   },
   "Heart": {
     "title": "Mes choix de cœur",

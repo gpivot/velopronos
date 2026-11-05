@@ -191,8 +191,10 @@ et la nation favorite : l'encadré des globes est retiré.
 ligne `favorite_teams` par joueur et par saison, `team_id` pour l'équipe de cœur (carte Équipe),
 `nation_code` pour la nation favorite (Fête nationale, victoires sur l'accueil). Les deux se
 choisissent séparément, à tout moment de la saison, et chaque choix est **définitif** (trigger
-`favorite_teams_fill_only`, confirmé par Guillaume). Piste ouverte : une équipe de cœur propre à
-un Grand Tour, au choix du joueur. La colonne `sex`
+`favorite_teams_fill_only`, confirmé par Guillaume). **Équipe propre à un Grand Tour** (migration 0054, à l'essai, demande de Guillaume du 05/11/2026) :
+sur la page des maillots d'un Grand Tour, le joueur garde son équipe de cœur ou en choisit une
+autre pour ce Grand Tour seulement (`course_heart_teams`), modifiable jusqu'au départ de la 1re
+étape (*à confirmer*). La carte Équipe utilise cette équipe en priorité. La colonne `sex`
 reste à 'H' (pas de nation favorite par sexe en vélo).
 
 ## Classement de saison : résultats retenus
