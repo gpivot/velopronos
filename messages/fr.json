@@ -969,7 +969,7 @@
     "name_fondue": "Grillade",
     "desc_fondue": "À garder en main : dégrille une fois tes coureurs, sur l'étape de ton choix de cette course.",
     "name_chat_noir": "Chat noir",
-    "desc_chat_noir": "À garder en main : remplace un de tes pronostics maillots (sauf meilleure équipe) ou ton porteur d'eau si son coureur abandonne, jusqu'au départ de l'étape 10.",
+    "desc_chat_noir": "À garder en main : remplace un de tes pronostics maillots (sauf meilleure équipe) ou ton porteur d'eau si son coureur abandonne, jusqu'au 1er jour de repos à partir de l'étape 8.",
     "lockedUntil_chat_noir": "Pas encore"
   },
   "Badges": {
@@ -1124,7 +1124,7 @@
     "waterCarrierRevealedPoints": "Révélé · +{points} pts",
     "waterCarrierChoose": "Choisis ton outsider caché pour ce Grand Tour",
     "chatNoirTitle": "Carte Chat noir",
-    "chatNoirHint": "Un de tes coureurs a abandonné : remplace-le une fois, jusqu'au départ de l'étape 10.",
+    "chatNoirHint": "Un de tes coureurs a abandonné : remplace-le une fois, jusqu'au 1er jour de repos à partir de l'étape 8.",
     "chatNoirReplace": "Remplacer",
     "chatNoirError": "Remplacement impossible.",
     "chatNoirAbandoned": "abandon"

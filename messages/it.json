@@ -969,7 +969,7 @@
     "name_fondue": "Grigliata",
     "desc_fondue": "Tienila in mano: libera una volta i tuoi corridori bruciati, sulla tappa che scegli di questa corsa.",
     "name_chat_noir": "Gatto nero",
-    "desc_chat_noir": "Tienila in mano: sostituisce uno dei tuoi pronostici maglie (tranne miglior squadra) o il tuo gregario se il suo corridore si ritira, fino alla partenza della tappa 10.",
+    "desc_chat_noir": "Tienila in mano: sostituisce uno dei tuoi pronostici maglie (tranne miglior squadra) o il tuo gregario se il suo corridore si ritira, fino al primo giorno di riposo dalla tappa 8.",
     "lockedUntil_chat_noir": "Non ancora"
   },
   "Badges": {
@@ -1124,7 +1124,7 @@
     "waterCarrierRevealedPoints": "Svelato · +{points} pt",
     "waterCarrierChoose": "Scegli il tuo outsider nascosto per questo grande giro",
     "chatNoirTitle": "Carta Gatto nero",
-    "chatNoirHint": "Uno dei tuoi corridori si è ritirato: sostituiscilo una volta, fino alla partenza della tappa 10.",
+    "chatNoirHint": "Uno dei tuoi corridori si è ritirato: sostituiscilo una volta, fino al primo giorno di riposo dalla tappa 8.",
     "chatNoirReplace": "Sostituisci",
     "chatNoirError": "Sostituzione impossibile.",
     "chatNoirAbandoned": "ritirato"
