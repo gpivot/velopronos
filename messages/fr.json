@@ -621,7 +621,9 @@
     "fuseeActive": "carte posée sur cette course : +100 / +50 / +20 pts pour tes coureurs aux 3 meilleurs temps de ski.",
     "gachetteActive": "carte posée sur cette course : +100 pts par coureur qui fait 20/20 au tir (+50 pour un 10/10 au sprint).",
     "grilled": "grillé",
-    "cardGrilladeAction": "Utiliser Grillade (dégriller mes coureurs)"
+    "cardGrilladeAction": "Utiliser Grillade (dégriller mes coureurs)",
+    "chooseTeams": "Choisis {count} équipes",
+    "searchTeam": "Chercher une équipe"
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",

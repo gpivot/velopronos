@@ -86,7 +86,7 @@ export async function getSeasonView(
 
   const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }, streak, cards] = await Promise.all([
     userId
-      ? supabase.from("predictions").select("race_id, athlete_ids, nation_code, bonus_x2_used").eq("user_id", userId)
+      ? supabase.from("predictions").select("race_id, athlete_ids, nation_code, team_ids, bonus_x2_used").eq("user_id", userId)
       : Promise.resolve({ data: [] as any[] }),
     userId
       ? supabase.from("score_ledger").select("race_id, points, breakdown").eq("user_id", userId).eq("season_id", season.id)
@@ -155,9 +155,15 @@ export async function getSeasonView(
     nationCodes.length ? supabase.from("nations").select("code, name").in("code", nationCodes) : Promise.resolve({ data: [] as any[] }),
   ]);
   const athleteById = new Map((athletes ?? []).map((a: any) => [a.id as string, a]));
+  // CLM par équipes (VéloPronos) : noms des équipes pronostiquées.
+  const teamIds = Array.from(new Set(predictions.flatMap((p: any) => p.team_ids ?? [])));
+  const { data: teams } = teamIds.length ? await supabase.from("teams").select("id, name").in("id", teamIds) : { data: [] as any[] };
+  const teamNameById = new Map((teams ?? []).map((x: any) => [x.id as string, x.name as string]));
   const nationNameByCode = new Map((nations ?? []).map((n: any) => [n.code as string, n.name as string]));
   const pickNames = (p: any): string =>
-    p.nation_code
+    (p.team_ids?.length ?? 0) > 0
+      ? (p.team_ids as string[]).map((id) => teamNameById.get(id) ?? "?").join(", ")
+      : p.nation_code
       ? nationNameByCode.get(p.nation_code) ?? p.nation_code
       : (p.athlete_ids ?? []).map((id: string) => shortName(athleteById.get(id))).join(", ");
 

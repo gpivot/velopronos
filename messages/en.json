@@ -621,7 +621,9 @@
     "fuseeActive": "card played on this race: +100 / +50 / +20 pts for your riders with the 3 fastest ski times.",
     "gachetteActive": "card played on this race: +100 pts per rider who shoots 20/20 (+50 for a 10/10 in the sprint).",
     "grilled": "burned",
-    "cardGrilladeAction": "Use Barbecue (un-burn my riders)"
+    "cardGrilladeAction": "Use Barbecue (un-burn my riders)",
+    "chooseTeams": "Pick {count} teams",
+    "searchTeam": "Search a team"
   },
   "SignIn": {
     "prompt": "Sign in to continue",

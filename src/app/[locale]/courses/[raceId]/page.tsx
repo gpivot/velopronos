@@ -10,6 +10,7 @@ import { getAdminProfile, getClock } from "@/lib/clock";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { PredictionForm, type AthleteWithOdds } from "./PredictionForm";
 import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm";
+import { TeamPredictionForm, type TeamWithOdds } from "./TeamPredictionForm";
 import { GrilladeButton } from "./GrilladeButton";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
@@ -67,6 +68,8 @@ export default async function RacePage({
   };
   const offStandings = stage.counts_in_standings === false;
   const isRelay = RELAY_FORMATS.includes(race.format);
+  // CLM par équipes (VéloPronos) : 3 équipes, predictions.team_ids.
+  const isTeamRace = race.format === "clm_equipes";
   const displayStatus = getRaceDisplayStatus(race, now);
 
   const user = authData.user;
@@ -76,6 +79,8 @@ export default async function RacePage({
   let nationsWithOdds: NationWithOdds[] = [];
   let initialAthleteSelection: string[] = [];
   let initialNationSelection: string | null = null;
+  let teamsWithOdds: TeamWithOdds[] = [];
+  let initialTeamSelection: string[] = [];
   // Pépites cachées pas encore révélées : jouées en caché sur toutes les courses, donc hors pronostic.
   let grilledAthleteIds: string[] = [];
   let hiddenPepiteIds: string[] = [];
@@ -126,7 +131,28 @@ export default async function RacePage({
     x2UsesRemaining = Math.max(0, 3 - (x2UsedCount ?? 0));
   }
 
-  if (isRelay) {
+  if (isTeamRace) {
+    const { data: odds } = await supabase
+      .from("odds")
+      .select("team_id, value, teams(code, name, nation_code)")
+      .eq("stage_id", race.stage_id)
+      .eq("format", race.format)
+      .is("valid_until", null)
+      .not("team_id", "is", null);
+    teamsWithOdds = (odds ?? [])
+      .map((o: any) => ({ team_id: o.team_id, code: o.teams?.code ?? "", name: o.teams?.name ?? o.team_id, nation_code: o.teams?.nation_code ?? null, value: o.value }))
+      .sort((a: TeamWithOdds, b: TeamWithOdds) => a.value - b.value || a.name.localeCompare(b.name));
+    if (user) {
+      const { data: existing } = await supabase
+        .from("predictions")
+        .select("team_ids, bonus_x2_used")
+        .eq("user_id", user.id)
+        .eq("race_id", race.id)
+        .maybeSingle();
+      initialTeamSelection = existing?.team_ids ?? [];
+      initialBonusX2 = existing?.bonus_x2_used ?? false;
+    }
+  } else if (isRelay) {
     const { data: odds } = await supabase
       .from("odds")
       .select("nation_code, value, nations(name)")
@@ -240,13 +266,13 @@ export default async function RacePage({
   const selectableAthletes =
     startList.status === "known" ? athletesWithOdds.filter((a) => startOrder[a.athlete_id] != null) : athletesWithOdds;
 
-  const hasOdds = isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
+  const hasOdds = isTeamRace ? teamsWithOdds.length > 0 : isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
   // Liste des biathlètes visible 7 jours avant l'étape seulement (cotes mises à jour pendant les pauses).
   const predictionsOpen = isPredictionOpen(stage.starts_on, now);
   const showForm = displayStatus === "upcoming" && hasOdds && !startListPending && predictionsOpen;
   // « L'avis de Biathlonpronos » saisi dans le back-office ; rubrique masquée s'il est vide.
   const opinion = typeof race.opinion === "string" ? race.opinion.trim() : "";
-  const hasPrediction = isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
+  const hasPrediction = isTeamRace ? initialTeamSelection.length > 0 : isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
 
   const results = raceResult?.results ?? [];
   const resultsTopCount = isRelay ? 5 : 10;
@@ -425,7 +451,16 @@ export default async function RacePage({
                 <GrilladeButton raceId={race.id} cardId={availableCards.find((c) => c.card_type === "fondue")!.id} />
               )}
 
-              {isRelay ? (
+              {isTeamRace ? (
+                <TeamPredictionForm
+                  raceId={race.id}
+                  teams={teamsWithOdds}
+                  initialSelection={initialTeamSelection}
+                  initialBonusX2={initialBonusX2}
+                  x2Eligible={x2Eligible}
+                  x2UsesRemaining={x2UsesRemaining}
+                />
+              ) : isRelay ? (
                 <RelayPredictionForm
                   raceId={race.id}
                   format={race.format}
@@ -469,6 +504,18 @@ export default async function RacePage({
               {!hasPrediction ? (
                 <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
                   {t("noPredictionMessage")}
+                </div>
+              ) : isTeamRace ? (
+                <div className="flex flex-col gap-2">
+                  {initialTeamSelection.map((teamId) => {
+                    const team = teamsWithOdds.find((x) => x.team_id === teamId);
+                    return (
+                      <div key={teamId} className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+                        <div className="flex-1 text-sm font-semibold">{team?.name ?? teamId}</div>
+                        {team && <div className="font-display text-sm font-bold text-ice">×{team.value}</div>}
+                      </div>
+                    );
+                  })}
                 </div>
               ) : isRelay ? (
                 <NationPickRow nation={nationsWithOdds.find((n) => n.nation_code === initialNationSelection)} />

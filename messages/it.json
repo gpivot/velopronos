@@ -621,7 +621,9 @@
     "fuseeActive": "carta posata su questa gara: +100 / +50 / +20 pt per i tuoi ciclisti con i 3 migliori tempi sugli sci.",
     "gachetteActive": "carta posata su questa gara: +100 pt per ogni ciclista che fa 20/20 al tiro (+50 per un 10/10 nella sprint).",
     "grilled": "bruciato",
-    "cardGrilladeAction": "Usa Grigliata (sblocca i miei ciclisti bruciati)"
+    "cardGrilladeAction": "Usa Grigliata (sblocca i miei ciclisti bruciati)",
+    "chooseTeams": "Scegli {count} squadre",
+    "searchTeam": "Cerca una squadra"
   },
   "SignIn": {
     "prompt": "Accedi per continuare",

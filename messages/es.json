@@ -621,7 +621,9 @@
     "fuseeActive": "carta colocada en esta carrera: +100 / +50 / +20 pts para tus ciclistas con los 3 mejores tiempos de esquí.",
     "gachetteActive": "carta colocada en esta carrera: +100 pts por ciclista que hace 20/20 en el tiro (+50 por un 10/10 en el sprint).",
     "grilled": "quemado",
-    "cardGrilladeAction": "Usar Parrillada (desquemar mis ciclistas)"
+    "cardGrilladeAction": "Usar Parrillada (desquemar mis ciclistas)",
+    "chooseTeams": "Elige {count} equipos",
+    "searchTeam": "Buscar un equipo"
   },
   "SignIn": {
     "prompt": "Inicia sesión para continuar",

@@ -621,7 +621,9 @@
     "fuseeActive": "Karte auf dieser Rennen: +100 / +50 / +20 Pkt. für deine Fahrer mit den 3 schnellsten Laufzeiten.",
     "gachetteActive": "Karte auf dieser Rennen: +100 Pkt. pro Fahrer mit 20/20 am Schießstand (+50 für 10/10 im Sprint).",
     "grilled": "gesperrt",
-    "cardGrilladeAction": "Grillfest einsetzen (Sperre meiner Fahrer aufheben)"
+    "cardGrilladeAction": "Grillfest einsetzen (Sperre meiner Fahrer aufheben)",
+    "chooseTeams": "Wähle {count} Teams",
+    "searchTeam": "Team suchen"
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",

@@ -66,6 +66,14 @@ jusqu'au départ de la 1re étape (RLS de `course_predictions`), en lecture seul
 points (Top 3 final : cote ×5/×2/×1 ; super combatif +200 et +50 par jour) arrivent avec le
 moteur vélo. Pastille du général à la couleur de la course (`jersey_color`).
 
+## Pronostic d'une étape CLM par équipes
+
+Le joueur choisit **3 équipes** parmi celles qui ont une cote « CLM par équipes » pour la course
+(onglet admin Coureurs & cotes, ou import des équipes), enregistrées dans `predictions.team_ids`.
+Bonus ×2 possible comme sur une étape normale. Affichées dans Ma saison et l'encadré de la
+semaine. **Pas encore** : saisie du résultat par équipe (il faudra `race_results.team_id`),
+points, et pronostics des autres joueurs pendant/après l'étape (moteur vélo).
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :
