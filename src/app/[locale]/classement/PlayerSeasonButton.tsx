@@ -8,7 +8,6 @@ import { BonusCardsList } from "@/components/BonusCardsList";
 import { PlayerBadgesRow } from "@/components/PlayerBadgesRow";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { CalendarAccordion } from "../courses/CalendarAccordion";
-import { SeasonPredictionsAccordion } from "../courses/SeasonPredictionsAccordion";
 import { getPlayerSeason, type PlayerSeason } from "./actions";
 
 /** Classement « Par étapes » : le pop-up se limite à cette étape (demande de Guillaume, 04/11/2026). */
@@ -167,7 +166,6 @@ export function PlayerSeasonButton({
                       </div>
                     )}
                   </div>
-                  {data.seasonPicks && <SeasonPredictionsAccordion picks={data.seasonPicks} readOnly />}
                   {data.streak != null && <StreakCard current={data.streak} />}
                   <div className="text-[11px] text-text-dim">{t("playerHiddenHint")}</div>
                   <CalendarAccordion stages={data.stages} defaultOpenStageId={data.defaultOpenStageId} locale={locale} readOnly />

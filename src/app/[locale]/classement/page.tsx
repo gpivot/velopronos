@@ -24,8 +24,6 @@ import { PlayerSeasonButton } from "./PlayerSeasonButton";
 import { StandingsFilters, type StandingsFilterOptions, type StandingsFilterState } from "./StandingsFilters";
 import { seasonHasFinishedRace } from "@/lib/streakCounter";
 import { getCardCourse } from "@/lib/bonusCards";
-import { getPlayerJokers } from "@/lib/seasonView";
-import { JokersCard } from "@/components/JokersCard";
 
 export const dynamic = "force-dynamic";
 
@@ -66,14 +64,13 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   const userId = userResult.user?.id ?? null;
   const { now } = await getClock();
 
-  const [stages, leagueRows, leaderboard, jokers, seasonBadges] = await Promise.all([
+  const [stages, leagueRows, leaderboard, seasonBadges] = await Promise.all([
     season ? getStandingsStages(supabase, season.id, now) : Promise.resolve([]),
     season && userId
       ? supabase.from("league_memberships").select("leagues!inner(id, name, season_id)").eq("user_id", userId).eq("leagues.season_id", season.id)
       : Promise.resolve({ data: [] as any[] }),
     // Classement général de la saison : sert à l'encadré « Mon classement » et à la vue Saison.
     season ? getLeaderboard(supabase, season.id) : Promise.resolve([]),
-    season && userId ? getPlayerJokers(supabase, season.id, userId) : Promise.resolve(null),
     season ? getPlayerBadges(supabase, season.id) : Promise.resolve(new Map<string, PlayerBadges>()),
   ]);
   // « Mon classement » : même calcul que l'encadré de l'accueil (rang général de la saison).
@@ -176,7 +173,6 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                 <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
               </div>
             </div>
-            {jokers && <JokersCard jokers={jokers} />}
           </div>
         )}
 

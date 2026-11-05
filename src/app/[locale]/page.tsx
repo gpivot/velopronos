@@ -18,7 +18,6 @@ import { getRaceResult } from "@/lib/lastResult";
 import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { NextRaceCard, type NextRace } from "@/components/NextRaceCard";
 import { StreakCard } from "@/components/StreakCard";
-import { SeasonPicksInvite } from "@/components/SeasonPicksInvite";
 import { getCurrentStreak } from "@/lib/streakCounter";
 import { getPlayerCards, type PlayerCards } from "@/lib/bonusCards";
 import { getFavoriteTeamStats, type FavoriteTeamStats } from "@/lib/favoriteTeamStats";
@@ -269,9 +268,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               </Link>
             </div>
 
-            {seasonPicksBeforeStart != null ? (
-              <SeasonPicksInvite chosen={seasonPicksBeforeStart} />
-            ) : streak != null && (
+            {streak != null && (
               <StreakCard current={streak} compact cards={cards ?? undefined} seasonId={season?.id} autoOpenClaim />
             )}
           </div>

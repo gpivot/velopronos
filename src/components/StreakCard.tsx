@@ -3,7 +3,6 @@ import { STREAK_TARGET } from "@/lib/scoring/constants";
 import type { PlayerCards } from "@/lib/bonusCards";
 import { BonusCardsList } from "./BonusCardsList";
 import { ClaimCardPicker } from "./ClaimCardPicker";
-import { StageCardPlayer } from "./StageCardPlayer";
 
 /**
  * « Série en cours » d'un joueur : VéloPronos, étapes d'affilée avec des points dans la course par
@@ -37,7 +36,6 @@ export function StreakCard({
         />
       )}
       <BonusCardsList cards={cards.cards} compact={compact} />
-      {seasonId && <StageCardPlayer stagePlays={cards.stagePlays ?? []} talentCardId={cards.talentCardId ?? null} />}
     </>
   );
 
