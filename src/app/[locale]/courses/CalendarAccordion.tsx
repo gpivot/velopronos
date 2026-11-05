@@ -47,6 +47,8 @@ export interface CalendarStage {
   /** VéloPronos : nombre de maillots pronostiqués sur la course, et choisis par le joueur. */
   jerseys?: number;
   jerseysPicked?: number;
+  /** Grand Tour : porteur d'eau du joueur (choisi ou pas, révélé ou pas). Absent sinon. */
+  waterCarrier?: { name: string | null; nationCode: string | null; revealed: boolean; locked: boolean } | null;
   races: CalendarRace[];
 }
 
@@ -165,6 +167,27 @@ export function CalendarAccordion({
                       <span className="text-sm font-semibold">{tJerseys("linkLabel")}</span>
                       <span className="text-xs text-text-dim">
                         {tJerseys("linkCount", { chosen: stage.jerseysPicked ?? 0, total: stage.jerseys ?? 0 })}
+                      </span>
+                    </span>
+                  </Link>
+                )}
+                {!readOnly && stage.waterCarrier && (
+                  // Porteur d'eau : propre à chaque Grand Tour, choisi sur la page des maillots.
+                  <Link
+                    href={`/maillots/${stage.id}`}
+                    className="flex items-center gap-3 rounded-xl border border-ice/40 bg-ice-soft px-3.5 py-3"
+                  >
+                    <span className="text-lg">💧</span>
+                    <span className="flex flex-1 flex-col">
+                      <span className="text-sm font-semibold">{tJerseys("waterCarrierTitle")}</span>
+                      <span className="text-xs text-text-dim">
+                        {stage.waterCarrier.name
+                          ? `${stage.waterCarrier.nationCode ? `${nationFlagEmoji(stage.waterCarrier.nationCode)} ` : ""}${stage.waterCarrier.name} · ${
+                              stage.waterCarrier.revealed ? tJerseys("waterCarrierRevealed") : tJerseys("waterCarrierHidden")
+                            }`
+                          : stage.waterCarrier.locked
+                            ? tJerseys("notChosen")
+                            : tJerseys("waterCarrierChoose")}
                       </span>
                     </span>
                   </Link>

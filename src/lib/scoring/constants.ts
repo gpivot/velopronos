@@ -77,7 +77,8 @@ export const ASPIRATION_BONUS_BY_COUNT: Record<number, number> = {
 };
 
 /** §12 — série de courses consécutives où au moins un choix marque des points. */
-export const STREAK_TARGET = 10;
+/** VéloPronos : série de 5 étapes d'affilée avec des points, dans une course par étapes. */
+export const STREAK_TARGET = 5;
 
 /**
  * §15 — cartes Fusée et Gâchette (cartes bonus depuis le 04/11/2026, plus de bonus automatique).

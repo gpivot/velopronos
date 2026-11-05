@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getCardCourse, getCourseStreak } from "./bonusCards";
 
 /** Vrai dès qu'au moins une course de la saison a été notée (statut « finished »). */
 export async function seasonHasFinishedRace(supabase: SupabaseClient, seasonId: string): Promise<boolean> {
@@ -11,20 +12,16 @@ export async function seasonHasFinishedRace(supabase: SupabaseClient, seasonId: 
 }
 
 /**
- * Série en cours d'un joueur sur la saison (0 s'il n'a pas encore de compteur). La série est propre
- * à chaque saison et n'existe qu'à partir de la 1re course notée : avant, renvoie null (rien
- * d'affiché), même si un ancien compteur traîne en base (course de test supprimée hors de l'admin…).
+ * VéloPronos : série en cours d'un joueur dans la course par étapes en cours (ou la prochaine),
+ * 0 sans compteur. null : aucune course par étapes à venir, ou rien n'a encore été noté.
  */
-export async function getCurrentStreak(supabase: SupabaseClient, seasonId: string, userId: string): Promise<number | null> {
-  const [started, { data }] = await Promise.all([
-    seasonHasFinishedRace(supabase, seasonId),
-    supabase
-      .from("streak_counters")
-      .select("current_streak")
-      .eq("season_id", seasonId)
-      .eq("user_id", userId)
-      .maybeSingle(),
-  ]);
-  if (!started) return null;
-  return data?.current_streak ?? 0;
+export async function getCurrentStreak(
+  supabase: SupabaseClient,
+  seasonId: string,
+  userId: string,
+  now: Date = new Date()
+): Promise<number | null> {
+  const [started, course] = await Promise.all([seasonHasFinishedRace(supabase, seasonId), getCardCourse(supabase, seasonId, now)]);
+  if (!started || !course) return null;
+  return getCourseStreak(supabase, course.id, userId);
 }

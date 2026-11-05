@@ -23,18 +23,24 @@ import {
 import { PlayerSeasonButton } from "./PlayerSeasonButton";
 import { StandingsFilters, type StandingsFilterOptions, type StandingsFilterState } from "./StandingsFilters";
 import { seasonHasFinishedRace } from "@/lib/streakCounter";
+import { getCardCourse } from "@/lib/bonusCards";
 import { getPlayerJokers } from "@/lib/seasonView";
 import { JokersCard } from "@/components/JokersCard";
 
 export const dynamic = "force-dynamic";
 
-/** Séries en cours (10/10) de tous les joueurs, 0 compris (série retombée) : rien avant la 1re course notée (cf. getCurrentStreak). */
-async function getCurrentStreaks(supabase: ReturnType<typeof createClient>, seasonId: string): Promise<Map<string, number>> {
+/**
+ * Séries en cours de tous les joueurs dans la course par étapes en cours (VéloPronos, 0051), 0
+ * compris (série retombée) : rien avant la 1re course notée (cf. getCurrentStreak).
+ */
+async function getCurrentStreaks(supabase: ReturnType<typeof createClient>, seasonId: string, now: Date): Promise<Map<string, number>> {
   if (!(await seasonHasFinishedRace(supabase, seasonId))) return new Map();
+  const course = await getCardCourse(supabase, seasonId, now);
+  if (!course) return new Map();
   const { data } = await supabase
     .from("streak_counters")
     .select("user_id, current_streak")
-    .eq("season_id", seasonId);
+    .eq("stage_id", course.id);
   return new Map((data ?? []).map((s: any) => [s.user_id as string, Number(s.current_streak)]));
 }
 
@@ -108,7 +114,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
       // Une étape hors classement (×0) ne donne pas de dossard rouge.
       const ongoingStage = stages.find((s) => s.countsInStandings !== false && isStageOngoing(s));
       const [currentStreaks, ongoingRows] = await Promise.all([
-        getCurrentStreaks(supabase, season.id),
+        getCurrentStreaks(supabase, season.id, now),
         ongoingStage ? getRacesStandings(supabase, ongoingStage.races, null, false) : Promise.resolve([]),
       ]);
       streaks = currentStreaks;

@@ -115,7 +115,7 @@ export default async function RacePage({
     const [{ data: cards }, { count: x2UsedCount }, seasonRaces, { data: lateJokers }] = await Promise.all([
       supabase
         .from("bonus_cards")
-        .select("id, card_type, status, used_on_race_id, used_on_stage_id")
+        .select("id, card_type, status, used_on_race_id, used_on_stage_id, course_id")
         .eq("user_id", user.id)
         .eq("season_id", stage.season_id),
       // ×2 déjà joués sur les étapes de la même course (celle-ci comprise, comme le comptent les formulaires).
@@ -135,7 +135,8 @@ export default async function RacePage({
     ]);
     lateJokerRaceIds = ((lateJokers ?? []) as any[]).map((p) => p.race_id as string);
     const cardRows = (cards ?? []) as CardRow[];
-    availableCards = cardRows.filter((c) => c.status === "available");
+    // VéloPronos : seules les cartes gagnées dans cette course s'y jouent (migration 0051).
+    availableCards = cardRows.filter((c) => c.status === "available" && c.course_id === stage.id);
     const onRace = cardsOnRace(race.id, cardRows, seasonRaces);
     activeCard = onRace.caFarte ? "ca_farte" : onRace.aspiration ? "aspiration" : null;
     // Aspiration déjà posée l'emporte sur un 4e choix arrivé ensuite (voir resolvePredictionCard).
@@ -552,7 +553,7 @@ export default async function RacePage({
                     hiddenPepiteIds={hiddenPepiteIds}
                     playableCards={[]}
                     activeCard={null}
-                    quatriemeChoixActive={quatriemeChoixActive}
+                    quatriemeChoixActive={false}
                     stageCards={stageCards}
                     initialBonusX2={false}
                     initialCardTarget={null}
