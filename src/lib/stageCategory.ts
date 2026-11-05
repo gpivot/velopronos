@@ -18,8 +18,8 @@ export interface StageCategoryFields {
 
 /** Valeur du menu déroulant de l'admin : le multiplicateur affiché (1, 2, 0). */
 export const STAGE_CATEGORY_OPTIONS: { value: "1" | "2" | "0"; label: string }[] = [
-  { value: "1", label: "Coupe du Monde (×1)" },
-  { value: "2", label: "Mondiaux / JO (×2)" },
+  { value: "1", label: "Normale (×1)" },
+  { value: "2", label: "Monument / Mondiaux (×2)" },
   { value: "0", label: "Autre (×0, hors classement)" },
 ];
 

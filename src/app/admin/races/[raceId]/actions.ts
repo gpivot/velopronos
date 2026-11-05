@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { isSpecialRuleAllowed } from "../../_components/labels";
+import { fromDateTimeLocalParis, isSpecialRuleAllowed, stageFormFields } from "../../_components/labels";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { fetchIbuResults, fetchIbuStartList } from "@/lib/admin/ibuResults";
@@ -175,28 +175,26 @@ export async function clearStartList(formData: FormData) {
   revalidatePath("/admin", "layout");
 }
 
-/** Modifie format, sexe, heure de départ (UTC) et course spéciale. */
+/** Modifie une étape : type, numéro, villes, distance, dénivelé, heure de départ (Paris), règle spéciale. */
 export async function updateRace(formData: FormData) {
   await requireAdmin();
   const raceId = String(formData.get("race_id"));
   const format = String(formData.get("format"));
-  const sex = String(formData.get("sex"));
   const specialRule = String(formData.get("special_rule"));
-  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle ; Fête nationale : seulement sur une course individuelle.");
+  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Pas de règle spéciale sur un CLM par équipes.");
   const admin = createAdminClient();
   if (specialRule !== "") {
     const { data: race } = await admin.from("races").select("stages(coefficient)").eq("id", raceId).single();
-    if ((race?.stages as unknown as { coefficient: number } | null)?.coefficient === 2) throw new Error("Pas de course malus ni de Fête nationale sur les Mondiaux / JO (étape à coefficient 2).");
+    if ((race?.stages as unknown as { coefficient: number } | null)?.coefficient === 2) throw new Error("Pas d'étape malus ni de Fête nationale sur une course ×2 (monuments, Mondiaux).");
   }
-  // relais_h/f portent le sexe dans le format, les relais mixtes n'en ont pas.
-  const sexless = format.startsWith("relais_");
 
   const { error } = await admin
     .from("races")
     .update({
       format,
-      sex: sex === "" || sexless ? null : sex,
-      locks_at: `${String(formData.get("locks_at"))}:00Z`,
+      sex: "H",
+      ...stageFormFields(formData),
+      locks_at: fromDateTimeLocalParis(String(formData.get("locks_at"))),
       special_rule: specialRule === "" ? null : specialRule,
     })
     .eq("id", raceId);
@@ -205,7 +203,7 @@ export async function updateRace(formData: FormData) {
   revalidatePath("/admin", "layout");
 }
 
-/** « L'avis de Biathlonpronos » de la course ; un texte vide masque la rubrique sur la page course. */
+/** « L'avis de VéloPronos » de la course ; un texte vide masque la rubrique sur la page course. */
 export async function updateRaceOpinion(formData: FormData) {
   await requireAdmin();
   const raceId = String(formData.get("race_id"));

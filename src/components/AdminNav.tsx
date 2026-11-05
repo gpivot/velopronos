@@ -6,7 +6,6 @@ import { ArrowLeftIcon } from "./icons";
 
 const items = [
   { href: "/admin", label: "Calendrier & résultats", matches: ["/admin/races", "/admin/calendrier"] },
-  { href: "/admin/velo", label: "Courses vélo (imports)", matches: ["/admin/velo"] },
   { href: "/admin/athletes", label: "Athlètes & cotes", matches: ["/admin/athletes"] },
   { href: "/admin/cartes", label: "Cartes bonus", matches: ["/admin/cartes"] },
   { href: "/admin/joueurs", label: "Joueurs & rôles", matches: ["/admin/joueurs"] },

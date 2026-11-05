@@ -24,6 +24,24 @@ export const COURSE_CATEGORIES: CourseCategory[] = [
   "national_championships",
 ];
 
+export const JERSEY_TYPES: JerseyType[] = ["general", "points", "montagne", "jeune", "combatif", "equipe"];
+
+export const COURSE_KIND_LABELS: Record<CourseKind, string> = {
+  one_day: "Classique",
+  stage_race: "Course par étapes",
+  grand_tour: "Grand Tour",
+  bonus_event: "Événement bonus",
+};
+
+export const COURSE_CATEGORY_LABELS: Record<CourseCategory, string> = {
+  grand_tour: "Grand Tour",
+  stage_race: "Course par étapes",
+  monument: "Monument",
+  world_tour: "World Tour",
+  world_champs: "Mondiaux",
+  national_championships: "Championnats nationaux",
+};
+
 export const STAGE_TYPE_LABELS: Record<StageType, string> = {
   sprint: "Sprint",
   montagne: "Montagne",
