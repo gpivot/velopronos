@@ -13,6 +13,7 @@ import { getRaceDisplayStatus, type RaceDisplayStatus } from "./raceStatus";
 export interface StandingsRace {
   id: string;
   format: string;
+  stage_number?: number | null;
   sex: string;
   locks_at: string;
   status: string;
@@ -88,7 +89,7 @@ export function buildStandings(
 export async function getStandingsStages(supabase: SupabaseClient, seasonId: string, now: Date): Promise<StandingsStage[]> {
   const { data, error } = await supabase
     .from("stages")
-    .select("id, location, country_code, starts_on, counts_in_standings, races(id, format, sex, locks_at, status)")
+    .select("id, location, country_code, starts_on, counts_in_standings, races(id, format, stage_number, sex, locks_at, status)")
     .eq("season_id", seasonId)
     .order("starts_on", { ascending: true });
   if (error) console.error("getStandingsStages:", error.message);

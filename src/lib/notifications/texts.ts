@@ -1,6 +1,6 @@
 import { createTranslator } from "next-intl";
 import { locales, type Locale } from "../../i18n/routing";
-import { displayedSex } from "../raceLabel";
+import { raceTitle } from "../raceLabel";
 import de from "../../../messages/de.json";
 import en from "../../../messages/en.json";
 import es from "../../../messages/es.json";
@@ -25,16 +25,15 @@ export function notificationTexts(locale: string) {
     t: createTranslator({ locale: loc, messages, namespace: "Notifications" }),
     format: createTranslator({ locale: loc, messages, namespace: "RaceFormat" }),
     sex: createTranslator({ locale: loc, messages, namespace: "Sex" }),
+    race: createTranslator({ locale: loc, messages, namespace: "Race" }),
   };
 }
 
 export type NotificationTexts = ReturnType<typeof notificationTexts>;
 
-/** « Sprint Femmes », « Relais Mixte »… dans la langue du joueur. */
-export function raceName(texts: NotificationTexts, race: { format: string; sex: string | null }): string {
-  const format = texts.format(race.format as "sprint");
-  const sex = displayedSex(race);
-  return sex ? texts.t("raceLabel", { format, sex: texts.sex(sex as "F") }) : format;
+/** « Étape 3 · Sprint », « Baroudeurs » (classique)… dans la langue du joueur. */
+export function raceName(texts: NotificationTexts, race: { format: string; sex?: string | null; stage_number?: number | null }): string {
+  return raceTitle(race, (k, v) => texts.format(k as "sprint", v as never), (k, v) => texts.race(k as "prologue", v as never));
 }
 
 /** Heure de Paris « 14:30 ». */

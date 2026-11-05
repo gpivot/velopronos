@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { nationFlagEmoji } from "@/lib/nationFlags";
-import { displayedSex } from "@/lib/raceLabel";
+import { raceTitle } from "@/lib/raceLabel";
 import type { SeasonJokers } from "@/lib/seasonView";
 
 /**
@@ -11,7 +11,7 @@ import type { SeasonJokers } from "@/lib/seasonView";
 export function JokersCard({ jokers }: { jokers: SeasonJokers }) {
   const t = useTranslations("Courses");
   const tFormat = useTranslations("RaceFormat");
-  const tSex = useTranslations("Sex");
+  const tRace = useTranslations("Race");
   const signed = (n: number) => (n > 0 ? `+${n}` : `${n}`);
 
   return (
@@ -31,7 +31,6 @@ export function JokersCard({ jokers }: { jokers: SeasonJokers }) {
           <div className="text-[12px] text-text-dim">{t("jokersNone")}</div>
         ) : (
           jokers.erased.map((line) => {
-            const sex = displayedSex({ format: line.format, sex: line.sex });
             return (
               <Link
                 key={line.raceId}
@@ -41,8 +40,7 @@ export function JokersCard({ jokers }: { jokers: SeasonJokers }) {
                 <span>{nationFlagEmoji(line.countryCode)}</span>
                 <span className="flex min-w-0 flex-1 flex-col">
                   <span className="truncate font-semibold">
-                    {tFormat(line.format)}
-                    {sex ? ` ${tSex(sex)}` : ""}
+                    {raceTitle(line, tFormat, tRace)}
                   </span>
                   <span className="truncate text-[11px] text-text-dim">{line.location}</span>
                 </span>

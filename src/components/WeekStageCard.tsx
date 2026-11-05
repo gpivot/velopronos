@@ -6,7 +6,7 @@ import { ResultBody } from "@/components/LastResultCard";
 import { formatPoints } from "@/components/PredictionBreakdown";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
-import { displayedSex } from "@/lib/raceLabel";
+import { raceTitle } from "@/lib/raceLabel";
 import type { WeekStage, WeekStageRace } from "@/lib/weekStage";
 import type { LastResult } from "@/lib/lastResult";
 import { SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
@@ -96,8 +96,7 @@ export async function WeekStageCard({
                 <div className="flex items-center gap-3 px-4 py-3">
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <div className="truncate text-sm font-semibold">
-                    {tFormat(race.format)}
-                    {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
+                    {raceTitle(race, tFormat, tRace)}
                   </div>
                   <div className="text-xs text-text-dim first-letter:uppercase">
                     {new Date(race.locksAt).toLocaleString(locale, {

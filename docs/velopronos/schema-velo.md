@@ -48,6 +48,15 @@ test (21 étapes, 2 repos, 184 coureurs, 23 équipes, 1 519 cotes).
 Une course de test se crée à la main sur la même page (« Créer une course à la main »), hors
 classement par défaut.
 
+## Libellés côté joueur
+
+Une étape s'affiche « Étape 3 · Sprint », « Prologue · Contre-la-montre », ou seulement son type
+pour une classique (étape unique **sans numéro**, migration de données **0046**). Le sexe n'est
+plus jamais affiché (`displayedSex` renvoie toujours null). Sous le titre : « Départ → Arrivée ·
+km » (`src/lib/raceLabel.ts`). L'encadré de la semaine de l'accueil ne montre, pour une course
+par étapes, que les étapes de la veille aux 6 jours suivants. Badge des courses ×2 : « Course
+majeure » (monuments, Mondiaux).
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :

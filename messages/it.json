@@ -448,7 +448,7 @@
     "importButton": "Importa calendario (CSV)",
     "importLoading": "Importazione...",
     "importSummary": "{stagesCreated} gara/e create, {stagesUpdated} aggiornate · {racesCreated} tappa/e create, {racesUpdated} aggiornate.",
-    "worldChampionships": "Mondiali",
+    "worldChampionships": "Gara maggiore",
     "toPlayCount": "{count} da giocare",
     "toPlayButton": "Da giocare",
     "seasonPredictionsTitle": "I miei pronostici di stagione",
@@ -570,7 +570,10 @@
     "opinionTitle": "Il parere di VéloPronos",
     "bonusQuestionsLine": "Domande bonus",
     "malusScale_tour_de_pena_4": "Ciclista non pronosticato → 5 giri, -100 pt (nessun pronostico: -300)",
-    "offStandingsNotice": "Tappa fuori classifica: ha la sua classifica, ma i suoi punti non contano per la stagione (niente pettorale rosso, carta bonus, ×2 né Pepita)."
+    "offStandingsNotice": "Tappa fuori classifica: ha la sua classifica, ma i suoi punti non contano per la stagione (niente pettorale rosso, carta bonus, ×2 né Pepita).",
+    "stageNumber": "Tappa {number}",
+    "prologue": "Prologo",
+    "stageTitle": "{stage} · {type}"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 ciclisti",

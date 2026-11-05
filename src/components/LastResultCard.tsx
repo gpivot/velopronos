@@ -3,7 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { ChevronRightIcon } from "@/components/icons";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
-import { displayedSex } from "@/lib/raceLabel";
+import { raceTitle } from "@/lib/raceLabel";
 import type { LastResult, LastResultExtra, LastResultPick } from "@/lib/lastResult";
 import { PepiteReveal } from "@/components/PepiteReveal";
 import { FuseeGachetteBadges, PenaltyLine, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
@@ -29,12 +29,11 @@ export async function LastResultCard({ results, locale }: { results: LastResult[
 }
 
 export async function SingleResultCard({ result, locale }: { result: LastResult; locale: string }) {
-  const [t, tFormat, tSex] = await Promise.all([
+  const [t, tFormat, tRace] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
-    getTranslations("Sex"),
+    getTranslations("Race"),
   ]);
-  const sex = displayedSex(result);
   const prediction = result.prediction;
 
   return (
@@ -49,8 +48,7 @@ export async function SingleResultCard({ result, locale }: { result: LastResult;
 
       <div className="flex items-center gap-2 border-b border-border px-4 py-3">
         <div className="flex-1 text-sm font-semibold">
-          {tFormat(result.format)}
-          {sex ? ` ${tSex(sex)}` : ""}
+          {raceTitle(result, tFormat, tRace)}
         </div>
         {result.coefficient === 2 && result.countsInStandings !== false && (
           <div className="whitespace-nowrap rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold text-gold">

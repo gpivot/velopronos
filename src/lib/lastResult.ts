@@ -73,6 +73,8 @@ export interface LastResultExtra {
 export interface LastResult {
   raceId: string;
   format: string;
+  /** VéloPronos : numéro d'étape (0 = prologue, null = classique). */
+  stageNumber?: number | null;
   sex: string | null;
   locksAt: string;
   location: string;
@@ -223,7 +225,7 @@ export function computeResultRowPoints(params: { rank: number; odds: number | un
   return base > 0 ? base : null;
 }
 
-const RACE_SELECT = "id, stage_id, format, sex, locks_at, special_rule, stages!inner(location, country_code, coefficient, counts_in_standings, season_id)";
+const RACE_SELECT = "id, stage_id, format, stage_number, sex, locks_at, special_rule, stages!inner(location, country_code, coefficient, counts_in_standings, season_id)";
 
 /** Durée pendant laquelle le dernier résultat de chaque catégorie reste affiché sur l'accueil. */
 export const LAST_RESULTS_WINDOW_MS = 48 * 3600 * 1000;
@@ -369,6 +371,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   const base: Omit<LastResult, "prediction"> = {
     raceId: race.id,
     format: race.format,
+    stageNumber: race.stage_number ?? null,
     sex: race.sex,
     locksAt: race.locks_at,
     location: stage.location,

@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { raceTitle } from "@/lib/raceLabel";
 import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Link } from "@/i18n/navigation";
@@ -48,8 +49,8 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
     getTranslations("Badges"),
     getTranslations("Home"),
   ]);
-  const raceLabel = (race: { format: string; sex: string }) =>
-    race.format.startsWith("relais") ? tFormat(race.format) : `${tFormat(race.format)} ${tSex(race.sex)}`;
+  const tRace = await getTranslations("Race");
+  const raceLabel = (race: { format: string; stage_number?: number | null }) => raceTitle(race, tFormat, tRace);
 
   const supabase = createClient();
   const [{ data: season }, { data: userResult }] = await Promise.all([

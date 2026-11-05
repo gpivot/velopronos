@@ -20,6 +20,7 @@ export interface WeekStagePick {
 export interface WeekStageRace {
   id: string;
   format: string;
+  stageNumber?: number | null;
   sex: string | null;
   locksAt: string;
   displayStatus: RaceDisplayStatus;
@@ -61,6 +62,7 @@ export function addDays(day: string, days: number): string {
 interface RaceRow {
   id: string;
   format: string;
+  stage_number?: number | null;
   sex: string | null;
   locks_at: string;
   status: string;
@@ -121,10 +123,14 @@ export async function getWeekStage(
 
   const { data: raceRows } = await supabase
     .from("races")
-    .select("id, format, sex, locks_at, status, special_rule")
+    .select("id, format, stage_number, sex, locks_at, status, special_rule")
     .eq("stage_id", stage.id)
     .order("locks_at", { ascending: true });
-  const races = (raceRows ?? []) as RaceRow[];
+  // Course par étapes (VéloPronos) : seulement la veille et les 6 jours à venir, pas les 21 étapes d'un Grand Tour.
+  const races = ((raceRows ?? []) as RaceRow[]).filter((r) => {
+    const day = parisDay(new Date(r.locks_at));
+    return (raceRows ?? []).length <= 3 || (day >= addDays(today, -1) && day <= addDays(today, 6));
+  });
 
   const { data: predictionRows } = races.length
     ? await supabase
@@ -179,7 +185,7 @@ export async function getWeekStage(
             };
           });
     }
-    return { id: r.id, format: r.format, sex: r.sex, locksAt: r.locks_at, displayStatus: getRaceDisplayStatus(r as any, now),
+    return { id: r.id, format: r.format, stageNumber: r.stage_number ?? null, sex: r.sex, locksAt: r.locks_at, displayStatus: getRaceDisplayStatus(r as any, now),
       picks,
       specialRule: r.special_rule ?? null,
       bonusX2: p?.bonus_x2_used ?? false,

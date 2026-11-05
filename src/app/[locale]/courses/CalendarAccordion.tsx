@@ -8,7 +8,7 @@ import { PredictedBadge } from "@/components/PredictedBadge";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { RaceDisplayStatus } from "@/lib/raceStatus";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
-import { displayedSex } from "@/lib/raceLabel";
+import { raceTitle, stageRoute } from "@/lib/raceLabel";
 import { SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
 
 export interface CalendarRace {
@@ -26,6 +26,11 @@ export interface CalendarRace {
   points: number | null;
   /** Course malus (tour_de_pena, brouillard, tes_colle). */
   special_rule: string | null;
+  /** VéloPronos : numéro (0 = prologue, null = classique), villes et distance. */
+  stage_number?: number | null;
+  start_city?: string | null;
+  end_city?: string | null;
+  distance_km?: number | null;
 }
 
 export interface CalendarStage {
@@ -66,7 +71,6 @@ export function CalendarAccordion({
   const [openStageId, setOpenStageId] = useState<string | null>(defaultOpenStageId);
   const t = useTranslations("Courses");
   const tFormat = useTranslations("RaceFormat");
-  const tSex = useTranslations("Sex");
   const tRace = useTranslations("Race");
 
   return (
@@ -158,9 +162,9 @@ export function CalendarAccordion({
                       >
                         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                           <div className="text-sm font-semibold">
-                            {tFormat(race.format)}
-                            {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
+                            {raceTitle(race, tFormat, tRace)}
                           </div>
+                          {stageRoute(race) && <div className="truncate text-xs text-text-dim">{stageRoute(race)}</div>}
                           <div className="text-xs text-text-dim">
                             {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                             {" · "}

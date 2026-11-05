@@ -22,6 +22,7 @@ import { notificationTexts, parisTime, raceName, type NotificationTexts } from "
 
 interface RaceInfo extends ReminderRace {
   format: string;
+  stage_number?: number | null;
   sex: string | null;
   location: string;
 }
@@ -72,7 +73,7 @@ function emailFrame(texts: NotificationTexts, settings: PlayerSettings, kind: "r
 export async function runReminders(admin: SupabaseClient, now: Date): Promise<string> {
   const { data: rows, error } = await admin
     .from("races")
-    .select("id, locks_at, format, sex, status, stages(location, starts_on)")
+    .select("id, locks_at, format, stage_number, sex, status, stages(location, starts_on)")
     .eq("status", "upcoming")
     .gt("locks_at", now.toISOString())
     .lte("locks_at", new Date(now.getTime() + REMINDER_LEAD_MS).toISOString());
@@ -87,6 +88,7 @@ export async function runReminders(admin: SupabaseClient, now: Date): Promise<st
       id: race.id,
       locks_at: race.locks_at,
       format: race.format,
+      stage_number: race.stage_number,
       sex: race.sex,
       location: (race.stages as unknown as { location: string }).location,
     }));
@@ -198,7 +200,7 @@ export async function notifyRaceResults(admin: SupabaseClient, raceId: string, n
   if (!readServiceAccount()) return "";
   const { data: race, error } = await admin
     .from("races")
-    .select("id, locks_at, format, sex, stages(location)")
+    .select("id, locks_at, format, stage_number, sex, stages(location)")
     .eq("id", raceId)
     .single();
   if (error || !race) return "";
@@ -240,7 +242,7 @@ export async function runWeeklyRecap(admin: SupabaseClient, now: Date): Promise<
 
   const { data: rows, error } = await admin
     .from("races")
-    .select("id, locks_at, format, sex, stages(location)")
+    .select("id, locks_at, format, stage_number, sex, stages(location)")
     .eq("status", "finished")
     .gte("locks_at", new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString())
     .lte("locks_at", now.toISOString())
@@ -250,6 +252,7 @@ export async function runWeeklyRecap(admin: SupabaseClient, now: Date): Promise<
     id: race.id,
     locks_at: race.locks_at,
     format: race.format,
+    stage_number: race.stage_number,
     sex: race.sex,
     location: (race.stages as unknown as { location: string }).location,
   }));

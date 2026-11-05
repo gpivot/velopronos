@@ -13,6 +13,7 @@ import { areJokersApplied, loadSeasonJokers } from "./jokers";
 export interface JokerLine {
   raceId: string;
   format: string;
+  stageNumber?: number | null;
   sex: string | null;
   location: string;
   countryCode: string | null;
@@ -106,7 +107,7 @@ export async function getSeasonView(
 
   const { data: stages, error } = await supabase
     .from("stages")
-    .select("id, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, races(id, format, sex, locks_at, status, special_rule)")
+    .select("id, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, races(id, format, sex, locks_at, status, special_rule, stage_number, start_city, end_city, distance_km)")
     .eq("season_id", season.id)
     .order("starts_on", { ascending: true });
   if (error) console.error("getSeasonView:", error.message);
@@ -228,7 +229,7 @@ export async function getPlayerJokers(supabase: SupabaseClient, seasonId: string
     loadSeasonJokers(supabase, seasonId, [userId]),
     supabase
       .from("races")
-      .select("id, format, sex, status, stages!inner(season_id, location, country_code)")
+      .select("id, format, stage_number, sex, status, stages!inner(season_id, location, country_code)")
       .eq("stages.season_id", seasonId),
   ]);
   const raceById = new Map(((races ?? []) as any[]).map((r) => [r.id as string, r]));
@@ -242,6 +243,7 @@ export async function getPlayerJokers(supabase: SupabaseClient, seasonId: string
       return {
         raceId: c.raceId,
         format: race?.format ?? "",
+        stageNumber: race?.stage_number ?? null,
         sex: race?.sex ?? null,
         location: race?.stages?.location ?? "",
         countryCode: race?.stages?.country_code ?? null,

@@ -13,7 +13,7 @@ import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm"
 import { GrilladeButton } from "./GrilladeButton";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
-import { displayedSex } from "@/lib/raceLabel";
+import { raceTitle, stageRoute } from "@/lib/raceLabel";
 import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
 import { getRaceResult } from "@/lib/lastResult";
 import { getStartList } from "@/lib/startList";
@@ -333,10 +333,13 @@ export default async function RacePage({
             <span>{nationFlagEmoji(stage.country_code)}</span>
             <span>{stage.location}</span>
           </div>
-          <div className="text-sm font-semibold text-frost">
-            {tFormat(race.format)}
-            {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
-          </div>
+          <div className="text-sm font-semibold text-frost">{raceTitle(race, tFormat, t)}</div>
+          {stageRoute(race) && (
+            <div className="text-xs text-text-dim">
+              {stageRoute(race)}
+              {race.elevation_m ? ` · D+ ${race.elevation_m} m` : ""}
+            </div>
+          )}
           {offStandings && (
             // Étape « Autre (×0) » : course test ou de recrutement, hors classement de la saison.
             <div className="flex items-center gap-3 rounded-2xl border border-dashed border-text-dim/40 bg-text-dim/10 px-3 py-2.5">

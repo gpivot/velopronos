@@ -448,7 +448,7 @@
     "importButton": "Import calendar (CSV)",
     "importLoading": "Importing...",
     "importSummary": "{stagesCreated} race(s) created, {stagesUpdated} updated · {racesCreated} stage(s) created, {racesUpdated} updated.",
-    "worldChampionships": "World Championships",
+    "worldChampionships": "Major race",
     "toPlayCount": "{count} to play",
     "toPlayButton": "Play",
     "seasonPredictionsTitle": "My season predictions",
@@ -570,7 +570,10 @@
     "opinionTitle": "VéloPronos' take",
     "bonusQuestionsLine": "Bonus questions",
     "malusScale_tour_de_pena_4": "Rider not picked → 5 loops, -100 pts (no pick at all: -300)",
-    "offStandingsNotice": "Unranked stage: it has its own ranking, but its points don't count towards the season (no red bib, bonus card, ×2 or Hidden Diamond)."
+    "offStandingsNotice": "Unranked stage: it has its own ranking, but its points don't count towards the season (no red bib, bonus card, ×2 or Hidden Diamond).",
+    "stageNumber": "Stage {number}",
+    "prologue": "Prologue",
+    "stageTitle": "{stage} · {type}"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 riders",

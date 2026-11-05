@@ -448,7 +448,7 @@
     "importButton": "Kalender importieren (CSV)",
     "importLoading": "Wird importiert...",
     "importSummary": "{stagesCreated} Station(en) erstellt, {stagesUpdated} aktualisiert · {racesCreated} Etappe erstellt, {racesUpdated} aktualisiert.",
-    "worldChampionships": "Weltmeisterschaften",
+    "worldChampionships": "Großes Rennen",
     "toPlayCount": "{count} offen",
     "toPlayButton": "Jetzt tippen",
     "seasonPredictionsTitle": "Meine Saisontipps",
@@ -570,7 +570,10 @@
     "opinionTitle": "Die Meinung von VéloPronos",
     "bonusQuestionsLine": "Bonusfragen",
     "malusScale_tour_de_pena_4": "Nicht getippter Fahrer → 5 Strafrunden, -100 Pkt. (kein Tipp: -300)",
-    "offStandingsNotice": "Etappe außer Wertung: Es hat seine eigene Rangliste, aber seine Punkte zählen nicht für die Saison (kein rotes Trikot, keine Bonuskarte, kein ×2, kein Rohdiamant)."
+    "offStandingsNotice": "Etappe außer Wertung: Es hat seine eigene Rangliste, aber seine Punkte zählen nicht für die Saison (kein rotes Trikot, keine Bonuskarte, kein ×2, kein Rohdiamant).",
+    "stageNumber": "Etappe {number}",
+    "prologue": "Prolog",
+    "stageTitle": "{stage} · {type}"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Fahrer",

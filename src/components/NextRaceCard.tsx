@@ -4,11 +4,12 @@ import { Countdown } from "@/components/Countdown";
 import { PredictedBadge } from "@/components/PredictedBadge";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
-import { displayedSex } from "@/lib/raceLabel";
+import { raceTitle } from "@/lib/raceLabel";
 
 export interface NextRace {
   id: string;
   format: string;
+  stage_number?: number | null;
   sex: string | null;
   locks_at: string;
   stages: { location: string; country_code: string };
@@ -41,8 +42,7 @@ export async function NextRaceCard({ race, nowMs, locale }: { race: NextRace; no
         <div className="flex flex-1 flex-col gap-0.5">
           <div className="text-sm font-semibold">{race.stages.location}</div>
           <div className="text-xs text-text-dim">
-            {tFormat(race.format)}
-            {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
+            {raceTitle(race, tFormat, tRace)}
           </div>
           {race.predicted ? (
             <PredictedBadge label={tRace("predicted")} />
