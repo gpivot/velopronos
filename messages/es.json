@@ -143,7 +143,7 @@
     "faq_points_q": "¿Cuántos puntos se pueden ganar en una etapa?",
     "faq_points_a": "Cientos. Cada ciclista del Top 10 aporta su cuota multiplicada según su puesto: × 25 para el ganador, × 18 para el 2.º… hasta × 1 para el 10.º. Como el baremo de la Copa del Mundo, premia ante todo la victoria. Un ciclista con cuota 9 que gana ya aporta 225 puntos, sin contar los bonus Top 10, Top 5, Podio y Pronóstico perfecto.",
     "faq_special_q": "¿Qué son las carreras especiales?",
-    "faq_special_a": "Algunas etapas, anunciadas de antemano, tienen una regla excepcional. Pinchazo: un corredor fuera del Top 10 te hace perder tantos puntos como su puesto. Pájara: penalización si tus elecciones acaban fuera del Top 10. Fiesta nacional: los corredores de tu nación favorita cuentan doble.",
+    "faq_special_a": "Algunas etapas, anunciadas de antemano, tienen una regla excepcional:\n- Pinchazo: un corredor fuera del Top 10 te hace perder tantos puntos como su puesto.\n- Pájara: penalización si tus elecciones acaban fuera del Top 10.\n- Fiesta nacional: los corredores de tu nación favorita cuentan doble.",
     "faq_cards_q": "¿Cómo se ganan las cartas bonus?",
     "faq_cards_a": "En una vuelta por etapas o gran vuelta, puntúa en 5 etapas seguidas: ganas una carta a tu elección. Por ejemplo el Boost (×3 sobre un corredor), la Parrillada (liberar a tus corredores) o el Pinganillo (4 corredores, cuentan los 3 mejores). Se juega en su carrera, en el momento justo.",
     "faq_team_q": "¿Para qué sirven el equipo y la nación favoritos?",
@@ -173,7 +173,7 @@
     "faq_jerseys_q": "¿Qué son los pronósticos de maillots?",
     "faq_jerseys_a": "Antes de la salida de una vuelta por etapas, pronosticas el ganador final de cada maillot (general, puntos, montaña, joven…). Al final, tu elección da su cuota × 5, × 2 o × 1 si acaba en el podio del maillot. En las grandes vueltas, también eliges un gregario, un outsider oculto que te da sus puntos en su primer Top 10.",
     "faq_joker_q": "¿Y si me olvido de una etapa?",
-    "faq_joker_a": "Una vez por carrera, el comodín rezagado te deja pronosticar hasta 1 h después de la salida, mientras no se hayan introducido los resultados. Los puntos de ese pronóstico se dividen por 2. Y en la general, solo cuentan tus mejores resultados en las vueltas por etapas y las clásicas."
+    "faq_joker_a": "Una vez por carrera por etapas, el comodín rezagado te deja pronosticar hasta 1 h después de la salida, mientras no se hayan introducido los resultados. Los puntos de ese pronóstico se dividen por 2. Y en la general, solo cuentan tus mejores resultados en las vueltas por etapas y las clásicas."
   },
   "Regles": {
     "title": "Las reglas",
@@ -253,7 +253,7 @@
     "finalBody": "Elige tus 3 corredores. Vigila el perfil de la etapa. Guarda tus cartas para el momento justo. Y sobre todo… evita el pinchazo.",
     "finalCta": "Ver las próximas etapas",
     "burntTitle": "Los ciclistas quemados",
-    "burntBody": "Un corredor elegido no está disponible en la etapa siguiente de la misma carrera. ¡Varía tus elecciones!",
+    "burntBody": "Un corredor elegido no está disponible en la etapa siguiente de la misma carrera por etapas. ¡Varía tus elecciones!",
     "burntPicked": "Elegida",
     "burntBurnt": "Quemada",
     "burntBack": "Disponible",
@@ -267,7 +267,7 @@
     "majorsAuto": "×2 automático",
     "majorsNever": "nunca ×4",
     "jokerTitle": "El comodín rezagado",
-    "jokerBody": "¿Olvidaste una etapa? Hasta 1 h después de la salida, mientras no se hayan introducido los resultados, aún puedes pronosticar. Los puntos de ese pronóstico se dividen por 2, sin bonus ×2 ni carta.",
+    "jokerBody": "¿Olvidaste pronosticar una etapa de una carrera por etapas? Hasta 1 h después de la salida, mientras no se hayan introducido los resultados, aún puedes pronosticar. Los puntos de ese pronóstico se dividen por 2, sin bonus ×2 ni carta.",
     "jokerCount": "1 por carrera",
     "jokerHalf": "puntos ÷ 2",
     "cardGrandTour": "Grandes vueltas",
@@ -280,7 +280,8 @@
     "porteurBody": "En cada gran vuelta, elige en secreto un outsider. Se juega oculto en todas las etapas: en su primer Top 10, los puntos que gana se suman a tu puntuación de la etapa, aunque no hayas pronosticado ese día. Entonces se revela (💧) y ya no da más puntos. Antes de su revelación, no puedes incluirlo en tus pronósticos de etapa.",
     "porteurOdds": "Todas sus cuotas ≥ {odds}",
     "heartTitle": "Equipo y nación favoritos",
-    "heartBody": "Elígelos una vez por temporada: sigues sus victorias en tu inicio. La nación favorita cuenta doble en la Fiesta nacional, el equipo favorito alimenta la carta Equipo. En cada gran vuelta, también puedes elegir otro equipo solo para esa gran vuelta."
+    "heartBody": "Elígelos una vez por temporada: sigues sus victorias en tu inicio. La nación favorita cuenta doble en la Fiesta nacional, el equipo favorito alimenta la carta Equipo. En cada gran vuelta, también puedes elegir otro equipo solo para esa gran vuelta.",
+    "burntStage": "Etapa {n}"
   },
   "Compte": {
     "pushOn": "Activadas en este teléfono",

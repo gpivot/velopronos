@@ -143,7 +143,7 @@
     "faq_points_q": "Wie viele Punkte kann man in einem Etappe gewinnen?",
     "faq_points_a": "Hunderte. Jeder Fahrer in den Top 10 bringt seine Quote, multipliziert je nach Platz: × 25 für den Sieger, × 18 für Platz 2 … bis × 1 für Platz 10. Wie die Weltcup-Wertung belohnt sie vor allem den Sieg. Ein Fahrer mit Quote 9, der gewinnt, bringt schon 225 Punkte, ohne die Boni Top 10, Top 5, Podium und perfekter Tipp.",
     "faq_special_q": "Was sind Spezialetappen?",
-    "faq_special_a": "Manche Etappen haben eine vorher angekündigte Sonderregel. Reifenpanne: Ein Fahrer außerhalb der Top 10 kostet dich so viele Punkte wie seine Platzierung. Hungerast: Malus, wenn deine Tipps außerhalb der Top 10 landen. Nationalfeiertag: Fahrer deiner Lieblingsnation zählen doppelt.",
+    "faq_special_a": "Manche Etappen haben eine vorher angekündigte Sonderregel:\n- Reifenpanne: Ein Fahrer außerhalb der Top 10 kostet dich so viele Punkte wie seine Platzierung.\n- Hungerast: Malus, wenn deine Tipps außerhalb der Top 10 landen.\n- Nationalfeiertag: Fahrer deiner Lieblingsnation zählen doppelt.",
     "faq_cards_q": "Wie gewinne ich Bonuskarten?",
     "faq_cards_a": "Punkte in einem Etappenrennen oder Grand Tour auf 5 Etappen in Folge: Du gewinnst eine Karte deiner Wahl. Zum Beispiel den Boost (×3 auf einen Fahrer), das Grillfest (Fahrer entsperren) oder den Funk (4 Fahrer, die besten 3 zählen). Sie wird in ihrem Rennen im richtigen Moment gespielt.",
     "faq_team_q": "Wozu dienen Lieblingsteam und Lieblingsnation?",
@@ -173,7 +173,7 @@
     "faq_jerseys_q": "Was sind Trikot-Tipps?",
     "faq_jerseys_a": "Vor dem Start eines Etappenrennens tippst du den Endsieger jedes Trikots (Gesamt, Punkte, Berg, Jungprofi…). Im Ziel bringt deine Wahl ihre Quote × 5, × 2 oder × 1, wenn sie auf dem Podium des Trikots landet. Bei den Grand Tours wählst du außerdem einen Wasserträger, einen verdeckten Außenseiter, der dir bei seinem ersten Top-10-Platz seine Punkte bringt.",
     "faq_joker_q": "Und wenn ich eine Etappe vergesse?",
-    "faq_joker_a": "Einmal pro Rennen lässt dich der Nachzügler-Joker bis 1 Stunde nach dem Start tippen, solange die Ergebnisse nicht eingetragen sind. Die Punkte dieses Tipps werden halbiert. Und in der Gesamtwertung zählen bei Etappenrennen und Klassikern nur deine besten Ergebnisse."
+    "faq_joker_a": "Einmal pro Etappenrennen lässt dich der Nachzügler-Joker bis 1 Stunde nach dem Start tippen, solange die Ergebnisse nicht eingetragen sind. Die Punkte dieses Tipps werden halbiert. Und in der Gesamtwertung zählen bei Etappenrennen und Klassikern nur deine besten Ergebnisse."
   },
   "Regles": {
     "title": "Die Regeln",
@@ -253,7 +253,7 @@
     "finalBody": "Wähle deine 3 Fahrer. Behalte das Etappenprofil im Blick. Spar deine Karten für den richtigen Moment. Und vor allem… vermeide eine Reifenpanne.",
     "finalCta": "Nächste Etappe ansehen",
     "burntTitle": "Gesperrte Fahrer",
-    "burntBody": "Ein gewählter Fahrer ist für die nächste Etappe desselben Rennens gesperrt. Variiere deine Tipps!",
+    "burntBody": "Ein gewählter Fahrer ist für die nächste Etappe desselben Etappenrennens gesperrt. Variiere deine Tipps!",
     "burntPicked": "Gewählt",
     "burntBurnt": "Gesperrt",
     "burntBack": "Verfügbar",
@@ -267,7 +267,7 @@
     "majorsAuto": "automatisch ×2",
     "majorsNever": "nie ×4",
     "jokerTitle": "Der Nachzügler-Joker",
-    "jokerBody": "Eine Etappe vergessen? Bis 1 Stunde nach dem Start, solange die Ergebnisse nicht eingetragen sind, kannst du noch tippen. Die Punkte dieses Tipps werden halbiert, ohne ×2-Bonus und ohne Karte.",
+    "jokerBody": "Bei einem Etappenrennen eine Etappe vergessen? Bis 1 Stunde nach dem Start, solange die Ergebnisse nicht eingetragen sind, kannst du noch tippen. Die Punkte dieses Tipps werden halbiert, ohne ×2-Bonus und ohne Karte.",
     "jokerCount": "1 pro Rennen",
     "jokerHalf": "Punkte ÷ 2",
     "cardGrandTour": "Grand Tours",
@@ -280,7 +280,8 @@
     "porteurBody": "Wähle bei jeder Grand Tour heimlich einen Außenseiter. Er wird auf allen Etappen verdeckt gespielt: Bei seinem ersten Top-10-Platz kommen seine Punkte zu deinem Etappenergebnis hinzu, auch wenn du an dem Tag nicht getippt hast. Dann wird er aufgedeckt (💧) und bringt nichts mehr. Vorher kannst du ihn nicht in deine Etappentipps nehmen.",
     "porteurOdds": "Alle seine Quoten ≥ {odds}",
     "heartTitle": "Lieblingsteam und Lieblingsnation",
-    "heartBody": "Einmal pro Saison wählen: Du verfolgst ihre Siege auf deiner Startseite. Die Lieblingsnation zählt am Nationalfeiertag doppelt, das Lieblingsteam speist die Team-Karte. Bei jeder Grand Tour kannst du auch ein anderes Team nur für diese Grand Tour wählen."
+    "heartBody": "Einmal pro Saison wählen: Du verfolgst ihre Siege auf deiner Startseite. Die Lieblingsnation zählt am Nationalfeiertag doppelt, das Lieblingsteam speist die Team-Karte. Bei jeder Grand Tour kannst du auch ein anderes Team nur für diese Grand Tour wählen.",
+    "burntStage": "Etappe {n}"
   },
   "Compte": {
     "pushOn": "Auf diesem Handy aktiviert",

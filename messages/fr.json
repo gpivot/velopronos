@@ -143,7 +143,7 @@
     "faq_points_q": "Combien de points peut-on gagner sur une étape ?",
     "faq_points_a": "Des centaines. Chaque coureur du Top 10 rapporte sa cote multipliée selon sa place : × 25 pour le vainqueur, × 18 pour le 2e… jusqu'à × 1 pour le 10e. Ce barème récompense d'abord la victoire. Un coureur à cote 9 qui gagne rapporte déjà 225 points, sans compter les bonus Top 10, Top 5, Podium et Prono parfait.",
     "faq_special_q": "C'est quoi, les étapes spéciales ?",
-    "faq_special_a": "Certaines étapes, annoncées à l'avance, ont une règle exceptionnelle. Crevaison : un coureur hors du Top 10 te fait perdre autant de points que sa place. Crise de foie : malus si tes choix finissent hors du Top 10. Fête nationale : les coureurs de ta nation favorite rapportent double.",
+    "faq_special_a": "Certaines étapes, annoncées à l'avance, ont une règle exceptionnelle :\n- Crevaison : un coureur hors du Top 10 te fait perdre autant de points que sa place.\n- Crise de foie : malus si tes choix finissent hors du Top 10.\n- Fête nationale : les coureurs de ta nation favorite rapportent double.",
     "faq_cards_q": "Comment gagner des cartes bonus ?",
     "faq_cards_a": "Dans une course par étapes ou un Grand Tour, marque des points sur 5 étapes d'affilée : tu gagnes une carte, que tu choisis. Par exemple le Boost (×3 sur un coureur), la Grillade (dégriller tes coureurs) ou l'Oreillette (4 coureurs, les 3 meilleurs comptent). Elle se joue dans sa course, au bon moment.",
     "faq_team_q": "À quoi servent l'équipe de cœur et la nation favorite ?",
@@ -173,7 +173,7 @@
     "faq_jerseys_q": "C'est quoi, les pronostics maillots ?",
     "faq_jerseys_a": "Avant le départ d'une course par étapes, tu pronostiques le vainqueur final de chaque maillot (général, points, montagne, jeune…). À l'arrivée, ton choix rapporte sa cote × 5, × 2 ou × 1 s'il finit sur le podium du maillot. Sur les Grands Tours, tu choisis aussi un porteur d'eau, un outsider caché qui te rapporte ses points à son premier Top 10.",
     "faq_joker_q": "Et si j'oublie une étape ?",
-    "faq_joker_a": "Une fois par course, le joker retardataire te laisse pronostiquer jusqu'à 1 h après le départ, tant que les résultats ne sont pas saisis. Les points de ce pronostic sont divisés par 2. Et au classement général, seuls tes meilleurs résultats comptent sur les courses par étapes et les classiques."
+    "faq_joker_a": "Une fois par course à étapes, le joker retardataire te laisse pronostiquer jusqu'à 1 h après le départ, tant que les résultats ne sont pas saisis. Les points de ce pronostic sont divisés par 2. Et au classement général, seuls tes meilleurs résultats comptent sur les courses par étapes et les classiques."
   },
   "Regles": {
     "title": "Le règlement",
@@ -253,7 +253,7 @@
     "finalBody": "Choisis tes 3 coureurs. Surveille le profil de l'étape. Garde tes cartes pour le bon moment. Et surtout… évite la crevaison.",
     "finalCta": "Voir les prochaines étapes",
     "burntTitle": "Les coureurs grillés",
-    "burntBody": "Un coureur choisi devient indisponible pour l'étape suivante de la même course. Varie tes choix !",
+    "burntBody": "Un coureur choisi devient indisponible pour l'étape suivante de la même course par étapes. Varie tes choix !",
     "burntPicked": "Choisie",
     "burntBurnt": "Grillée",
     "burntBack": "Disponible",
@@ -267,7 +267,7 @@
     "majorsAuto": "×2 automatique",
     "majorsNever": "jamais ×4",
     "jokerTitle": "Le joker retardataire",
-    "jokerBody": "Tu as oublié une étape ? Jusqu'à 1 h après le départ, tant que les résultats ne sont pas saisis, tu peux encore pronostiquer. Les points de ce pronostic sont divisés par 2, sans bonus ×2 ni carte.",
+    "jokerBody": "Tu as oublié de pronostiquer sur une course par étapes ? Jusqu'à 1 h après le départ, tant que les résultats ne sont pas saisis, tu peux encore pronostiquer. Les points de ce pronostic sont divisés par 2, sans bonus ×2 ni carte.",
     "jokerCount": "1 par course",
     "jokerHalf": "points ÷ 2",
     "cardGrandTour": "Grands Tours",
@@ -280,7 +280,8 @@
     "porteurBody": "Sur chaque Grand Tour, choisis en secret un outsider. Il est joué en caché sur toutes les étapes : à son premier Top 10, les points qu'il gagne s'ajoutent à ton score de l'étape, même si tu n'as pas pronostiqué ce jour-là. Il est alors révélé (💧) et ne rapporte plus. Avant sa révélation, tu ne peux pas le mettre dans tes pronostics d'étape.",
     "porteurOdds": "Toutes ses cotes ≥ {odds}",
     "heartTitle": "Équipe de cœur et nation favorite",
-    "heartBody": "Choisis-les une fois pour la saison : tu suis leurs victoires sur ton accueil. La nation favorite compte double à la Fête nationale, l'équipe de cœur nourrit la carte Équipe. Sur chaque Grand Tour, tu peux aussi choisir une autre équipe pour ce Grand Tour seulement."
+    "heartBody": "Choisis-les une fois pour la saison : tu suis leurs victoires sur ton accueil. La nation favorite compte double à la Fête nationale, l'équipe de cœur nourrit la carte Équipe. Sur chaque Grand Tour, tu peux aussi choisir une autre équipe pour ce Grand Tour seulement.",
+    "burntStage": "Étape {n}"
   },
   "Compte": {
     "pushOn": "Activées sur ce téléphone",

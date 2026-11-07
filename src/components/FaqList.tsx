@@ -34,7 +34,7 @@ export async function FaqList({ rulesLink = true }: { rulesLink?: boolean }) {
                 +
               </span>
             </summary>
-            <p className="mt-3 text-sm leading-relaxed text-text-dim">
+            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-text-dim">
               {t(`faq_${q}_a`)}
             </p>
           </details>
