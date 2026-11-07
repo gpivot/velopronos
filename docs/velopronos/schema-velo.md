@@ -343,13 +343,14 @@ Spécification de Guillaume du 05/11/2026 : événement bonus autonome, hors du 
   défaut 0/50/120/220/350/500/700/950/1250/1600/2000) et `stages.champions_closed_at` ;
   `score_ledger.bonus_kind` (= 'champions'), une ligne par joueur et par événement.
 - **Événement** : la course existante (`stages`, `kind = bonus_event`, catégorie
-  `national_championships` de l'import plutôt que `bonus_champions`, *à confirmer*). Nombre de
+  `national_championships` de l'import plutôt que `bonus_champions`, catégorie à part, confirmé par Guillaume le 07/11/2026). Nombre de
   championnats libre (10 par défaut côté admin).
 - **Pronostics** : modifiables jusqu'à la limite de **chaque** championnat (RLS
   `champion_championship_open`, horloge simulée comprise) ; ceux des autres ne sont lisibles qu'une
   fois le championnat verrouillé. Coureurs proposés : ceux de la saison qui ont la nationalité du
-  pays ; l'admin peut en ajouter un depuis la page du WE (*à confirmer*). Limite par défaut = heure
-  de départ (*à confirmer*).
+  pays ; l'admin peut en ajouter un depuis la page du WE (confirmé le 07/11/2026). Limite par défaut =
+  heure de départ (confirmé) ; en pratique Guillaume fixera **une limite unique** pour tout le WE
+  (bouton « Même limite pour tous »), même si les championnats courent samedi et dimanche.
 - **Calcul** (`src/lib/velo/champions.ts`, testé) : palier atteint (`championsScore`, jamais
   50 × bonnes réponses), score provisoire au fil des résultats (`summarizeChampions`), classement
   du WE par score puis champions trouvés, ex æquo sans départage (`rankChampions`).
