@@ -213,7 +213,7 @@
     "comboPerfectDesc": "The 3 riders who scored the most",
     "exampleTitle": "Example result",
     "oddsTitle": "Odds",
-    "oddsBody": "Each rider has odds per stage type (sprint, mountain, breakaway, time trial) and per jersey. Favourites have the lowest odds, outsiders the highest: they can earn much more.",
+    "oddsBody": "Each rider has odds per stage type (sprint, mountain, breakaway, time trial, classic) and per jersey. Favourites have the lowest odds, outsiders the highest: they can earn much more.",
     "oddsFavorite": "Favourite",
     "oddsLow": "low odds",
     "oddsHigh": "high odds",
@@ -495,6 +495,7 @@
     "montagne": "Mountain",
     "clm": "Time trial",
     "baroudeurs": "Breakaway",
+    "classique": "Classic",
     "clm_equipes": "Team time trial"
   },
   "Sex": {

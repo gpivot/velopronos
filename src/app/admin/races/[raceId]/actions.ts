@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { fromDateTimeLocalParis, isSpecialRuleAllowed, stageFormFields } from "../../_components/labels";
 import { createAdminClient } from "@/lib/supabase/server";
+import { fillCourseOddsFromSeason } from "@/lib/velo/imports";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { fetchIbuResults, fetchIbuStartList } from "@/lib/admin/ibuResults";
 import { aiResultToCsv, fetchAiStageResults, findRiderByName, officialSiteFor } from "@/lib/admin/aiStageResults";
@@ -273,7 +274,7 @@ export async function updateRace(formData: FormData) {
     if ((race?.stages as unknown as { coefficient: number } | null)?.coefficient === 2) throw new Error("Pas d'étape malus ni de Fête nationale sur une course ×2 (monuments, Mondiaux).");
   }
 
-  const { error } = await admin
+  const { data: updated, error } = await admin
     .from("races")
     .update({
       format,
@@ -282,8 +283,12 @@ export async function updateRace(formData: FormData) {
       locks_at: fromDateTimeLocalParis(String(formData.get("locks_at"))),
       special_rule: specialRule === "" ? null : specialRule,
     })
-    .eq("id", raceId);
+    .eq("id", raceId)
+    .select("stage_id")
+    .single();
   if (error) throw new Error(error.message);
+  // Nouveau type d'étape (ex. Classique) : les engagés sans cote de ce type reprennent celle de la saison.
+  if (updated?.stage_id) await fillCourseOddsFromSeason(admin, updated.stage_id as string);
 
   revalidatePath("/admin", "layout");
 }

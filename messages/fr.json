@@ -213,7 +213,7 @@
     "comboPerfectDesc": "Les 3 coureurs qui rapportaient le plus",
     "exampleTitle": "Exemple de résultat",
     "oddsTitle": "Les cotes",
-    "oddsBody": "Chaque coureur a une cote par type d'étape (sprint, montagne, baroudeurs, contre-la-montre) et par maillot. Les favoris ont les cotes les plus faibles, les outsiders les plus élevées : ils peuvent rapporter beaucoup plus.",
+    "oddsBody": "Chaque coureur a une cote par type d'étape (sprint, montagne, baroudeurs, contre-la-montre, classique) et par maillot. Les favoris ont les cotes les plus faibles, les outsiders les plus élevées : ils peuvent rapporter beaucoup plus.",
     "oddsFavorite": "Favori",
     "oddsLow": "cote basse",
     "oddsHigh": "cote haute",
@@ -495,6 +495,7 @@
     "montagne": "Montagne",
     "clm": "Contre-la-montre",
     "baroudeurs": "Baroudeurs",
+    "classique": "Classique",
     "clm_equipes": "CLM par équipes"
   },
   "Sex": {

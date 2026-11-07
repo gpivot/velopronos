@@ -4,9 +4,10 @@ import {
   COURSE_RIDERS_HEADERS,
   COURSE_STAGES_HEADERS,
   COURSE_TEAMS_HEADERS,
+  SEASON_RIDERS_HEADERS,
 } from "@/lib/velo/imports";
 import { CsvImportPanel } from "../_components/CsvImportPanel";
-import { createVeloCourse, importVeloCalendar } from "./actions";
+import { createVeloCourse, importVeloCalendar, importVeloSeasonRiders } from "./actions";
 import { CourseImports } from "./CourseImports";
 
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
@@ -20,7 +21,7 @@ export function VeloImports({ seasonId, courses }: { seasonId: string; courses: 
         <h3 className="text-lg font-semibold">1. Calendrier de la saison</h3>
         <CsvImportPanel
           title="Calendrier (export de l'ancienne app)"
-          description="Une ligne par course. Les courses sont retrouvées par leur nom : réimporter met à jour sans dupliquer. Une classique reçoit son étape unique (11 h, type Baroudeurs) à corriger ensuite. Monuments et Mondiaux comptent ×2."
+          description="Une ligne par course. Les courses sont retrouvées par leur nom : réimporter met à jour sans dupliquer. Une classique reçoit son étape unique (11 h, type Classique pour un monument, Baroudeurs sinon) à corriger ensuite. Monuments et Mondiaux comptent ×2."
           headers={COURSE_CALENDAR_HEADERS}
           onImport={importVeloCalendar.bind(null, seasonId)}
         />
@@ -50,7 +51,17 @@ export function VeloImports({ seasonId, courses }: { seasonId: string; courses: 
       </section>
 
       <section className="flex flex-col gap-3">
-        <h3 className="text-lg font-semibold">2. Étapes, coureurs et cotes d’une course</h3>
+        <h3 className="text-lg font-semibold">2. Coureurs de la saison</h3>
+        <CsvImportPanel
+          title="Liste des coureurs de la saison et leurs cotes par profil"
+          description="Une ligne par coureur : équipe, nation et une cote par profil (sprint, montagne, CLM, baroudeur, classique). Réimporter met à jour sans dupliquer ; une cellule vide ne touche pas à la cote existante. Chaque course reprend ces cotes pour ses engagés qui n'ont pas de cote propre (une étape Classique prend la colonne cote_classique). Les maillots se cotent course par course."
+          headers={SEASON_RIDERS_HEADERS}
+          onImport={importVeloSeasonRiders.bind(null, seasonId)}
+        />
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h3 className="text-lg font-semibold">3. Étapes, coureurs et cotes d’une course</h3>
         <CourseImports
           courses={courses}
           stagesHeaders={COURSE_STAGES_HEADERS}

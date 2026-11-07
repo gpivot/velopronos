@@ -41,7 +41,8 @@ test (21 étapes, 2 repos, 184 coureurs, 23 équipes, 1 519 cotes).
    heure_depart, date, pays, country_code, denivele`) : `R` = jour de repos. Option « décaler pour
    que la 1re étape tombe le… » pour rejouer une course passée en test.
 3. **Coureurs et cotes** (`numero, prenom, nom, equipe, nom_equipe, nationalite, statut,
-   cote_sprint, cote_montagne, cote_clm, cote_baroudeur, MJ, MV, MP, MJeune, SC`).
+   cote_sprint, cote_montagne, cote_clm, cote_baroudeur, cote_classique, MJ, MV, MP, MJeune, SC`).
+   Après l'import, les engagés sans cote propre reprennent celles de la liste de la saison.
 4. **Équipes** (`equipe, equipe_nom, cote_ME, CLME`) : nom complet, cotes « meilleure équipe » et
    CLM par équipes.
 
@@ -213,6 +214,32 @@ de son Grand Tour (`badgesInCourse`), plus dans celui de la saison.
 
 Reste à faire : textes du règlement.
 
+## Liste des coureurs de la saison et cote Classique (migration 0057, 07/11/2026)
+
+Demande de Guillaume du 07/11/2026 : une liste complète des coureurs de la saison, chacun avec sa
+cote par profil, que les courses reprennent ; plus une cote « Classique » pour les grandes
+classiques (Milan-San Remo, Flandres, Roubaix, Flèche Wallonne…).
+
+- **Import « Coureurs de la saison »** (onglet Calendrier, bloc 2) : `prenom, nom, equipe,
+  nom_equipe, nationalite, cote_sprint, cote_montagne, cote_clm, cote_baroudeur, cote_classique`.
+  Crée ou met à jour équipes et coureurs, et range les cotes dans `odds` avec `stage_id` null
+  (« cote de saison », historisée si elle change). Les colonnes de maillot sont ignorées : les
+  maillots se cotent course par course. Aucun engagé n'est créé.
+- **Reprise par les courses** (`fillCourseOddsFromSeason`) : pour chaque engagé d'une course et
+  chaque type d'étape de la course, la cote de saison est copiée si la course n'en a pas. Une cote
+  propre à la course n'est jamais écrasée. Elle se déclenche après l'import des coureurs d'une
+  course, à l'ajout d'un coureur, à la création d'une étape, au changement de type d'une étape,
+  et par le bouton « Compléter avec les cotes de la saison » (admin > Coureurs & cotes). Les pages
+  de pronostic et le moteur de points continuent de lire les cotes de la course : rien ne change
+  pour eux.
+- **Type d'étape « Classique »** (`race_format` et `odds_format`, migration 0057 à exécuter
+  seule) : une classique dont l'étape est de type Classique utilise la colonne `cote_classique`.
+  Mêmes règles de points qu'un type individuel (règles spéciales permises).
+- **Courses d'un jour et leur cote** : une classique utilise la cote du type de son étape unique.
+  À l'import du calendrier, **un monument reçoit le type Classique, les autres classiques le type
+  Baroudeurs** (à confirmer) ; Guillaume change le type d'une classique précise (ex. Flèche
+  Wallonne → Classique) dans sa fiche d'étape, et les cotes de saison suivent.
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :
@@ -229,7 +256,7 @@ retrait d'un coureur. Le CSV téléchargé reprend le format d'import et se réi
 - **Colonne « Statut »** (2 courses futures marquées « active ») : ignorée, le statut se déduit
   des dates. **Statut des coureurs** (« abandoned ») : ignoré à l'import, comme prévu.
 - **Classiques** : l'import du calendrier leur crée leur étape unique à **11 h (heure de Paris)**,
-  type **Baroudeurs**, à corriger (ou réimporter un fichier d'étape d'une ligne). Les cotes d'une
+  type **Classique** pour un monument, **Baroudeurs** sinon (07/11/2026), à corriger (ou réimporter un fichier d'étape d'une ligne). Les cotes d'une
   classique sont celles du type choisi.
 - **Heures de départ** des fichiers d'étapes lues en **heure de Paris** (les courses hors fuseau,
   Québec, Montréal, seront à saisir en conséquence).

@@ -9,6 +9,7 @@ import { importCalendarCsv } from "@/lib/admin/calendarImport";
 import { deleteStage, recomputeSeasonStreaks } from "@/lib/admin/raceResults";
 import { stageCategoryFields } from "@/lib/stageCategory";
 import { COURSE_CATEGORIES, COURSE_KINDS, JERSEY_TYPES } from "@/lib/velo/courses";
+import { fillCourseOddsFromSeason } from "@/lib/velo/imports";
 import type { CsvActionResult } from "../_components/CsvImportPanel";
 
 export async function createSeason(formData: FormData) {
@@ -90,6 +91,7 @@ export async function createRace(formData: FormData) {
     status: "upcoming",
   });
   if (error) throw new Error(error.message);
+  await fillCourseOddsFromSeason(admin, stageId);
 
   revalidatePath("/admin");
 }

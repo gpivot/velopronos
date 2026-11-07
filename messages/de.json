@@ -213,7 +213,7 @@
     "comboPerfectDesc": "Die 3 Fahrer, die am meisten brachten",
     "exampleTitle": "Beispielergebnis",
     "oddsTitle": "Die Quoten",
-    "oddsBody": "Jeder Fahrer hat eine Quote pro Etappentyp (Sprint, Berg, Ausreißer, Zeitfahren) und pro Trikot. Favoriten haben die niedrigsten Quoten, Außenseiter die höchsten: Sie können viel mehr bringen.",
+    "oddsBody": "Jeder Fahrer hat eine Quote pro Etappentyp (Sprint, Berg, Ausreißer, Zeitfahren, Klassiker) und pro Trikot. Favoriten haben die niedrigsten Quoten, Außenseiter die höchsten: Sie können viel mehr bringen.",
     "oddsFavorite": "Favorit",
     "oddsLow": "niedrige Quote",
     "oddsHigh": "hohe Quote",
@@ -495,6 +495,7 @@
     "montagne": "Bergetappe",
     "clm": "Zeitfahren",
     "baroudeurs": "Ausreißer",
+    "classique": "Klassiker",
     "clm_equipes": "Mannschaftszeitfahren"
   },
   "Sex": {

@@ -6,7 +6,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { ConfirmButton } from "../_components/ConfirmButton";
 import { raceLabel } from "../_components/labels";
 import { COURSE_KIND_LABELS, JERSEY_ODDS_FORMAT, type CourseKind, type JerseyType } from "@/lib/velo/courses";
-import { addCourseRider, createTeam, removeCourseRider, updateCourseRider, updateCourseTeam } from "./actions";
+import { addCourseRider, createTeam, fillOddsFromSeason, removeCourseRider, updateCourseRider, updateCourseTeam } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +18,7 @@ const STAGE_TYPE_COLUMNS = [
   { format: "montagne", label: "Mont." },
   { format: "clm", label: "CLM" },
   { format: "baroudeurs", label: "Baroud." },
+  { format: "classique", label: "Classique" },
 ];
 
 const JERSEY_COLUMNS: Array<{ jersey: JerseyType; label: string }> = [
@@ -161,9 +162,18 @@ export default async function AdminRidersPage({
         <a href={`/admin/athletes/export?course=${course.id}`} className="underline">
           Télécharger le CSV de la course
         </a>
+        {riders.length > 0 && (
+          <form action={fillOddsFromSeason}>
+            <input type="hidden" name="stage_id" value={course.id} />
+            <button type="submit" className="rounded border border-border px-2 py-1 text-xs">
+              Compléter avec les cotes de la saison
+            </button>
+          </form>
+        )}
       </div>
       <p className="text-xs text-text-dim">
-        Les cotes sont propres à la course. Une case vidée retire la cote, une cote modifiée garde l&apos;ancienne dans
+        Les cotes sont propres à la course. Un coureur engagé sans cote reprend celle de la liste de la saison
+        (import « Coureurs de la saison », onglet Calendrier) ; une cote saisie ici n&apos;est jamais écrasée. Une case vidée retire la cote, une cote modifiée garde l&apos;ancienne dans
         l&apos;historique. Pour tout remplacer d&apos;un coup, réimporte le fichier des coureurs (onglet{" "}
         <Link href="/admin" className="underline">Calendrier</Link>, en bas de page). Abandon : choisis l&apos;étape où le
         coureur a quitté la course.

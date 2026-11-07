@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { normalizeNationCode } from "@/lib/nationFlags";
-import { clearCourseOdds, riderKey, writeCourseOdds } from "@/lib/velo/imports";
+import { clearCourseOdds, fillCourseOddsFromSeason, riderKey, writeCourseOdds } from "@/lib/velo/imports";
 
 // VéloPronos : coureurs et cotes d'une course (stage_riders + odds.stage_id).
 
@@ -107,6 +107,14 @@ export async function addCourseRider(formData: FormData) {
     .from("stage_riders")
     .upsert({ stage_id: stageId, athlete_id: athleteId, bib: bib ? Number(bib) : null }, { onConflict: "stage_id,athlete_id" });
   if (error) throw new Error(error.message);
+  await fillCourseOddsFromSeason(admin, stageId);
+  revalidatePath("/admin/athletes");
+}
+
+/** Copie les cotes de la saison dans la course, pour les engagés qui n'ont pas de cote propre. */
+export async function fillOddsFromSeason(formData: FormData) {
+  await requireAdmin();
+  await fillCourseOddsFromSeason(createAdminClient(), text(formData, "stage_id"));
   revalidatePath("/admin/athletes");
 }
 

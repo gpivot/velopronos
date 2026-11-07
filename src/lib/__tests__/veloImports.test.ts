@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { normalizeNationCode } from "../nationFlags";
-import { courseCoefficient, parisTimeToUtcIso, parseDate, parseStageType, parseTime } from "../velo/courses";
+import { courseCoefficient, isMonument, parisTimeToUtcIso, parseDate, parseStageType, parseTime } from "../velo/courses";
 import { parseCourseCalendar, parseCourseRiders, parseCourseStages, parseCourseTeams } from "../velo/imports";
 
 describe("vocabulaire vélo", () => {
@@ -10,6 +10,8 @@ describe("vocabulaire vélo", () => {
     expect(parseStageType("mountain")).toBe("montagne");
     expect(parseStageType("Accidentée")).toBe("baroudeurs");
     expect(parseStageType("Plaine")).toBeNull();
+    expect(parseStageType("Classique")).toBe("classique");
+    expect(parseStageType("classic")).toBe("classique");
   });
 
   it("lit dates et heures", () => {
@@ -86,6 +88,14 @@ describe("parseCourseStages", () => {
   });
 });
 
+describe("monuments", () => {
+  it("reconnaît un monument par sa catégorie ou son nom, pas la Flèche Wallonne", () => {
+    expect(isMonument("Paris-Roubaix", "world_tour")).toBe(true);
+    expect(isMonument("Course X", "monument")).toBe(true);
+    expect(isMonument("Flèche Wallonne", "world_tour")).toBe(false);
+  });
+});
+
 describe("parseCourseRiders", () => {
   const csv = [
     "numero,prenom,nom,equipe,nom_equipe,nationalite,statut,cote_sprint,cote_montagne,cote_clm,cote_baroudeur,MJ,MV,MP,MJeune,SC",
@@ -119,5 +129,15 @@ describe("parseCourseTeams", () => {
   it("lit les cotes meilleure équipe et CLM par équipes", () => {
     const { teams } = parseCourseTeams("equipe,equipe_nom,cote_ME,CLME\nUAE,UAE Team Emirates XRG,30,18\n");
     expect(teams).toEqual([{ code: "UAE", name: "UAE Team Emirates XRG", odds: { meilleure_equipe: 30, clm_equipes: 18 } }]);
+  });
+});
+
+describe("cote Classique", () => {
+  it("lit la colonne cote_classique (liste de la saison ou d'une course)", () => {
+    const csv = ["prenom,nom,equipe,nom_equipe,nationalite,cote_sprint,cote_montagne,cote_clm,cote_baroudeur,cote_classique", "Mathieu,Van der Poel,ADC,Alpecin,NED,8,60,40,6,2"].join("\n");
+    const { riders, warnings } = parseCourseRiders(csv);
+    expect(warnings).toHaveLength(0);
+    expect(riders[0].bib).toBeNull();
+    expect(riders[0].odds).toEqual({ sprint: 8, montagne: 60, clm: 40, baroudeurs: 6, classique: 2 });
   });
 });

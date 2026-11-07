@@ -183,7 +183,7 @@ export default async function ReglesPage() {
               </div>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {(["sprint", "montagne", "baroudeurs", "clm", "clm_equipes"] as const).map((f) => (
+              {(["sprint", "montagne", "baroudeurs", "clm", "classique", "clm_equipes"] as const).map((f) => (
                 <span key={f} className="rounded-full border border-border bg-card2 px-2.5 py-1 font-display text-[11px] font-bold">
                   {tFormat(f)}
                 </span>

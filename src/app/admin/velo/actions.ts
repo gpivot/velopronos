@@ -17,6 +17,7 @@ import {
   importCourseRiders,
   importCourseStages,
   importCourseTeams,
+  importSeasonRiders,
   type ImportSummary,
 } from "@/lib/velo/imports";
 import { normalizeNationCode, NATION_NAMES } from "@/lib/nationFlags";
@@ -44,6 +45,11 @@ async function run(fn: () => Promise<CsvActionResult>): Promise<CsvActionResult>
 export async function importVeloCalendar(seasonId: string, csvText: string): Promise<CsvActionResult> {
   await requireAdmin();
   return run(async () => toResult(await importCourseCalendar(createAdminClient(), seasonId, csvText), "course(s)"));
+}
+
+export async function importVeloSeasonRiders(seasonId: string, csvText: string): Promise<CsvActionResult> {
+  await requireAdmin();
+  return run(async () => toResult(await importSeasonRiders(createAdminClient(), seasonId, csvText), "coureur(s)"));
 }
 
 export async function importVeloStages(stageId: string, newStartDate: string | null, csvText: string): Promise<CsvActionResult> {

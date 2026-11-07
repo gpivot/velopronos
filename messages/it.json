@@ -213,7 +213,7 @@
     "comboPerfectDesc": "I 3 ciclisti che rendevano di più",
     "exampleTitle": "Esempio di risultato",
     "oddsTitle": "Le quote",
-    "oddsBody": "Ogni corridore ha una quota per tipo di tappa (volata, montagna, fuga, cronometro) e per maglia. I favoriti hanno le quote più basse, gli outsider le più alte: possono rendere molto di più.",
+    "oddsBody": "Ogni corridore ha una quota per tipo di tappa (volata, montagna, fuga, cronometro, classica) e per maglia. I favoriti hanno le quote più basse, gli outsider le più alte: possono rendere molto di più.",
     "oddsFavorite": "Favorito",
     "oddsLow": "quota bassa",
     "oddsHigh": "quota alta",
@@ -495,6 +495,7 @@
     "montagne": "Montagna",
     "clm": "Cronometro",
     "baroudeurs": "Fuga",
+    "classique": "Classica",
     "clm_equipes": "Cronosquadre"
   },
   "Sex": {

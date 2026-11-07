@@ -4,6 +4,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { normalizeLabel, parseCsv, parseOddsCell } from "../admin/csv";
+import { fetchAll } from "../admin/fetchAll";
 import { NATION_NAMES, normalizeNationCode } from "../nationFlags";
 import {
   addDays,
@@ -15,6 +16,7 @@ import {
   daysBetween,
   defaultJerseyColor,
   defaultJerseys,
+  isMonument,
   type JerseyType,
   parisTimeToUtcIso,
   parseBoolean,
@@ -39,6 +41,8 @@ function emptySummary(): ImportSummary {
 export const ONE_DAY_DEFAULT_TIME = "11:00";
 /** Type d'étape par défaut d'une classique (à confirmer : les cotes de la course s'y rangent). */
 export const ONE_DAY_DEFAULT_TYPE: StageType = "baroudeurs";
+/** Type par défaut de l'étape unique d'un monument : cote « Classique » (à confirmer). */
+export const MONUMENT_DEFAULT_TYPE: StageType = "classique";
 
 // ---------------------------------------------------------------------------------------------
 // 1. Calendrier de saison
@@ -180,18 +184,19 @@ export async function importCourseCalendar(admin: SupabaseClient, seasonId: stri
     }
 
     if (course.kind === "one_day") {
+      const type = isMonument(course.name, course.category) ? MONUMENT_DEFAULT_TYPE : ONE_DAY_DEFAULT_TYPE;
       const { count } = await admin.from("races").select("id", { count: "exact", head: true }).eq("stage_id", stageId);
       if (!count) {
         const { error } = await admin.from("races").insert({
           stage_id: stageId,
           sex: "H",
-          format: ONE_DAY_DEFAULT_TYPE,
+          format: type,
           stage_number: null, // classique : étape unique, sans numéro
           locks_at: parisTimeToUtcIso(course.startsOn, ONE_DAY_DEFAULT_TIME),
           status: "upcoming",
         });
         if (error) summary.warnings.push(`${course.name} : étape unique non créée (${error.message}).`);
-        else summary.details.push(`${course.name} : étape unique créée à ${ONE_DAY_DEFAULT_TIME}, type baroudeurs (à vérifier).`);
+        else summary.details.push(`${course.name} : étape unique créée à ${ONE_DAY_DEFAULT_TIME}, type ${type} (à vérifier).`);
       }
     }
   }
@@ -365,6 +370,7 @@ export const COURSE_RIDERS_HEADERS = [
   "cote_montagne",
   "cote_clm",
   "cote_baroudeur",
+  "cote_classique",
   "MJ",
   "MV",
   "MP",
@@ -378,6 +384,7 @@ export const RIDER_ODDS_COLUMNS: Array<[string, string]> = [
   ["cote_montagne", "montagne"],
   ["cote_clm", "clm"],
   ["cote_baroudeur", "baroudeurs"],
+  ["cote_classique", "classique"],
   ["mj", "maillot_general"],
   ["mv", "maillot_points"],
   ["mp", "maillot_montagne"],
@@ -518,9 +525,11 @@ export async function importCourseRiders(admin: SupabaseClient, stageId: string,
     return athleteId ? Object.entries(rider.odds).map(([format, value]) => ({ targetId: athleteId, format, value })) : [];
   });
   const written = await writeCourseOdds(admin, seasonId, stageId, "athlete_id", wanted);
+  const filled = await fillCourseOddsFromSeason(admin, stageId);
 
   summary.details.push(
-    `${teamNames.size} équipe(s), ${ridersCreated} coureur(s) nouveau(x) dans la saison, ${written} cote(s) enregistrée(s).`
+    `${teamNames.size} équipe(s), ${ridersCreated} coureur(s) nouveau(x) dans la saison, ${written} cote(s) enregistrée(s)` +
+      (filled ? `, ${filled} cote(s) reprise(s) de la liste de la saison.` : ".")
   );
   return summary;
 }
@@ -551,23 +560,24 @@ async function upsertTeams(admin: SupabaseClient, seasonId: string, namesByCode:
 
 /**
  * Remplace les cotes courantes d'une course qui ont changé (historisées), pour des cibles
- * coureur (`athlete_id`) ou équipe (`team_id`). Renvoie le nombre de cotes enregistrées.
+ * coureur (`athlete_id`) ou équipe (`team_id`). `stageId` null = cotes de la saison (liste des
+ * coureurs de la saison). Renvoie le nombre de cotes enregistrées.
  */
 export async function writeCourseOdds(
   admin: SupabaseClient,
   seasonId: string,
-  stageId: string,
+  stageId: string | null,
   target: "athlete_id" | "team_id",
   wanted: Array<{ targetId: string; format: string; value: number }>
 ): Promise<number> {
-  const { data: currentOdds } = await admin
-    .from("odds")
-    .select(`id, ${target}, format, value`)
-    .eq("stage_id", stageId)
-    .is("valid_until", null)
-    .not(target, "is", null);
+  const currentRows = await fetchAll((from, to) => {
+    let query = admin.from("odds").select(`id, ${target}, format, value`).eq("season_id", seasonId).is("valid_until", null).not(target, "is", null);
+    query = stageId ? query.eq("stage_id", stageId) : query.is("stage_id", null);
+    return query.order("id").range(from, to);
+  });
+  const currentOdds = currentRows as unknown[];
   const current = new Map(
-    ((currentOdds ?? []) as unknown as Array<Record<string, unknown>>).map((o) => [
+    (currentOdds as Array<Record<string, unknown>>).map((o) => [
       `${o[target]}|${o.format}`,
       { id: o.id as string, value: o.value as number },
     ])
@@ -604,6 +614,140 @@ export async function clearCourseOdds(
   if (formats.length > 0) query = query.in("format", formats);
   const { error } = await query;
   if (error) throw new Error(`Cotes : ${error.message}`);
+}
+
+// ---------------------------------------------------------------------------------------------
+// 3 bis. Liste des coureurs de la saison : une cote par profil, reprise par chaque course
+// ---------------------------------------------------------------------------------------------
+
+export const SEASON_RIDERS_HEADERS = [
+  "prenom",
+  "nom",
+  "equipe",
+  "nom_equipe",
+  "nationalite",
+  "cote_sprint",
+  "cote_montagne",
+  "cote_clm",
+  "cote_baroudeur",
+  "cote_classique",
+];
+
+/** Cotes de saison : une par profil d'étape ; les maillots restent propres à chaque course. */
+export const SEASON_ODDS_FORMATS = ["sprint", "montagne", "clm", "baroudeurs", "classique"];
+
+/**
+ * Importe la liste des coureurs de la saison : équipes, coureurs (retrouvés par prénom + nom,
+ * créés sinon) et leur cote par profil (odds.stage_id null). Une cote qui change est historisée ;
+ * une cellule vide ne touche pas à la cote existante. Ne crée aucun engagé : les courses reprennent
+ * ces cotes pour leurs engagés qui n'ont pas de cote propre (fillCourseOddsFromSeason).
+ */
+export async function importSeasonRiders(admin: SupabaseClient, seasonId: string, csvText: string): Promise<ImportSummary> {
+  const summary = emptySummary();
+  const { riders, warnings } = parseCourseRiders(csvText);
+  summary.warnings.push(...warnings);
+  if (riders.length === 0) return summary;
+
+  await ensureNations(admin, riders.map((r) => r.nationCode));
+  const teamNames = new Map<string, string>();
+  for (const r of riders) if (!teamNames.get(r.teamCode)) teamNames.set(r.teamCode, r.teamName);
+  const teamIdByCode = await upsertTeams(admin, seasonId, teamNames);
+
+  const athletes = await fetchAll((from, to) =>
+    admin.from("athletes").select("id, first_name, last_name").eq("season_id", seasonId).order("id").range(from, to)
+  );
+  const athleteIdByKey = new Map(athletes.map((a: any) => [riderKey(a.first_name, a.last_name), a.id as string]));
+  for (const rider of riders) {
+    const key = riderKey(rider.firstName, rider.lastName);
+    const fields = { nation_code: rider.nationCode, team_id: teamIdByCode.get(rider.teamCode) ?? null };
+    const id = athleteIdByKey.get(key);
+    if (id) {
+      const { error } = await admin.from("athletes").update(fields).eq("id", id);
+      if (error) summary.warnings.push(`${rider.firstName} ${rider.lastName} : ${error.message}`);
+      else summary.updated++;
+      continue;
+    }
+    const { data, error } = await admin
+      .from("athletes")
+      .insert({ ...fields, season_id: seasonId, first_name: rider.firstName, last_name: rider.lastName, sex: "H" })
+      .select("id")
+      .single();
+    if (error || !data) {
+      summary.warnings.push(`${rider.firstName} ${rider.lastName} : création impossible (${error?.message}).`);
+      continue;
+    }
+    athleteIdByKey.set(key, data.id as string);
+    summary.created++;
+  }
+
+  const ignored = new Set<string>();
+  const wanted = riders.flatMap((rider) => {
+    const athleteId = athleteIdByKey.get(riderKey(rider.firstName, rider.lastName));
+    if (!athleteId) return [];
+    return Object.entries(rider.odds).flatMap(([format, value]) => {
+      if (!SEASON_ODDS_FORMATS.includes(format)) {
+        ignored.add(format);
+        return [];
+      }
+      return [{ targetId: athleteId, format, value }];
+    });
+  });
+  const written = await writeCourseOdds(admin, seasonId, null, "athlete_id", wanted);
+  summary.details.push(`${teamNames.size} équipe(s), ${written} cote(s) de saison enregistrée(s).`);
+  if (ignored.size > 0) summary.warnings.push("Colonnes de maillot ignorées : les cotes de maillot se donnent course par course.");
+  return summary;
+}
+
+/**
+ * Complète les cotes d'une course avec celles de la saison : pour chaque engagé et chaque profil
+ * d'étape de la course, la cote de saison est copiée si la course n'en a pas encore. Une cote
+ * propre à la course n'est jamais remplacée. Renvoie le nombre de cotes copiées.
+ */
+export async function fillCourseOddsFromSeason(admin: SupabaseClient, stageId: string): Promise<number> {
+  const [{ data: stage }, { data: races }, { data: entries }] = await Promise.all([
+    admin.from("stages").select("season_id").eq("id", stageId).maybeSingle(),
+    admin.from("races").select("format").eq("stage_id", stageId),
+    admin.from("stage_riders").select("athlete_id").eq("stage_id", stageId),
+  ]);
+  if (!stage) throw new Error("Course introuvable.");
+  const formats = Array.from(new Set((races ?? []).map((r) => r.format as string))).filter((f) => SEASON_ODDS_FORMATS.includes(f));
+  const athleteIds = new Set((entries ?? []).map((e) => e.athlete_id as string));
+  if (formats.length === 0 || athleteIds.size === 0) return 0;
+
+  const [seasonOdds, courseOdds] = await Promise.all([
+    fetchAll((from, to) =>
+      admin
+        .from("odds")
+        .select("athlete_id, format, value")
+        .eq("season_id", stage.season_id)
+        .is("stage_id", null)
+        .is("valid_until", null)
+        .not("athlete_id", "is", null)
+        .in("format", formats)
+        .order("id")
+        .range(from, to)
+    ),
+    fetchAll((from, to) =>
+      admin
+        .from("odds")
+        .select("athlete_id, format")
+        .eq("stage_id", stageId)
+        .is("valid_until", null)
+        .not("athlete_id", "is", null)
+        .in("format", formats)
+        .order("id")
+        .range(from, to)
+    ),
+  ]);
+  const existing = new Set(courseOdds.map((o: any) => `${o.athlete_id}|${o.format}`));
+  const toInsert = (seasonOdds as any[])
+    .filter((o) => athleteIds.has(o.athlete_id) && !existing.has(`${o.athlete_id}|${o.format}`))
+    .map((o) => ({ season_id: stage.season_id, stage_id: stageId, format: o.format, athlete_id: o.athlete_id, value: o.value }));
+  for (let i = 0; i < toInsert.length; i += 500) {
+    const { error } = await admin.from("odds").insert(toInsert.slice(i, i + 500));
+    if (error) throw new Error(`Cotes : ${error.message}`);
+  }
+  return toInsert.length;
 }
 
 // ---------------------------------------------------------------------------------------------
