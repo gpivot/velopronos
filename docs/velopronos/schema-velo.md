@@ -249,6 +249,56 @@ confirmer). Code : `src/lib/predictionWindow.ts` (`predictionOpensOn`, `predicti
 `isPredictionOpen`), lu par Ma saison, l'accueil, la page d'étape, l'enregistrement des pronostics
 et les rappels. Aucune migration : la règle est appliquée par l'app, comme avant.
 
+## Startlists par IA (migration 0058, 07/11/2026)
+
+Demande de Guillaume du 07/11/2026 : à partir du lundi 17 h de la semaine de course, on récupère la
+startlist provisoire, on alimente les courses de la semaine et on ouvre les pronostics ; la liste
+est mise à jour chaque jour à 17 h et une dernière fois à 7 h le matin de la course.
+
+- **Code** : `src/lib/velo/aiStartlist.ts` (appel à Claude avec recherche web, même mécanique que
+  les résultats par IA) et `src/lib/velo/startlistSync.ts` (créneaux, rapprochement, mise à jour).
+  Route `/api/startlists/cron`, protégée par `CRON_SECRET`.
+- **Sources** : la page des engagés donnée pour la course (facultatif), puis le **site prioritaire
+  de la saison** (réglable dans admin > Coureurs & cotes ; vide = ProCyclingStats), puis PCS, puis
+  le site officiel.
+- **Ce que fait un passage** : l'IA donne noms, nations, équipes et dossards (jamais de cote).
+  Les coureurs sont retrouvés dans la saison (noms sans accents, dans les deux sens) ; les engagés
+  absents de la nouvelle liste sont retirés (leurs cotes de course aussi) ; les cotes de la saison
+  sont reprises. Une liste de moins de 20 coureurs ou « pas encore publiée » ne change rien.
+- **Coureur inconnu** de la liste de la saison : créé dans la saison et engagé **sans cote**
+  (donc pas pronostiquable) ; il est signalé « ⚠️ » dans le compte rendu de la course (à
+  confirmer : autre option, une cote par défaut).
+- **Joueurs** : si un coureur de leur pronostic n'est plus au départ, la page de l'étape affiche
+  « Un coureur de ton pronostic n'est plus au départ : remplace-le avant la course. » Pas de
+  notification push ni d'e-mail pour l'instant.
+- **Quand** : seulement entre l'ouverture des pronostics (lundi 17 h) et le départ de la 1re étape ;
+  ensuite rien n'est touché (abandons à la main). Le WE des Champions n'est pas concerné. Une case
+  « Mise à jour automatique » par course permet de garder une liste importée à la main. Bouton
+  « Mettre à jour la startlist maintenant » dans admin > Coureurs & cotes.
+- **Coût** : un appel IA (Opus 5.5 avec recherche web) par course et par passage, soit environ 8
+  par course (7 soirs + le matin), quelques dizaines de centimes chacun.
+
+**Mise en route (une fois, après la migration 0058)** : `CRON_SECRET` et `ANTHROPIC_API_KEY` doivent
+être dans Vercel ; activer `pg_cron` et `pg_net` dans Supabase (Database > Extensions) ; puis dans
+l'éditeur SQL (remplacer `CRON_SECRET_ICI`) :
+
+```sql
+select cron.schedule(
+  'startlists-ia',
+  '*/10 5,6,15,16 * * *',
+  $$select net.http_get(
+    url := 'https://velopronos.vercel.app/api/startlists/cron',
+    headers := jsonb_build_object('Authorization', 'Bearer CRON_SECRET_ICI'),
+    timeout_milliseconds := 300000
+  )$$
+);
+```
+
+Les heures sont en UTC (5-6 h et 15-16 h couvrent 7 h et 17 h de Paris, hiver comme été) ; la
+route ne fait rien en dehors de 7 h et 17 h de Paris et traite une course par appel (toutes les
+10 minutes). Durée d'un appel : jusqu'à 300 s (`maxDuration`), ce qui suppose « Fluid compute »
+activé sur Vercel (réglage par défaut des projets récents).
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :

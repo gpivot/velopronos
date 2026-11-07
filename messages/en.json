@@ -531,6 +531,7 @@
     "previousRace": "Prev. stage",
     "nextRace": "Next stage",
     "predictionsOpenOn": "The rider list will be available on {date} at 5 pm: predictions open on the Monday of race week.",
+    "riderWithdrawn": "⚠️ A rider in your prediction is no longer starting: replace them before the race.",
     "playerNoPrediction": "No prediction on this stage.",
     "resultsHelpTitle": "Ranking icons",
     "resultsHelpFusee": "Rocket: top 3 ski time (the number is the rank). With the Rocket card: +100 / +50 / +20 pts.",

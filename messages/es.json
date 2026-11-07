@@ -531,6 +531,7 @@
     "previousRace": "Anterior",
     "nextRace": "Siguiente",
     "predictionsOpenOn": "La lista de ciclistas estará disponible el {date} a las 17 h: los pronósticos abren el lunes de la semana de la carrera.",
+    "riderWithdrawn": "⚠️ Un corredor de tu pronóstico ya no toma la salida: cámbialo antes de la carrera.",
     "playerNoPrediction": "Sin pronóstico en esta etapa.",
     "resultsHelpTitle": "Iconos de la clasificación",
     "resultsHelpFusee": "Cohete: top 3 del tiempo de esquí (la cifra es el puesto). Con la carta Cohete: +100 / +50 / +20 pts.",

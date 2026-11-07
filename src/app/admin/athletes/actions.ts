@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { normalizeNationCode } from "@/lib/nationFlags";
 import { clearCourseOdds, fillCourseOddsFromSeason, riderKey, writeCourseOdds } from "@/lib/velo/imports";
+import { syncCourseStartlist } from "@/lib/velo/startlistSync";
 
 // VéloPronos : coureurs et cotes d'une course (stage_riders + odds.stage_id).
 
@@ -140,5 +141,34 @@ export async function createTeam(formData: FormData) {
     .from("teams")
     .upsert({ season_id: text(formData, "season_id"), code, name }, { onConflict: "season_id,code" });
   if (error) throw new Error(error.message);
+  revalidatePath("/admin/athletes");
+}
+
+/** Startlist par IA d'une course, lancée à la main (même traitement que le passage planifié). */
+export async function syncStartlistNow(formData: FormData) {
+  await requireAdmin();
+  await syncCourseStartlist(createAdminClient(), text(formData, "stage_id"));
+  revalidatePath("/admin/athletes");
+}
+
+/** Réglages de la startlist d'une course : page des engagés à lire en premier, mise à jour auto. */
+export async function saveStartlistSettings(formData: FormData) {
+  await requireAdmin();
+  const { error } = await createAdminClient()
+    .from("stages")
+    .update({ startlist_url: text(formData, "startlist_url") || null, startlist_auto: formData.get("startlist_auto") === "on" })
+    .eq("id", text(formData, "stage_id"));
+  if (error) throw new Error(`${error.message} (migration 0058 appliquée ?)`);
+  revalidatePath("/admin/athletes");
+}
+
+/** Site prioritaire de la saison pour les startlists (vide = ProCyclingStats). */
+export async function saveStartlistPrioritySite(formData: FormData) {
+  await requireAdmin();
+  const { error } = await createAdminClient()
+    .from("seasons")
+    .update({ startlist_priority_site: text(formData, "startlist_priority_site") || null })
+    .eq("id", text(formData, "season_id"));
+  if (error) throw new Error(`${error.message} (migration 0058 appliquée ?)`);
   revalidatePath("/admin/athletes");
 }

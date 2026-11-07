@@ -531,6 +531,7 @@
     "previousRace": "Precedente",
     "nextRace": "Successiva",
     "predictionsOpenOn": "La lista dei corridori sarà disponibile il {date} alle 17: i pronostici aprono il lunedì della settimana della corsa.",
+    "riderWithdrawn": "⚠️ Un corridore del tuo pronostico non è più al via: sostituiscilo prima della corsa.",
     "playerNoPrediction": "Nessun pronostico su questa tappa.",
     "resultsHelpTitle": "Le icone della classifica",
     "resultsHelpFusee": "Razzo: top 3 del tempo sugli sci (il numero è la posizione). Con la carta Razzo: +100 / +50 / +20 pt.",

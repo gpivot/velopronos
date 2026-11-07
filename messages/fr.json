@@ -531,6 +531,7 @@
     "previousRace": "Étape préc.",
     "nextRace": "Étape suiv.",
     "predictionsOpenOn": "La liste des coureurs sera disponible le {date} à 17 h : les pronostics ouvrent le lundi de la semaine de course.",
+    "riderWithdrawn": "⚠️ Un coureur de ton pronostic n'est plus au départ : remplace-le avant la course.",
     "playerNoPrediction": "Pas de pronostic sur cette étape.",
     "resultsHelpTitle": "Les pictos du classement",
     "resultsHelpFusee": "Fusée : top 3 du temps de ski (le chiffre donne le rang). Avec la carte Fusée : +100 / +50 / +20 pts.",

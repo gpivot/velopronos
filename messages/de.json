@@ -531,6 +531,7 @@
     "previousRace": "Vorh. Etappe",
     "nextRace": "Nächstes",
     "predictionsOpenOn": "Die Fahrerliste ist ab {date} um 17 Uhr verfügbar: Die Tipps öffnen am Montag der Rennwoche.",
+    "riderWithdrawn": "⚠️ Ein Fahrer aus deinem Tipp startet nicht mehr: Ersetze ihn vor dem Rennen.",
     "playerNoPrediction": "Kein Tipp für dieses Etappe.",
     "resultsHelpTitle": "Symbole der Rangliste",
     "resultsHelpFusee": "Rakete: Top 3 der Laufzeit (die Zahl ist der Rang). Mit der Karte Rakete: +100 / +50 / +20 Pkt.",

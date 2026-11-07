@@ -4,9 +4,20 @@ import { fetchAll } from "@/lib/admin/fetchAll";
 import { fullAthleteName } from "@/lib/athleteName";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { ConfirmButton } from "../_components/ConfirmButton";
-import { raceLabel } from "../_components/labels";
+import { formatLockTime, raceLabel } from "../_components/labels";
 import { COURSE_KIND_LABELS, JERSEY_ODDS_FORMAT, type CourseKind, type JerseyType } from "@/lib/velo/courses";
-import { addCourseRider, createTeam, fillOddsFromSeason, removeCourseRider, updateCourseRider, updateCourseTeam } from "./actions";
+import {
+  addCourseRider,
+  createTeam,
+  fillOddsFromSeason,
+  removeCourseRider,
+  saveStartlistPrioritySite,
+  saveStartlistSettings,
+  syncStartlistNow,
+  updateCourseRider,
+  updateCourseTeam,
+} from "./actions";
+import { DEFAULT_STARTLIST_SITE } from "@/lib/velo/aiStartlist";
 
 export const dynamic = "force-dynamic";
 
@@ -91,6 +102,12 @@ export default async function AdminRidersPage({
       </div>
     );
   }
+
+  // Startlist par IA (migration 0058) : lue à part pour que la page marche sans la migration.
+  const [{ data: startlistInfo }, { data: seasonStartlist }] = await Promise.all([
+    admin.from("stages").select("startlist_url, startlist_auto, startlist_synced_at, startlist_report").eq("id", course.id).maybeSingle(),
+    admin.from("seasons").select("startlist_priority_site").eq("id", season.id).maybeSingle(),
+  ]);
 
   const [{ data: entries }, { data: teams }, { data: races }, odds] = await Promise.all([
     admin
@@ -178,6 +195,62 @@ export default async function AdminRidersPage({
         <Link href="/admin" className="underline">Calendrier</Link>, en bas de page). Abandon : choisis l&apos;étape où le
         coureur a quitté la course.
       </p>
+
+      <section className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4 text-sm">
+        <h2 className="font-semibold">Startlist par IA</h2>
+        <p className="text-xs text-text-dim">
+          Le lundi 17 h de la semaine de course, puis chaque jour à 17 h et à 7 h le matin du départ, l&apos;IA récupère les
+          engagés (noms, équipes, dossards) et met la liste à jour ; les cotes viennent de la liste des coureurs de la saison.
+          Rien n&apos;est touché après le départ de la 1re étape.
+        </p>
+        {startlistInfo ? (
+          <>
+            <p className="text-xs">
+              {startlistInfo.startlist_synced_at
+                ? `Dernier passage : ${formatLockTime(startlistInfo.startlist_synced_at)} · ${startlistInfo.startlist_report ?? ""}`
+                : "Pas encore de passage pour cette course."}
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <form action={syncStartlistNow}>
+                <input type="hidden" name="stage_id" value={course.id} />
+                <button type="submit" className="rounded bg-ice px-3 py-1.5 text-xs font-bold text-on-ice">
+                  Mettre à jour la startlist maintenant (1 à 3 min)
+                </button>
+              </form>
+            </div>
+            <form action={saveStartlistSettings} className="flex flex-wrap items-center gap-2 text-xs text-text-dim">
+              <input type="hidden" name="stage_id" value={course.id} />
+              <input
+                name="startlist_url"
+                defaultValue={startlistInfo.startlist_url ?? ""}
+                placeholder="Page des engagés à lire en premier (facultatif)"
+                className={`${inputClass} w-80`}
+              />
+              <label className="flex items-center gap-1">
+                <input type="checkbox" name="startlist_auto" defaultChecked={startlistInfo.startlist_auto !== false} /> Mise à jour automatique
+              </label>
+              <button type="submit" className="rounded border border-border px-2 py-1 text-xs">
+                Enregistrer
+              </button>
+            </form>
+            <form action={saveStartlistPrioritySite} className="flex flex-wrap items-center gap-2 text-xs text-text-dim">
+              <input type="hidden" name="season_id" value={season.id} />
+              Site prioritaire (toute la saison)
+              <input
+                name="startlist_priority_site"
+                defaultValue={seasonStartlist?.startlist_priority_site ?? ""}
+                placeholder={DEFAULT_STARTLIST_SITE}
+                className={`${inputClass} w-56`}
+              />
+              <button type="submit" className="rounded border border-border px-2 py-1 text-xs">
+                Enregistrer
+              </button>
+            </form>
+          </>
+        ) : (
+          <p className="text-xs text-text-dim">Colle la migration 0058 dans Supabase pour activer la startlist par IA.</p>
+        )}
+      </section>
 
       <details className="rounded-xl border border-border bg-card p-4">
         <summary className="cursor-pointer text-xs font-semibold text-text-dim">Ajouter un coureur ou une équipe</summary>

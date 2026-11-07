@@ -289,6 +289,9 @@ export default async function RacePage({
   // Liste des coureurs visible à partir du lundi 17 h de la semaine de course (predictionWindow.ts).
   const predictionsOpen = isPredictionOpen(stage.starts_on, now);
   const showForm = displayStatus === "upcoming" && hasOdds && !startListPending && predictionsOpen;
+  // Startlist mise à jour (IA ou admin) : un coureur choisi n'est plus au départ (plus de cote).
+  const selectableIds = new Set(selectableAthletes.map((a) => a.athlete_id));
+  const hasWithdrawnPick = showForm && !isTeamRace && !isRelay && initialAthleteSelection.some((id) => !selectableIds.has(id));
   // « L'avis de Biathlonpronos » saisi dans le back-office ; rubrique masquée s'il est vide.
   const opinion = typeof race.opinion === "string" ? race.opinion.trim() : "";
   const hasPrediction = isTeamRace ? initialTeamSelection.length > 0 : isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
@@ -452,6 +455,10 @@ export default async function RacePage({
 
         {/* Questions bonus juste sous l'avis, pour qu'elles soient vues (avant le départ et en live). */}
         {(displayStatus === "upcoming" || displayStatus === "ongoing") && bonusQuestionsBlock}
+
+        {hasWithdrawnPick && (
+          <div className="rounded-2xl border border-red/50 bg-card p-4 text-[13px] font-semibold text-red">{t("riderWithdrawn")}</div>
+        )}
 
         {displayStatus === "upcoming" &&
           (!predictionsOpen ? (
