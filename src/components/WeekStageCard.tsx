@@ -31,12 +31,13 @@ export async function WeekStageCard({
   nowMs: number;
   locale: string;
 }) {
-  const [t, tFormat, tSex, tRace, tCourses] = await Promise.all([
+  const [t, tFormat, tSex, tRace, tCourses, tChampions] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
     getTranslations("Race"),
     getTranslations("Courses"),
+    getTranslations("Champions"),
   ]);
   const day = (date: string) =>
     new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
@@ -75,7 +76,19 @@ export async function WeekStageCard({
           </span>
         </Link>
 
-        {stage.races.length === 0 && <div className="px-4 py-3 text-[13px] text-text-dim">{tCourses("noRacesInStage")}</div>}
+        {stage.look === "bonus" ? (
+          // WE des Champions : écran à part (1 coureur par pays, sans cote).
+          <Link href={`/champions/${stage.id}`} className="flex items-center gap-3 px-4 py-3">
+            <span className="text-lg">🏆</span>
+            <span className="flex flex-1 flex-col">
+              <span className="text-sm font-semibold">{tChampions("link")}</span>
+              <span className="text-xs text-text-dim">{tChampions("link_hint")}</span>
+            </span>
+            <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-text-dim" />
+          </Link>
+        ) : (
+          stage.races.length === 0 && <div className="px-4 py-3 text-[13px] text-text-dim">{tCourses("noRacesInStage")}</div>
+        )}
 
         {stage.races.map((race) => {
           const result = results[race.id] ?? null;

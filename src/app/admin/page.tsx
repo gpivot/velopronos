@@ -172,6 +172,11 @@ export default async function AdminCalendarResultsPage() {
                       <span className="text-xs text-text-dim">
                         {done}/{stage.races.length} résultat(s) saisi(s)
                       </span>
+                      {stage.kind === "bonus_event" && (
+                        <Link href={`/admin/champions/${stage.id}`} className="rounded-full border border-gold/50 px-2.5 py-1 text-xs font-semibold text-gold">
+                          🏆 WE des Champions
+                        </Link>
+                      )}
                       <Link
                         href={`/admin/stages/${stage.id}`}
                         title="Modifier la course"

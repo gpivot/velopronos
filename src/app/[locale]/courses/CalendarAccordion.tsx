@@ -53,6 +53,8 @@ export interface CalendarStage {
   /** VéloPronos : nombre de maillots pronostiqués sur la course, et choisis par le joueur. */
   jerseys?: number;
   jerseysPicked?: number;
+  /** WE des Champions : pronostics posés sur le nombre de championnats. */
+  champions?: { done: number; total: number };
   /** Grand Tour : porteur d'eau du joueur (choisi ou pas, révélé ou pas). Absent sinon. */
   waterCarrier?: { name: string | null; nationCode: string | null; revealed: boolean; locked: boolean } | null;
   races: CalendarRace[];
@@ -84,6 +86,7 @@ export function CalendarAccordion({
   const tFormat = useTranslations("RaceFormat");
   const tRace = useTranslations("Race");
   const tJerseys = useTranslations("Jerseys");
+  const tChampions = useTranslations("Champions");
 
   const [filter, setFilter] = useState<CourseFilter>("all");
   const looks = new Map(stages.map((stage) => [stage.id, courseLook(stage)]));
@@ -268,7 +271,29 @@ export function CalendarAccordion({
                     </span>
                   </Link>
                 )}
-                {stage.races.length === 0 ? (
+                {look === "bonus" && (
+                  // WE des Champions : écran à part, 1 coureur par pays, sans cote.
+                  <Link
+                    href={`/champions/${stage.id}`}
+                    className="flex items-center gap-3 rounded-xl border border-gold/50 bg-gold-soft px-3.5 py-3"
+                  >
+                    <span className="text-lg">🏆</span>
+                    <span className="flex flex-1 flex-col">
+                      <span className="text-sm font-semibold">{tChampions(readOnly ? "title" : "link")}</span>
+                      <span className="text-xs text-text-dim">
+                        {!readOnly && stage.champions && stage.champions.total > 0
+                          ? tChampions("progress", { done: stage.champions.done, total: stage.champions.total })
+                          : tChampions("link_hint")}
+                      </span>
+                    </span>
+                    {!readOnly && stage.champions && stage.champions.total > stage.champions.done && !stage.opensOn && stage.ends_on >= new Date().toISOString().slice(0, 10) && (
+                      <span className="whitespace-nowrap rounded-full bg-ice px-3 py-1 font-display text-[11px] font-bold text-on-ice">
+                        {tChampions("complete")}
+                      </span>
+                    )}
+                  </Link>
+                )}
+                {look === "bonus" && stage.races.length === 0 ? null : stage.races.length === 0 ? (
                   <div className="px-1.5 py-2 text-[12px] text-text-dim">{t("noRacesInStage")}</div>
                 ) : (
                   stage.races.map((race) => {

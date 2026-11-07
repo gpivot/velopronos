@@ -329,3 +329,39 @@ Demande de Guillaume : `src/lib/velo/courseLook.ts` classe chaque course (Grand 
   (Monuments et Mondiaux compris), Monuments, Championnats (Mondiaux et Week-end des Champions),
   Autre (les courses hors classement, qui sortent alors des autres filtres).
   Seuls les types présents dans la saison sont proposés (*à confirmer*).
+
+## WE des Champions (migration 0056, 05/11/2026)
+
+Spécification de Guillaume du 05/11/2026 : événement bonus autonome, hors du moteur des courses
+(pas de cote, pas de Top 10, pas de grillage, pas de carte ni de bonus).
+
+- **Entités créées** : `champion_championships` (un championnat national par pays : `nation_code`,
+  `starts_at`, `locks_at`, `winner_athlete_id`) et `champion_predictions` (un coureur par joueur et
+  par championnat, `submitted_at`, `updated_at`). « Correct » se calcule à la lecture (pronostic =
+  vainqueur), il n'est pas stocké.
+- **Champs ajoutés** : `stages.champions_scale` (barème par palier, index = champions trouvés,
+  défaut 0/50/120/220/350/500/700/950/1250/1600/2000) et `stages.champions_closed_at` ;
+  `score_ledger.bonus_kind` (= 'champions'), une ligne par joueur et par événement.
+- **Événement** : la course existante (`stages`, `kind = bonus_event`, catégorie
+  `national_championships` de l'import plutôt que `bonus_champions`, *à confirmer*). Nombre de
+  championnats libre (10 par défaut côté admin).
+- **Pronostics** : modifiables jusqu'à la limite de **chaque** championnat (RLS
+  `champion_championship_open`, horloge simulée comprise) ; ceux des autres ne sont lisibles qu'une
+  fois le championnat verrouillé. Coureurs proposés : ceux de la saison qui ont la nationalité du
+  pays ; l'admin peut en ajouter un depuis la page du WE (*à confirmer*). Limite par défaut = heure
+  de départ (*à confirmer*).
+- **Calcul** (`src/lib/velo/champions.ts`, testé) : palier atteint (`championsScore`, jamais
+  50 × bonnes réponses), score provisoire au fil des résultats (`summarizeChampions`), classement
+  du WE par score puis champions trouvés, ex æquo sans départage (`rankChampions`).
+- **Clôture** (`src/lib/velo/championsScoring.ts`) : refusée tant qu'un vainqueur manque ; écrit
+  le score de chaque joueur ayant au moins un pronostic dans `score_ledger` et date la clôture.
+  « Rouvrir » retire ces lignes (correction d'un résultat).
+- **Classement Saison** : la ligne du WE est rattachée à sa course (`stage_id`, type
+  `bonus_event`), comptée intégralement par `retainedResults.ts`, hors des quotas Top 2 / Top 8.
+  Elle suit le drapeau « hors classement » de la course (trigger mis à jour). Dans la page
+  Classement, filtre par course : le WE affiche ce score final.
+- **Écrans** : `/champions/<course>` (cartes par pays, progression, score provisoire puis final,
+  classement du WE, barème), lien depuis Ma saison et l'encadré de la semaine ; admin
+  `/admin/champions/<course>` (championnats, limites, vainqueurs, coureurs, barème, clôture),
+  bouton « 🏆 WE des Champions » dans la liste des courses. Textes dans l'espace `Champions` des
+  5 langues, noms de pays traduits par le navigateur (`Intl.DisplayNames`).
