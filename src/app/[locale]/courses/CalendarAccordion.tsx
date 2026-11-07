@@ -48,7 +48,7 @@ export interface CalendarStage {
   coefficient: 1 | 2;
   /** false : étape « Autre (×0) », hors classement de la saison (affichée grisée). */
   counts_in_standings?: boolean;
-  /** Jour d'ouverture des pronostics ("2027-01-02") tant qu'ils sont fermés (7 jours avant l'étape), null sinon. */
+  /** Jour d'ouverture des pronostics ("2027-01-04", un lundi, à 17 h) tant qu'ils sont fermés, null sinon. */
   opensOn: string | null;
   /** VéloPronos : nombre de maillots pronostiqués sur la course, et choisis par le joueur. */
   jerseys?: number;

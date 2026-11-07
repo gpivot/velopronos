@@ -240,6 +240,15 @@ classiques (Milan-San Remo, Flandres, Roubaix, Flèche Wallonne…).
   Baroudeurs** (à confirmer) ; Guillaume change le type d'une classique précise (ex. Flèche
   Wallonne → Classique) dans sa fiche d'étape, et les cotes de saison suivent.
 
+## Ouverture des pronostics : lundi 17 h (07/11/2026)
+
+Règle de Guillaume du 07/11/2026, à la place des « 7 jours avant » hérités : les pronostics d'une
+course (liste des coureurs et cotes) ouvrent **le lundi à 17 h, heure de Paris, de la semaine de
+la course**. Une course qui part un lundi ouvre le lundi précédent (choix pragmatique, à
+confirmer). Code : `src/lib/predictionWindow.ts` (`predictionOpensOn`, `predictionOpensAt`,
+`isPredictionOpen`), lu par Ma saison, l'accueil, la page d'étape, l'enregistrement des pronostics
+et les rappels. Aucune migration : la règle est appliquée par l'app, comme avant.
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :

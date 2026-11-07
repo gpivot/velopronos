@@ -286,7 +286,7 @@ export default async function RacePage({
     startList.status === "known" ? athletesWithOdds.filter((a) => startOrder[a.athlete_id] != null) : athletesWithOdds;
 
   const hasOdds = isTeamRace ? teamsWithOdds.length > 0 : isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
-  // Liste des biathlètes visible 7 jours avant l'étape seulement (cotes mises à jour pendant les pauses).
+  // Liste des coureurs visible à partir du lundi 17 h de la semaine de course (predictionWindow.ts).
   const predictionsOpen = isPredictionOpen(stage.starts_on, now);
   const showForm = displayStatus === "upcoming" && hasOdds && !startListPending && predictionsOpen;
   // « L'avis de Biathlonpronos » saisi dans le back-office ; rubrique masquée s'il est vide.
