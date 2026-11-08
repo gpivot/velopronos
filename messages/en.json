@@ -399,6 +399,15 @@
     "inviteCodeLabel": "Invite code"
   },
   "Classement": {
+    "retainedTitle": "End-of-season jokers",
+    "retainedDiscover": "See which races count",
+    "retainedHelp": "The overall standings count every Grand Tour and the Champions weekend, your {stage} best stage races and your {oneDay} best one-day races. Your other races are dropped: their points don't count.",
+    "retainedGroupAll": "Grand Tours and bonus events · all count",
+    "retainedGroupStage": "Stage races · best {count} count",
+    "retainedGroupOneDay": "One-day races · best {count} count",
+    "retainedKept": "Counts",
+    "retainedDropped": "Dropped",
+    "retainedDelta": "−{points} pts",
     "title": "Standings",
     "emptyState": "No points scored yet. The standings fill in as soon as the first stage is scored.",
     "streakTitle": "Best current streaks",

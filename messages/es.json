@@ -399,6 +399,15 @@
     "inviteCodeLabel": "Código de invitación"
   },
   "Classement": {
+    "retainedTitle": "Comodines de fin de temporada",
+    "retainedDiscover": "Descubre qué carreras cuentan",
+    "retainedHelp": "En la general cuentan todas las Grandes Vueltas y el fin de semana de campeones, tus {stage} mejores vueltas por etapas y tus {oneDay} mejores clásicas. Tus otras carreras se descartan: sus puntos no cuentan.",
+    "retainedGroupAll": "Grandes Vueltas y eventos bonus · cuentan todos",
+    "retainedGroupStage": "Vueltas por etapas · cuentan las {count} mejores",
+    "retainedGroupOneDay": "Clásicas · cuentan las {count} mejores",
+    "retainedKept": "Cuenta",
+    "retainedDropped": "Descartada",
+    "retainedDelta": "−{points} pts",
     "title": "Clasificación",
     "emptyState": "Todavía no se ha sumado ningún punto. La clasificación se completará en cuanto se puntúe la primera etapa.",
     "streakTitle": "Mejores rachas en curso",

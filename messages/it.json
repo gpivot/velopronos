@@ -399,6 +399,15 @@
     "inviteCodeLabel": "Codice di invito"
   },
   "Classement": {
+    "retainedTitle": "Jolly di fine stagione",
+    "retainedDiscover": "Scopri quali corse contano",
+    "retainedHelp": "Nella classifica generale contano tutti i Grandi Giri e il weekend dei campioni, le tue {stage} migliori corse a tappe e le tue {oneDay} migliori classiche. Le altre corse vengono scartate: i loro punti non contano.",
+    "retainedGroupAll": "Grandi Giri ed eventi bonus · contano tutti",
+    "retainedGroupStage": "Corse a tappe · contano le {count} migliori",
+    "retainedGroupOneDay": "Classiche · contano le {count} migliori",
+    "retainedKept": "Conta",
+    "retainedDropped": "Scartata",
+    "retainedDelta": "−{points} pt",
     "title": "Classifica",
     "emptyState": "Nessun punto ancora assegnato. La classifica si riempie non appena viene calcolato il punteggio della prima tappa.",
     "streakTitle": "Migliori serie in corso",

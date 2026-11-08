@@ -399,6 +399,15 @@
     "inviteCodeLabel": "Einladungscode"
   },
   "Classement": {
+    "retainedTitle": "Saisonend-Joker",
+    "retainedDiscover": "Sieh, welche Rennen zählen",
+    "retainedHelp": "In der Gesamtwertung zählen alle Grand Tours und das Meister-Wochenende, deine {stage} besten Etappenrennen und deine {oneDay} besten Eintagesrennen. Deine anderen Rennen werden gestrichen: Ihre Punkte zählen nicht.",
+    "retainedGroupAll": "Grand Tours und Bonus-Events · alle zählen",
+    "retainedGroupStage": "Etappenrennen · die {count} besten zählen",
+    "retainedGroupOneDay": "Eintagesrennen · die {count} besten zählen",
+    "retainedKept": "Zählt",
+    "retainedDropped": "Gestrichen",
+    "retainedDelta": "−{points} Pkt.",
     "title": "Rangliste",
     "emptyState": "Noch keine Punkte vergeben. Die Wertung füllt sich, sobald das erste Etappe ausgewertet ist.",
     "streakTitle": "Beste laufende Serien",

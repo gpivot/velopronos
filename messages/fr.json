@@ -399,6 +399,15 @@
     "inviteCodeLabel": "Code d'invitation"
   },
   "Classement": {
+    "retainedTitle": "Jokers de fin de saison",
+    "retainedDiscover": "Découvre tes courses retenues",
+    "retainedHelp": "Au classement général comptent tous les Grands Tours et le WE des Champions, tes {stage} meilleures courses par étapes et tes {oneDay} meilleures classiques. Tes autres courses jouées sont écartées : leurs points ne comptent pas.",
+    "retainedGroupAll": "Grands Tours et événements bonus · tous retenus",
+    "retainedGroupStage": "Courses par étapes · {count} meilleures retenues",
+    "retainedGroupOneDay": "Classiques · {count} meilleures retenues",
+    "retainedKept": "Retenue",
+    "retainedDropped": "Écartée",
+    "retainedDelta": "−{points} pts",
     "title": "Classement",
     "emptyState": "Aucun point marqué pour le moment. Le classement se remplit dès la première étape notée.",
     "streakTitle": "Meilleures séries en cours",
