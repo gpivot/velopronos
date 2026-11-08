@@ -25,6 +25,20 @@ export async function createSeason(formData: FormData) {
   revalidatePath("/admin");
 }
 
+/** Modifie le nom et les dates d'une saison. */
+export async function updateSeason(formData: FormData) {
+  await requireAdmin();
+  const startsOn = String(formData.get("starts_on"));
+  const endsOn = String(formData.get("ends_on"));
+  if (endsOn < startsOn) throw new Error("La fin de saison doit être après son début.");
+  const { error } = await createAdminClient()
+    .from("seasons")
+    .update({ label: String(formData.get("label")).trim(), starts_on: startsOn, ends_on: endsOn })
+    .eq("id", String(formData.get("season_id")));
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin", "layout");
+}
+
 /**
  * Jokers de fin de saison (01/11/2026) : à activer quand la dernière course est notée. Le
  * classement retire alors les résultats effacés par les jokers ; réversible (désactiver).

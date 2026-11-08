@@ -205,28 +205,6 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
         <p className="text-xs text-text-dim">Heure de départ en heure de Paris : c&apos;est aussi l&apos;heure de verrouillage des pronostics.</p>
       </form>
 
-      {race.format !== "clm_equipes" && riders.length > 0 && (
-        <form action={updateCombatif} className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-4">
-          <input type="hidden" name="race_id" value={race.id} />
-          <span className="text-sm font-semibold">Combatif du jour</span>
-          <select name="combatif_athlete_id" defaultValue={race.combatif_athlete_id ?? ""} className={inputClass}>
-            <option value="">— Aucun —</option>
-            {riders.map((e) => (
-              <option key={e.athlete_id} value={e.athlete_id}>
-                {e.bib ? `${e.bib} · ` : ""}
-                {fullAthleteName(e.athletes)}
-              </option>
-            ))}
-          </select>
-          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
-            Enregistrer
-          </button>
-          <p className="w-full text-xs text-text-dim">
-            +50 (doublé par le ×2) aux joueurs dont le super combatif pronostiqué est ce coureur. Une étape déjà notée est renotée.
-          </p>
-        </form>
-      )}
-
       <form action={updateRaceOpinion} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">L&apos;avis de VéloPronos</div>
         <input type="hidden" name="race_id" value={race.id} />
@@ -264,6 +242,28 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           specialRule={race.special_rule}
           candidates={candidates}
         />
+      )}
+
+      {race.format !== "clm_equipes" && riders.length > 0 && (
+        <form action={updateCombatif} className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-4">
+          <input type="hidden" name="race_id" value={race.id} />
+          <span className="text-sm font-semibold">Combatif du jour</span>
+          <select name="combatif_athlete_id" defaultValue={race.combatif_athlete_id ?? ""} className={inputClass}>
+            <option value="">— Aucun —</option>
+            {riders.map((e) => (
+              <option key={e.athlete_id} value={e.athlete_id}>
+                {e.bib ? `${e.bib} · ` : ""}
+                {fullAthleteName(e.athletes)}
+              </option>
+            ))}
+          </select>
+          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
+            Enregistrer
+          </button>
+          <p className="w-full text-xs text-text-dim">
+            +50 (doublé par le ×2) aux joueurs dont le super combatif pronostiqué est ce coureur. Une étape déjà notée est renotée.
+          </p>
+        </form>
       )}
 
       <div className="flex flex-wrap gap-2 border-t border-border pt-4">

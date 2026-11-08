@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { updateStage } from "../../calendrier/actions";
 import { submitJerseyResults } from "./actions";
+import { CourseImportsSection } from "../../velo/VeloImports";
 import { fullAthleteName } from "@/lib/athleteName";
 import { STAGE_CATEGORY_OPTIONS, stageCategoryFormValue } from "@/lib/stageCategory";
 import {
@@ -181,6 +182,8 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
           )}
         </div>
       )}
+
+      <CourseImportsSection course={{ id: stage.id, label: stage.name ?? stage.location }} />
     </div>
   );
 }

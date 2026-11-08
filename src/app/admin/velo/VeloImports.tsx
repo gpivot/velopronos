@@ -13,8 +13,8 @@ import { CourseImports } from "./CourseImports";
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 const KIND_LABELS = COURSE_KIND_LABELS;
 
-/** Imports vélo de l'onglet Calendrier : calendrier de la saison, course à la main, puis par course. */
-export function VeloImports({ seasonId, courses }: { seasonId: string; courses: Array<{ id: string; label: string }> }) {
+/** Imports d'une saison (page de la saison) : calendrier, course à la main, coureurs de la saison. */
+export function SeasonImports({ seasonId }: { seasonId: string }) {
   return (
     <>
       <section className="flex flex-col gap-3">
@@ -60,15 +60,16 @@ export function VeloImports({ seasonId, courses }: { seasonId: string; courses: 
         />
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h3 className="text-lg font-semibold">3. Étapes, coureurs et cotes d’une course</h3>
-        <CourseImports
-          courses={courses}
-          stagesHeaders={COURSE_STAGES_HEADERS}
-          ridersHeaders={COURSE_RIDERS_HEADERS}
-          teamsHeaders={COURSE_TEAMS_HEADERS}
-        />
-      </section>
     </>
+  );
+}
+
+/** Imports d'une course (page de la course) : étapes, coureurs et cotes, équipes. */
+export function CourseImportsSection({ course }: { course: { id: string; label: string } }) {
+  return (
+    <section className="flex flex-col gap-3">
+      <h2 className="text-lg font-semibold">Étapes, coureurs et cotes de la course</h2>
+      <CourseImports courses={[course]} stagesHeaders={COURSE_STAGES_HEADERS} ridersHeaders={COURSE_RIDERS_HEADERS} teamsHeaders={COURSE_TEAMS_HEADERS} />
+    </section>
   );
 }

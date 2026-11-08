@@ -21,11 +21,9 @@ import {
   createSeason,
   removeSeason,
   removeStage,
-  setJokersApplied,
 } from "./calendrier/actions";
 import { removeRace } from "./races/[raceId]/actions";
 import { COURSE_KIND_LABELS, type CourseKind } from "@/lib/velo/courses";
-import { VeloImports } from "./velo/VeloImports";
 
 export const dynamic = "force-dynamic";
 
@@ -67,61 +65,45 @@ export default async function AdminCalendarResultsPage() {
 
         <div className="flex flex-col gap-2">
           {(seasons ?? []).map((s) => (
-            <details key={s.id} className="rounded-xl border border-border bg-card">
-              <summary className="flex cursor-pointer items-center justify-between gap-3 px-4 py-3">
-                <div>
-                  <div className="text-sm font-semibold">{s.label}</div>
-                  <div className="text-xs text-text-dim">
-                    {s.starts_on} → {s.ends_on}
-                  </div>
+            <div key={s.id} className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3">
+              <Link href={`/admin/seasons/${s.id}`} className="min-w-0 flex-1">
+                <div className="text-sm font-semibold">{s.label}</div>
+                <div className="text-xs text-text-dim">
+                  {s.starts_on} → {s.ends_on}
                 </div>
-                <div className="flex items-center gap-2">
-                  {s.status === "active" ? (
-                    <span className="rounded-full bg-ice-soft px-3 py-1 text-xs font-semibold text-ice">active</span>
-                  ) : (
-                    <form action={activateSeason}>
-                      <input type="hidden" name="season_id" value={s.id} />
-                      <button type="submit" className="rounded border border-border px-3 py-1 text-xs">
-                        Activer
-                      </button>
-                    </form>
-                  )}
-                  <form action={removeSeason}>
+              </Link>
+              <div className="flex items-center gap-2">
+                {s.status === "active" ? (
+                  <span className="rounded-full bg-ice-soft px-3 py-1 text-xs font-semibold text-ice">active</span>
+                ) : (
+                  <form action={activateSeason}>
                     <input type="hidden" name="season_id" value={s.id} />
-                    <ConfirmButton
-                      title="Supprimer la saison"
-                      requireText={s.label}
-                      message={`Supprimer la saison ${s.label} ? Tout ce qui en dépend sera définitivement effacé : étapes, courses, athlètes, cotes, pronostics, résultats, points, classements, ligues, cartes et Pépites.`}
-                      className={trashClass}
-                    >
-                      <TrashIcon className="h-4 w-4" />
-                    </ConfirmButton>
+                    <button type="submit" className="rounded border border-border px-3 py-1 text-xs">
+                      Activer
+                    </button>
                   </form>
-                </div>
-              </summary>
-              <div className="flex flex-col gap-3 border-t border-border px-4 py-3">
-                <form action={setJokersApplied} className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-3">
+                )}
+                <Link
+                  href={`/admin/seasons/${s.id}`}
+                  title="Modifier la saison et importer son calendrier"
+                  aria-label="Modifier la saison"
+                  className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border text-text-dim hover:text-ice"
+                >
+                  <PencilIcon className="h-4 w-4" />
+                </Link>
+                <form action={removeSeason}>
                   <input type="hidden" name="season_id" value={s.id} />
-                  <input type="hidden" name="applied" value={s.jokers_applied ? "0" : "1"} />
-                  <div className="flex-1 text-xs text-text-dim">
-                    <b className="text-frost">Jokers de fin de saison</b> : {s.jokers_applied ? "appliqués au classement." : "pas encore appliqués."}{" "}
-                    Les 3 plus mauvaises courses individuelles et les 2 plus mauvais relais de chaque joueur (hors
-                    Mondiaux/JO, courses non jouées d&apos;abord) sont retirés du classement. À activer quand la dernière
-                    course est notée ; les joueurs en voient l&apos;aperçu dans Ma saison.
-                  </div>
                   <ConfirmButton
-                    message={
-                      s.jokers_applied
-                        ? "Retirer les jokers du classement ?"
-                        : "Appliquer les jokers de fin de saison au classement ? (réversible)"
-                    }
-                    className="rounded border border-border px-3 py-1 text-xs"
+                    title="Supprimer la saison"
+                    requireText={s.label}
+                    message={`Supprimer la saison ${s.label} ? Tout ce qui en dépend sera définitivement effacé : courses, étapes, coureurs, cotes, pronostics, résultats, points, classements, ligues et cartes.`}
+                    className={trashClass}
                   >
-                    {s.jokers_applied ? "Retirer les jokers" : "Appliquer les jokers"}
+                    <TrashIcon className="h-4 w-4" />
                   </ConfirmButton>
                 </form>
               </div>
-            </details>
+            </div>
           ))}
           {(!seasons || seasons.length === 0) && (
             <p className="text-sm text-text-dim">Aucune saison. Crée-en une ci-dessous pour commencer.</p>
@@ -240,7 +222,7 @@ export default async function AdminCalendarResultsPage() {
                         </form>
                       </div>
                     ))}
-                    {stage.races.length === 0 && <p className="px-2 text-xs text-text-dim">Aucune étape : importe le fichier des étapes ci-dessous.</p>}
+                    {stage.races.length === 0 && <p className="px-2 text-xs text-text-dim">Aucune étape : importe le fichier des étapes avec le crayon de la course.</p>}
 
                     <form action={createRace} className="mt-2 flex flex-wrap gap-2 border-t border-border/50 px-2 pt-3">
                       <input type="hidden" name="stage_id" value={stage.id} />
@@ -272,11 +254,14 @@ export default async function AdminCalendarResultsPage() {
             })}
 
             {sortedStages.length === 0 && (
-              <p className="text-sm text-text-dim">Aucune course pour cette saison : importe le calendrier ci-dessous.</p>
+              <p className="text-sm text-text-dim">Aucune course pour cette saison : importe le calendrier avec le crayon de la saison.</p>
             )}
           </div>
 
-          <VeloImports seasonId={season.id} courses={sortedStages.map((c) => ({ id: c.id, label: `${c.name ?? c.location} (${c.starts_on})` }))} />
+          <p className="text-xs text-text-dim">
+            Imports : le calendrier et les coureurs de la saison avec le crayon de la saison, les étapes, coureurs et équipes
+            d&apos;une course avec le crayon de la course.
+          </p>
         </section>
       )}
     </div>
