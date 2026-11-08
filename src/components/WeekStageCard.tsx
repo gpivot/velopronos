@@ -213,7 +213,7 @@ export async function RestWeekCard() {
     <div className="flex flex-col gap-2">
       <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("weekStageTitle")}</div>
       <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-4">
-        <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-ice-soft text-2xl">🎿</div>
+        <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-ice-soft text-2xl">🏖️</div>
         <div className="text-[13px] font-semibold leading-snug text-frost">{t("restWeek")}</div>
       </div>
     </div>

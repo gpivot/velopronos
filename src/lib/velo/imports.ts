@@ -229,6 +229,8 @@ export interface ParsedStage {
   elevationM: number | null;
   date: string;
   time: string;
+  /** Pays de l'étape (code CIO), null si le fichier ne le donne pas. */
+  countryCode: string | null;
 }
 
 function parseNumber(value: string | undefined): number | null {
@@ -287,6 +289,7 @@ export function parseCourseStages(
       elevationM: elevation == null ? null : Math.round(elevation),
       date: addDays(date, shiftDays),
       time,
+      countryCode: normalizeNationCode(row["country_code"]) ?? normalizeNationCode(row["pays"]) ?? null,
     });
   });
   return { stages, restDays, warnings };
@@ -321,6 +324,9 @@ export async function importCourseStages(
   const idByNumber = new Map((existing ?? []).map((r) => [r.stage_number as number | null, r.id as string]));
   // Classique : étape unique sans numéro, reprise (et mise à jour) par la ligne du fichier.
   const isOneDay = course?.kind === "one_day";
+  await ensureNations(admin, stages.map((s) => s.countryCode).filter((c): c is string => !!c));
+  // Pays de l'étape (migration 0059) : sans la migration, l'import continue sans lui.
+  let withCountry = true;
 
   for (const stage of stages) {
     const stageNumber = isOneDay ? null : stage.stageNumber;
@@ -334,15 +340,21 @@ export async function importCourseStages(
       locks_at: parisTimeToUtcIso(stage.date, stage.time),
     };
     const id = idByNumber.get(stageNumber) ?? (isOneDay ? idByNumber.get(1) : undefined);
-    if (id) {
-      const { error } = await admin.from("races").update(fields).eq("id", id);
-      if (error) summary.warnings.push(`Étape ${stage.stageNumber} : ${error.message}`);
-      else summary.updated++;
-    } else {
-      const { error } = await admin.from("races").insert({ ...fields, stage_id: stageId, sex: "H", status: "upcoming" });
-      if (error) summary.warnings.push(`Étape ${stage.stageNumber} : ${error.message}`);
-      else summary.created++;
+    const write = (withPays: boolean) => {
+      const row = withPays && stage.countryCode ? { ...fields, country_code: stage.countryCode } : fields;
+      return id
+        ? admin.from("races").update(row).eq("id", id)
+        : admin.from("races").insert({ ...row, stage_id: stageId, sex: "H", status: "upcoming" });
+    };
+    let { error } = await write(withCountry);
+    if (error && withCountry && error.message.includes("country_code")) {
+      withCountry = false;
+      summary.warnings.push("Pays des étapes ignoré : colle la migration 0059 dans Supabase puis réimporte.");
+      ({ error } = await write(false));
     }
+    if (error) summary.warnings.push(`Étape ${stage.stageNumber} : ${error.message}`);
+    else if (id) summary.updated++;
+    else summary.created++;
   }
 
   const dates = [...stages.map((s) => s.date), ...restDays].sort();

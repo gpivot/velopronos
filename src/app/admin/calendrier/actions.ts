@@ -9,6 +9,7 @@ import { importCalendarCsv } from "@/lib/admin/calendarImport";
 import { deleteStage, recomputeSeasonStreaks } from "@/lib/admin/raceResults";
 import { stageCategoryFields } from "@/lib/stageCategory";
 import { COURSE_CATEGORIES, COURSE_KINDS, JERSEY_TYPES } from "@/lib/velo/courses";
+import { MOUNTAIN_COLORS, POINTS_COLORS } from "@/lib/velo/jerseyColors";
 import { fillCourseOddsFromSeason } from "@/lib/velo/imports";
 import type { CsvActionResult } from "../_components/CsvImportPanel";
 
@@ -193,5 +194,12 @@ function courseFormFields(formData: FormData) {
     category: (COURSE_CATEGORIES as string[]).includes(category) ? category : null,
     jersey_color: /^#[0-9a-fA-F]{6}$/.test(color) ? color : null,
     jerseys,
+    // Couleurs des maillots sprint et montagne (migration 0059), seulement si le formulaire les donne.
+    ...(formData.has("points_jersey_color")
+      ? { points_jersey_color: POINTS_COLORS.some((c) => c.value === formData.get("points_jersey_color")) ? String(formData.get("points_jersey_color")) : null }
+      : {}),
+    ...(formData.has("mountain_jersey_color")
+      ? { mountain_jersey_color: MOUNTAIN_COLORS.some((c) => c.value === formData.get("mountain_jersey_color")) ? String(formData.get("mountain_jersey_color")) : null }
+      : {}),
   };
 }

@@ -299,6 +299,42 @@ route ne fait rien en dehors de 7 h et 17 h de Paris et traite une course par ap
 10 minutes). Durée d'un appel : jusqu'à 300 s (`maxDuration`), ce qui suppose « Fluid compute »
 activé sur Vercel (réglage par défaut des projets récents).
 
+## Demandes du 08/11/2026 (admin, classement, Grands Tours)
+
+- **Admin** : les saisons ont un crayon (page `/admin/seasons/<id>` : nom, dates, import du
+  calendrier, création d'une course, import des coureurs de la saison). La page d'une course
+  (crayon) contient les imports étapes, coureurs et équipes de cette course. Le combatif du jour se
+  saisit sous le top 10. L'onglet Cartes bonus plantait (carte Chat noir sans libellé) : corrigé,
+  libellés vélo, option « Débloquer tout de suite » retirée (sans effet en vélo).
+- **Joker retardataire** : il reste ouvert sur toutes les classiques (confirmé par Guillaume).
+- **Classement** : encadré « Mon classement » > « Jokers de fin de saison » en accordéon : courses
+  jouées, retenues ou écartées par la règle des résultats retenus, et points écartés
+  (`getPlayerRetainedCourses`).
+- **Calendrier (Ma saison)** : jours de repos affichés entre les étapes (« 🏖️ Repos · date ») ;
+  pastille de couleur par type d'étape (`src/lib/velo/stageTypeStyle.ts` : sprint vert, montagne
+  blanc à pois rouges, baroudeurs bleu, CLM jaune, CLM par équipes jaune foncé, classique orange
+  brique, *à confirmer*) ; petit drapeau du pays de l'étape.
+- **Pays de l'étape** (`races.country_code`, migration 0059) : lu dans la colonne `country_code`
+  (ou `pays`) du fichier des étapes, modifiable dans la fiche de l'étape.
+- **Profil de l'étape** (`races.profile_image_url`, stockage public `stage-profiles`, migration
+  0059) : image PNG/JPG/WebP de 5 Mo maximum envoyée depuis la fiche de l'étape, affichée au-dessus
+  de « L'avis de VéloPronos ».
+- **Couleurs des maillots** au choix dans la fiche de la course : leader jaune, rose ou rouge
+  (`stages.jersey_color`) ; sprint vert ou cyclamen ; montagne à pois rouges, à pois bleus ou bleu
+  (`stages.points_jersey_color`, `stages.mountain_jersey_color`, migration 0059). Par défaut :
+  Giro cyclamen et bleu, Vuelta vert et pois bleus, sinon vert et pois rouges
+  (`src/lib/velo/jerseyColors.ts`).
+- **Import des étapes** : variantes de contre-la-montre reconnues (« CLM individuel », « Contre la
+  montre », « ITT », « Chrono », « Cronometro » ; « TTT » ou « équipes » = CLM par équipes) ; heure
+  avec secondes (« 13:10:00 ») ou plage de départ d'un CLM (« 13:10-17:25 » = 13:10). Le fichier du
+  Giro n'est pas dans le dépôt : correctif à vérifier avec lui (*à confirmer*).
+- **Heures d'import** : toutes les heures des fichiers sont lues en heure de Paris (été comme hiver)
+  et enregistrées en UTC ; l'app les affiche en heure de Paris. Rien à changer.
+- **Picto de la semaine sans course** (accueil) : 🏖️ au lieu du ski.
+- **Équipe de cœur et nation favorite** : déjà le cas, la carte Équipe d'un Grand Tour reprend
+  l'équipe de cœur de la saison tant que le joueur n'en choisit pas une autre pour ce Grand Tour ;
+  la nation favorite est choisie pour la saison.
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :

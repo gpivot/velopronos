@@ -14,7 +14,9 @@ import {
   COURSE_KINDS,
   JERSEY_LABELS,
   JERSEY_TYPES,
+  defaultJerseyColor,
 } from "@/lib/velo/courses";
+import { LEADER_COLORS, MOUNTAIN_COLORS, POINTS_COLORS, defaultSecondaryJerseys } from "@/lib/velo/jerseyColors";
 
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
@@ -30,6 +32,12 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
     admin.from("nations").select("*").order("name"),
   ]);
   if (!stage) notFound();
+
+  // Couleurs des maillots au choix (jerseyColors.ts) ; un ancien hexadécimal libre retombe sur le plus proche des 3.
+  const jerseyDefaults = defaultSecondaryJerseys(stage.name ?? stage.location ?? "");
+  const leaderColor = LEADER_COLORS.some((c) => c.value === stage.jersey_color)
+    ? (stage.jersey_color as string)
+    : (defaultJerseyColor(stage.name ?? "", stage.kind) ?? "#FFD200");
 
   const hasFinishedRace = ((stage.races ?? []) as { status: string }[]).some((r) => r.status === "finished");
 
@@ -115,7 +123,33 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
           </select>
           <label className="flex items-center gap-1.5 text-xs text-text-dim">
             Maillot de leader
-            <input name="jersey_color" type="color" defaultValue={stage.jersey_color ?? "#FFD200"} className="h-8 w-10 rounded border border-border bg-bg" />
+            <select name="jersey_color" defaultValue={leaderColor} className={inputClass}>
+              {LEADER_COLORS.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex items-center gap-1.5 text-xs text-text-dim">
+            Maillot sprint
+            <select name="points_jersey_color" defaultValue={stage.points_jersey_color ?? jerseyDefaults.points} className={inputClass}>
+              {POINTS_COLORS.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex items-center gap-1.5 text-xs text-text-dim">
+            Maillot montagne
+            <select name="mountain_jersey_color" defaultValue={stage.mountain_jersey_color ?? jerseyDefaults.mountain} className={inputClass}>
+              {MOUNTAIN_COLORS.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
         <div className="flex flex-wrap items-center gap-3 text-xs text-text-dim">

@@ -5,6 +5,7 @@ import { fromDateTimeLocalParis, isSpecialRuleAllowed, stageFormFields } from ".
 import { createAdminClient } from "@/lib/supabase/server";
 import { fillCourseOddsFromSeason } from "@/lib/velo/imports";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
+import { normalizeNationCode, NATION_NAMES } from "@/lib/nationFlags";
 import { fetchIbuResults, fetchIbuStartList } from "@/lib/admin/ibuResults";
 import { aiResultToCsv, fetchAiStageResults, findRiderByName, officialSiteFor } from "@/lib/admin/aiStageResults";
 import { toParisWallTime } from "@/lib/displayTimeZone";
@@ -274,18 +275,27 @@ export async function updateRace(formData: FormData) {
     if ((race?.stages as unknown as { coefficient: number } | null)?.coefficient === 2) throw new Error("Pas d'étape malus ni de Fête nationale sur une course ×2 (monuments, Mondiaux).");
   }
 
-  const { data: updated, error } = await admin
-    .from("races")
-    .update({
-      format,
-      sex: "H",
-      ...stageFormFields(formData),
-      locks_at: fromDateTimeLocalParis(String(formData.get("locks_at"))),
-      special_rule: specialRule === "" ? null : specialRule,
-    })
-    .eq("id", raceId)
-    .select("stage_id")
-    .single();
+  const fields = {
+    format,
+    sex: "H",
+    ...stageFormFields(formData),
+    locks_at: fromDateTimeLocalParis(String(formData.get("locks_at"))),
+    special_rule: specialRule === "" ? null : specialRule,
+  };
+  // Pays de l'étape (migration 0059) : sans la migration, le reste est enregistré quand même.
+  const countryCode = normalizeNationCode(String(formData.get("country_code") ?? ""));
+  if (countryCode) {
+    await admin.from("nations").upsert({ code: countryCode, name: NATION_NAMES[countryCode] ?? countryCode }, { onConflict: "code", ignoreDuplicates: true });
+  }
+  const save = (withCountry: boolean) =>
+    admin
+      .from("races")
+      .update(withCountry && formData.has("country_code") ? { ...fields, country_code: countryCode ?? null } : fields)
+      .eq("id", raceId)
+      .select("stage_id")
+      .single();
+  let { data: updated, error } = await save(true);
+  if (error?.message.includes("country_code")) ({ data: updated, error } = await save(false));
   if (error) throw new Error(error.message);
   // Nouveau type d'étape (ex. Classique) : les engagés sans cote de ce type reprennent celle de la saison.
   if (updated?.stage_id) await fillCourseOddsFromSeason(admin, updated.stage_id as string);
@@ -344,4 +354,46 @@ export async function removeRace(formData: FormData) {
   await deleteRace(createAdminClient(), String(formData.get("race_id")));
   revalidatePath("/admin", "layout");
   if (formData.get("redirect") === "1") redirect("/admin");
+}
+
+/** Profil de l'étape (image) : envoyé dans le stockage public « stage-profiles » (migration 0059). */
+export async function uploadStageProfile(formData: FormData) {
+  await requireAdmin();
+  const raceId = String(formData.get("race_id"));
+  const file = formData.get("profile");
+  if (!(file instanceof File) || file.size === 0) throw new Error("Choisis une image PNG ou JPG.");
+  if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) throw new Error("Format accepté : PNG, JPG ou WebP.");
+  if (file.size > 5 * 1024 * 1024) throw new Error("Image trop lourde (5 Mo maximum).");
+  const admin = createAdminClient();
+  const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+  const path = `${raceId}/${Date.now()}.${extension}`;
+  const { error: uploadError } = await admin.storage
+    .from("stage-profiles")
+    .upload(path, Buffer.from(await file.arrayBuffer()), { contentType: file.type, upsert: true });
+  if (uploadError) throw new Error(`${uploadError.message} (migration 0059 appliquée ?)`);
+  const { data } = admin.storage.from("stage-profiles").getPublicUrl(path);
+  const { data: previous } = await admin.from("races").select("profile_image_url").eq("id", raceId).maybeSingle();
+  const { error } = await admin.from("races").update({ profile_image_url: data.publicUrl }).eq("id", raceId);
+  if (error) throw new Error(`${error.message} (migration 0059 appliquée ?)`);
+  await removeStoredProfile(admin, previous?.profile_image_url ?? null);
+  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
+}
+
+export async function removeStageProfile(formData: FormData) {
+  await requireAdmin();
+  const raceId = String(formData.get("race_id"));
+  const admin = createAdminClient();
+  const { data: previous } = await admin.from("races").select("profile_image_url").eq("id", raceId).maybeSingle();
+  const { error } = await admin.from("races").update({ profile_image_url: null }).eq("id", raceId);
+  if (error) throw new Error(error.message);
+  await removeStoredProfile(admin, previous?.profile_image_url ?? null);
+  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
+}
+
+/** Supprime l'ancien fichier du stockage (l'URL publique finit par « /stage-profiles/<chemin> »). */
+async function removeStoredProfile(admin: ReturnType<typeof createAdminClient>, url: string | null) {
+  const path = url?.split("/stage-profiles/")[1];
+  if (path) await admin.storage.from("stage-profiles").remove([decodeURIComponent(path)]);
 }

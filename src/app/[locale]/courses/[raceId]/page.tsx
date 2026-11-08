@@ -451,6 +451,16 @@ export default async function RacePage({
           )}
         </div>
 
+        {typeof race.profile_image_url === "string" && race.profile_image_url && (
+          // Profil de l'étape envoyé par l'admin (migration 0059), au-dessus de l'avis.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={race.profile_image_url}
+            alt={t("profileAlt")}
+            className="w-full rounded-2xl border border-border bg-white object-contain"
+            loading="lazy"
+          />
+        )}
         {opinion && <RaceOpinion title={t("opinionTitle")} text={opinion} />}
 
         {/* Questions bonus juste sous l'avis, pour qu'elles soient vues (avant le départ et en live). */}
