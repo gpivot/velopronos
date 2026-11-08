@@ -5,15 +5,14 @@ import { saveCardSetting } from "./actions";
 
 export const dynamic = "force-dynamic";
 
+// VéloPronos : libellés des cartes (docs/velopronos/schema-velo.md, « Séries et cartes bonus »).
 const CARD_LABELS: Record<string, { name: string; hint: string }> = {
-  fondue: { name: "Grillade", hint: "Dégrille une fois ses coureurs, sur la course de son choix." },
-  ca_farte: { name: "Ça farte", hint: "×3 sur un biathlète, sur la course de son choix." },
-  balle_de_pioche: { name: "Balle de pioche", hint: "4 biathlètes sur les 4 prochaines courses, les 3 meilleurs comptent." },
-  aspiration: { name: "Aspiration", hint: "Chaque biathlète compte une place plus haut. Débloquée d'office à la 4e étape." },
-  equipe: { name: "Équipe", hint: "La cote de chaque biathlète de l'équipe favorite dans le Top 10. Débloquée d'office après les Mondiaux/JO." },
-  fusee: { name: "Fusée", hint: "Sur une étape : +100 / +50 / +20 pour les 1er / 2e / 3e temps de ski." },
-  gachette: { name: "Gâchette", hint: "Sur une étape : +100 par 20/20, +50 par 10/10 au sprint." },
-  talent: { name: "Talent", hint: "Après une pépite révélée : la réactiver ou en choisir une nouvelle." },
+  fondue: { name: "Grillade", hint: "Dégrille une fois ses coureurs, sur l'étape de son choix." },
+  ca_farte: { name: "Boost ×3", hint: "×3 sur un coureur, sur l'étape de son choix." },
+  balle_de_pioche: { name: "4e choix", hint: "4 coureurs sur les 3 prochaines étapes, les 3 meilleurs comptent." },
+  aspiration: { name: "Aspiration", hint: "Chaque coureur pronostiqué compte une place plus haut, sur l'étape de son choix." },
+  equipe: { name: "Équipe", hint: "Grands Tours : à partir de l'étape 10, chaque coureur de l'équipe de cœur dans le Top 10 rapporte sa cote." },
+  chat_noir: { name: "Chat noir", hint: "Remplace une fois un coureur abandonné (maillot ou porteur d'eau), jusqu'au 1er repos après l'étape 8." },
 };
 
 /** Jour (heure de Paris) d'un instant enregistré, pour un input date. */
@@ -38,13 +37,12 @@ export default async function AdminCardsPage() {
 
       <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4 text-sm leading-relaxed text-text-dim">
         <p>
-          Choisis les cartes proposées au 10/10 et la période où elles le sont. Une carte <strong className="text-frost">désactivée</strong>{" "}
+          Choisis les cartes proposées après une série de 5 étapes et la période où elles le sont. Une carte <strong className="text-frost">désactivée</strong>{" "}
           n&apos;apparaît plus dans le choix ; <strong className="text-frost">hors de sa période</strong>, elle est grisée. Les cartes déjà
           prises par les joueurs restent jouables.
         </p>
         <p>
-          Dates vides = pas de limite. « Débloquer tout de suite » ignore l&apos;attente automatique d&apos;Aspiration (4e étape) et
-          d&apos;Équipe (après les Mondiaux/JO). Aucune carte ne se joue sur les courses des Mondiaux/JO.
+          Dates vides = pas de limite. Aucune carte ne se joue sur une course ×2 ni hors classement.
         </p>
       </div>
 
@@ -54,7 +52,7 @@ export default async function AdminCardsPage() {
         <div className="flex flex-col gap-3">
           {CLAIMABLE_CARD_TYPES.map((type) => {
             const setting = byType.get(type);
-            const label = CARD_LABELS[type];
+            const label = CARD_LABELS[type] ?? { name: type, hint: "" };
             return (
               <form
                 key={type}
@@ -89,12 +87,6 @@ export default async function AdminCardsPage() {
                     className="rounded border border-border bg-bg px-2 py-1 text-sm text-text"
                   />
                 </label>
-                {((type as string) === "aspiration" || (type as string) === "equipe") && (
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" name="force_unlock" defaultChecked={setting?.force_unlock ?? false} />
-                    Débloquer tout de suite
-                  </label>
-                )}
                 <button type="submit" className="rounded-lg bg-ice px-3 py-1.5 font-semibold text-on-ice">
                   Enregistrer
                 </button>
