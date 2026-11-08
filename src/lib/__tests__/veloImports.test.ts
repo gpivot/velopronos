@@ -141,3 +141,20 @@ describe("cote Classique", () => {
     expect(riders[0].odds).toEqual({ sprint: 8, montagne: 60, clm: 40, baroudeurs: 6, classique: 2 });
   });
 });
+
+describe("fichiers d'étapes du Giro (CLM)", () => {
+  it("reconnaît les variantes de contre-la-montre", () => {
+    expect(parseStageType("CLM individuel")).toBe("clm");
+    expect(parseStageType("Contre la montre")).toBe("clm");
+    expect(parseStageType("ITT")).toBe("clm");
+    expect(parseStageType("Cronometro")).toBe("clm");
+    expect(parseStageType("CLM par équipes")).toBe("clm_equipes");
+    expect(parseStageType("TTT")).toBe("clm_equipes");
+  });
+
+  it("lit les heures avec secondes et les plages de départ d'un CLM", () => {
+    expect(parseTime("13:10:00")).toBe("13:10");
+    expect(parseTime("13:10-17:25")).toBe("13:10");
+    expect(parseTime("13h10 - 17h25")).toBe("13:10");
+  });
+});
