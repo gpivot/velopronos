@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Petite icône des notifications (Android l'affiche en blanc) : la roue du logo VéloPronos. -->
+<!-- Petite icône des notifications (Android l'affiche en blanc) : la roue du logo VéloPronos et ses traits de vitesse. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="48"
-    android:viewportHeight="48">
+    android:viewportWidth="140"
+    android:viewportHeight="140">
     <path
         android:strokeColor="#FFFFFFFF"
-        android:strokeWidth="3.6"
-        android:pathData="M24,8a16,16 0,1 1,0 32a16,16 0,1 1,0 -32" />
-    <path
-        android:strokeColor="#FFFFFFFF"
-        android:strokeWidth="1.8"
+        android:strokeWidth="8"
         android:strokeLineCap="round"
-        android:pathData="M27.00,24.00L36.50,24.00M26.12,26.12L32.84,32.84M24.00,27.00L24.00,36.50M21.88,26.12L15.16,32.84M21.00,24.00L11.50,24.00M21.88,21.88L15.16,15.16M24.00,21.00L24.00,11.50M26.12,21.88L32.84,15.16" />
+        android:pathData="M6,39.5L30,39.5M6,53.5L16,53.5" />
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="16"
+        android:pathData="M84,26a44,44 0,1 1,0 88a44,44 0,1 1,0 -88" />
     <path
         android:fillColor="#FFFFFFFF"
-        android:pathData="M24,20a4,4 0,1 1,0 8a4,4 0,1 1,0 -8z" />
+        android:pathData="M84,65a5,5 0,1 1,0 10a5,5 0,1 1,0 -10z" />
 </vector>

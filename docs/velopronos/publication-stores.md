@@ -11,8 +11,8 @@ Cloud Messaging, builds sur Codemagic (`codemagic.yaml`).
 | Identifiant Android | `fr.velopronos.app` (nouvelle fiche, compte organisation) | `mobile/android/app/build.gradle`, `capacitor.config.ts` |
 | Identifiant iOS | `com.base6a1f0e7a3cd8ee2103802f51.app` (appli VéloPronos déjà sur l'App Store) | `project.pbxproj` |
 | Version | iOS 2.0 (build = numéro Codemagic) ; Android 2.0.<build> | `codemagic.yaml` |
-| Icône et écran de démarrage | **Provisoires** : roue de vélo jaune sur fond marron, mot « VéloPronos » | sources `mobile/assets/`, regénérés par `npm run assets` dans `mobile/` |
-| Petite icône des notifications Android | la roue, en blanc | `res/drawable/ic_stat_notify.xml` |
+| Icône et écran de démarrage | Logo VéloPronos (roue blanche, traits de vitesse blanc et jaune `#EEC748`, fond `#1B160D`) ; écran de démarrage avec « VéloPronos » en Poppins ExtraBold | sources `mobile/assets/`, regénérés par `npm run assets` dans `mobile/` |
+| Petite icône des notifications Android | la roue et ses traits, en blanc | `res/drawable/ic_stat_notify.xml` |
 | Écran hors ligne | bouton « Réessayer » vers `www.velopronos.fr` | `mobile/www/` |
 | Adresse ouverte par l'appli | `www.velopronos.fr`, ou `VELOPRONOS_URL` si fourni au build | `capacitor.config.ts`, `codemagic.yaml` |
 | Signature, envoi TestFlight | clé « VeloPronos » (Android) et intégration « VeloPronos » (iOS) dans Codemagic | `codemagic.yaml` |
@@ -129,9 +129,10 @@ Dans console.cloud.google.com, projet du Firebase VéloPronos :
 
 ## À confirmer par Guillaume
 
-- **Icône** : version provisoire faite à partir du logo du site (roue de vélo). Le logo de
-  l'ancienne appli VéloPronos est-il à reprendre ? Si oui, fournir l'image en 1024 × 1024.
-  Le logo du site (`LogoMark`, `src/components/icons.tsx`) est encore la cible du biathlon.
+- **Logo** (09/11/2026) : redessiné d'après la capture fournie par Guillaume (pas de fichier
+  source vectoriel). Il remplace la cible du biathlon dans l'appli et sur le site (`LogoMark`,
+  `src/components/icons.tsx`). « Pronos » passe en jaune sur la page d'accueil, comme le logo.
+  Si un fichier source (SVG ou PNG 1024 × 1024) existe, le fournir pour vérifier les proportions.
 - **Compte Apple** : l'appli `com.base6a1f0e7a3cd8ee2103802f51.app` est-elle bien dans l'équipe
   Apple Developer de Guillaume (et pas dans celle de base44) ? Sinon, demander son transfert
   (App Store Connect > Applis > Transfert) ou créer un nouvel identifiant.
