@@ -46,6 +46,7 @@ avec le nouveau schéma et les écrans vélo.
   - Mis à jour : `mobile/capacitor.config.ts`, `mobile/android` (build.gradle, strings.xml, dossier
     Java, couleur des notifications), `mobile/ios` (project.pbxproj, Info.plist), `codemagic.yaml`
     (signatures et intégration nommées « VeloPronos » dans Codemagic).
+  - **Pas à pas stores et notifications** (09/11/2026) : `publication-stores.md`.
   - **Reste à faire** : un projet Firebase VéloPronos avec les deux applis, puis remplacer
     `mobile/android/app/google-services.json` et `mobile/ios/App/App/GoogleService-Info.plist`
     (ceux de Biathlonpronos sont encore en place : le build Android échouera tant qu'ils ne sont

@@ -6,6 +6,14 @@ import type { CapacitorConfig } from "@capacitor/cli";
  * repasser par les stores. Seuls les changements natifs (plugins, icône…) demandent une
  * nouvelle version.
  */
+/**
+ * Adresse du site ouverte par l'appli. Par défaut le domaine définitif ; pour un build de test
+ * avant la bascule du domaine (velopronos.fr pointe encore vers base44), Codemagic peut fournir
+ * VELOPRONOS_URL, par exemple https://velopronos.vercel.app/ (voir docs/velopronos/publication-stores.md).
+ */
+const siteUrl = process.env.VELOPRONOS_URL || "https://www.velopronos.fr/";
+const siteHost = new URL(siteUrl).hostname;
+
 const config: CapacitorConfig = {
   // Identifiants (Guillaume, 04/11/2026) : Android fr.velopronos.app (nouvelle fiche, compte
   // organisation) ; iOS com.base6a1f0e7a3cd8ee2103802f51.app, celui de l'appli VéloPronos déjà
@@ -16,10 +24,10 @@ const config: CapacitorConfig = {
   webDir: "www",
   server: {
     // Domaine à confirmer (velopronos.fr pointe encore vers l'app base44).
-    url: "https://www.velopronos.fr/",
+    url: siteUrl,
     errorPath: "offline.html",
     // Liens vers ces domaines restent dans l'appli ; les autres s'ouvrent dans le navigateur.
-    allowNavigation: ["www.velopronos.fr", "velopronos.fr"],
+    allowNavigation: Array.from(new Set([siteHost, "www.velopronos.fr", "velopronos.fr"])),
   },
   backgroundColor: "#1b130d",
   android: {
