@@ -11,7 +11,7 @@ export type CourseCategory =
   | "world_tour"
   | "world_champs"
   | "national_championships";
-export type StageType = "sprint" | "montagne" | "clm" | "baroudeurs" | "clm_equipes";
+export type StageType = "sprint" | "montagne" | "clm" | "baroudeurs" | "classique" | "clm_equipes";
 export type JerseyType = "general" | "points" | "montagne" | "jeune" | "combatif" | "equipe";
 
 export const COURSE_KINDS: CourseKind[] = ["one_day", "stage_race", "grand_tour", "bonus_event"];
@@ -47,6 +47,7 @@ export const STAGE_TYPE_LABELS: Record<StageType, string> = {
   montagne: "Montagne",
   clm: "Contre-la-montre",
   baroudeurs: "Baroudeurs",
+  classique: "Classique",
   clm_equipes: "CLM par équipes",
 };
 
@@ -62,13 +63,28 @@ const STAGE_TYPE_ALIASES: Record<string, StageType> = {
   baroudeur: "baroudeurs",
   accidentee: "baroudeurs",
   breakaway: "baroudeurs",
+  classique: "classique",
+  classic: "classique",
+  classics: "classique",
+  classiques: "classique",
   clme: "clm_equipes",
   "clm par equipes": "clm_equipes",
   team_time_trial: "clm_equipes",
 };
 
 export function parseStageType(label: string | undefined): StageType | null {
-  return STAGE_TYPE_ALIASES[normalizeLabel(label ?? "")] ?? null;
+  const key = normalizeLabel(label ?? "");
+  const exact = STAGE_TYPE_ALIASES[key];
+  if (exact) return exact;
+  // Variantes des fichiers (ex. Giro : « CLM individuel », « Contre la montre », « ITT », « Chrono ») :
+  // un contre-la-montre par équipes se reconnaît à « équipe », « team » ou « TTT ».
+  const words = key.replace(/[^a-z0-9]+/g, " ");
+  if (/\b(ttt|clme|cre|cle)\b|team time|equipes?\b.*(clm|contre|chrono)|(clm|contre|chrono).*\bequipes?\b/.test(words)) return "clm_equipes";
+  if (/\b(clm|itt|tt|chrono|cronometro|contrarreloj)\b|contre la montre|time trial|prologue/.test(words)) return "clm";
+  if (/\bsprint\b/.test(words)) return "sprint";
+  if (/\b(montagne|mountain|haute montagne|montana|montagna)\b/.test(words)) return "montagne";
+  if (/\b(baroudeurs?|accidentee|vallonnee|hilly|breakaway)\b/.test(words)) return "baroudeurs";
+  return null;
 }
 
 export const JERSEY_LABELS: Record<JerseyType, string> = {
@@ -112,6 +128,13 @@ export function defaultJerseyColor(name: string, kind: CourseKind): string | nul
 
 const MONUMENT_NAMES = ["milan-san remo", "milan-sanremo", "tour des flandres", "paris-roubaix", "liege-bastogne-liege", "tour de lombardie", "il lombardia"];
 
+/** Monument : par sa catégorie, ou par son nom (les 5 monuments). */
+export function isMonument(name: string, category: CourseCategory | null): boolean {
+  if (category === "monument") return true;
+  const n = normalizeLabel(name);
+  return MONUMENT_NAMES.some((m) => n.includes(m));
+}
+
 /** Les 5 monuments et les Mondiaux comptent ×2 d'office (décision du 01/11/2026). */
 export function courseCoefficient(name: string, category: CourseCategory | null): 1 | 2 {
   if (category === "monument" || category === "world_champs") return 2;
@@ -137,7 +160,9 @@ export function parseTime(value: string | undefined): string | null {
   const v = (value ?? "").trim();
   const iso = v.match(/T(\d{2}):(\d{2})/);
   if (iso) return `${iso[1]}:${iso[2]}`;
-  const m = v.match(/^(\d{1,2})\s*[:hH]\s*(\d{2})?$/);
+  // « 13:10 », « 13h10 », « 13h », « 13:10:00 » (Excel), ou la 1re heure d'une plage « 13:10-17:30 »
+  // (CLM : heure du premier départ).
+  const m = v.match(/^(\d{1,2})\s*[:hH.]\s*(\d{2})?(?::\d{2})?(?:\s*(?:-|–|à|a)\s*\d{1,2}\s*[:hH.]?\s*(?:\d{2})?(?::\d{2})?)?$/);
   if (!m) return null;
   const h = Number(m[1]);
   const min = Number(m[2] ?? 0);

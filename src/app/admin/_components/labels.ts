@@ -13,7 +13,7 @@ export const SPECIAL_RULES = [
 ];
 
 /** Formats autorisés par règle spéciale : pas sur un CLM par équipes (on y pronostique des équipes). */
-const INDIVIDUAL_STAGE_TYPES = ["sprint", "montagne", "clm", "baroudeurs"];
+const INDIVIDUAL_STAGE_TYPES = ["sprint", "montagne", "clm", "baroudeurs", "classique"];
 export const SPECIAL_RULE_FORMATS: Record<string, string[]> = {
   brouillard: INDIVIDUAL_STAGE_TYPES,
   tes_colle: INDIVIDUAL_STAGE_TYPES,

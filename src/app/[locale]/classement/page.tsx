@@ -6,7 +6,8 @@ import { Link } from "@/i18n/navigation";
 import { HeaderActions } from "@/components/HeaderActions";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getClock } from "@/lib/clock";
-import { getLeaderboard } from "@/lib/leaderboard";
+import { getLeaderboard, getPlayerRetainedCourses } from "@/lib/leaderboard";
+import { RetainedCoursesCard } from "@/components/RetainedCoursesCard";
 import { badgesInCourse, getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
 import { HelpButton } from "@/components/HelpButton";
 import { LeaderBib, PlayerBadgesRow, StageLeaderBib } from "@/components/PlayerBadgesRow";
@@ -64,7 +65,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   const userId = userResult.user?.id ?? null;
   const { now } = await getClock();
 
-  const [stages, leagueRows, leaderboard, seasonBadges] = await Promise.all([
+  const [stages, leagueRows, leaderboard, seasonBadges, retained] = await Promise.all([
     season ? getStandingsStages(supabase, season.id, now) : Promise.resolve([]),
     season && userId
       ? supabase.from("league_memberships").select("leagues!inner(id, name, season_id)").eq("user_id", userId).eq("leagues.season_id", season.id)
@@ -72,6 +73,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
     // Classement général de la saison : sert à l'encadré « Mon classement » et à la vue Saison.
     season ? getLeaderboard(supabase, season.id) : Promise.resolve([]),
     season ? getPlayerBadges(supabase, season.id) : Promise.resolve(new Map<string, PlayerBadges>()),
+    season && userId ? getPlayerRetainedCourses(supabase, season.id, userId) : Promise.resolve(null),
   ]);
   // « Mon classement » : même calcul que l'encadré de l'accueil (rang général de la saison).
   const myRankIndex = userId ? leaderboard.findIndex((row) => row.userId === userId) : -1;
@@ -173,6 +175,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                 <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
               </div>
             </div>
+            {retained && <RetainedCoursesCard courses={retained.courses} droppedPoints={retained.droppedPoints} />}
           </div>
         )}
 

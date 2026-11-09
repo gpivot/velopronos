@@ -24,25 +24,18 @@ export interface JerseyConfig {
   points?: number | null;
 }
 
-/** Pastille du maillot : couleur du leader de la course pour le général, couleurs classiques ailleurs. */
-const JERSEY_COLORS: Record<string, string> = {
-  points: "#2E9E44",
-  montagne: "repeating-radial-gradient(circle at 30% 30%, #D62828 0 3px, #FFFFFF 3px 7px)",
-  jeune: "#FFFFFF",
-  combatif: "#C8102E",
-  equipe: "#FFD200",
-};
 
 export function JerseysForm({
   stageId,
   configs,
   locked,
-  leaderColor,
+  swatches,
 }: {
   stageId: string;
   configs: JerseyConfig[];
   locked: boolean;
-  leaderColor: string | null;
+  /** Fond de la pastille de chaque maillot (couleurs choisies pour la course, src/lib/velo/jerseyColors.ts). */
+  swatches: Record<string, string>;
 }) {
   const [picks, setPicks] = useState<Record<string, string>>(() => Object.fromEntries(configs.map((c) => [c.jersey, c.initialPick ?? ""])));
   const [searches, setSearches] = useState<Record<string, string>>({});
@@ -100,7 +93,7 @@ export function JerseysForm({
     <div className="flex flex-col gap-4">
       {configs.map((c) => {
         const current = c.options.find((o) => o.id === picks[c.jersey]);
-        const swatch = c.jersey === "general" ? leaderColor ?? "#FFD200" : JERSEY_COLORS[c.jersey];
+        const swatch = swatches[c.jersey];
         return (
           <div key={c.jersey} className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2">

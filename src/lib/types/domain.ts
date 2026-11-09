@@ -72,6 +72,7 @@ export type OddsFormat =
   | "montagne"
   | "clm"
   | "baroudeurs"
+  | "classique"
   | "clm_equipes"
   | "maillot_general"
   | "maillot_points"
@@ -128,6 +129,7 @@ export type RaceFormat =
   | "montagne"
   | "clm"
   | "baroudeurs"
+  | "classique"
   | "clm_equipes";
 
 export type SpecialRule = "tour_de_pena" | "brouillard" | "tes_colle" | null;

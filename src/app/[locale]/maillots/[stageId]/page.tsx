@@ -1,3 +1,4 @@
+import { jerseySwatches } from "@/lib/velo/jerseyColors";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Link } from "@/i18n/navigation";
@@ -28,7 +29,7 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
 
   const { data: course } = await supabase
     .from("stages")
-    .select("id, season_id, kind, name, location, country_code, jerseys, jersey_color, races(locks_at, stage_number)")
+    .select("*, races(locks_at, stage_number)")
     .eq("id", stageId)
     .maybeSingle();
   if (!course) notFound();
@@ -218,7 +219,7 @@ export default async function JerseysPage({ params }: { params: Promise<{ stageI
           ) : (
             <>
               {chatNoirCard && chatNoirTargets.length > 0 && <ChatNoirForm cardId={chatNoirCard.id} targets={chatNoirTargets} />}
-              <JerseysForm stageId={course.id} configs={configs} locked={isLocked} leaderColor={course.jersey_color ?? null} />
+              <JerseysForm stageId={course.id} configs={configs} locked={isLocked} swatches={jerseySwatches(course)} />
               {isGrandTour && teams.size > 0 && (
                 <GrandTourTeamForm
                   stageId={course.id}

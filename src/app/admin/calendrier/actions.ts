@@ -9,6 +9,8 @@ import { importCalendarCsv } from "@/lib/admin/calendarImport";
 import { deleteStage, recomputeSeasonStreaks } from "@/lib/admin/raceResults";
 import { stageCategoryFields } from "@/lib/stageCategory";
 import { COURSE_CATEGORIES, COURSE_KINDS, JERSEY_TYPES } from "@/lib/velo/courses";
+import { MOUNTAIN_COLORS, POINTS_COLORS } from "@/lib/velo/jerseyColors";
+import { fillCourseOddsFromSeason } from "@/lib/velo/imports";
 import type { CsvActionResult } from "../_components/CsvImportPanel";
 
 export async function createSeason(formData: FormData) {
@@ -22,6 +24,20 @@ export async function createSeason(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin");
+}
+
+/** Modifie le nom et les dates d'une saison. */
+export async function updateSeason(formData: FormData) {
+  await requireAdmin();
+  const startsOn = String(formData.get("starts_on"));
+  const endsOn = String(formData.get("ends_on"));
+  if (endsOn < startsOn) throw new Error("La fin de saison doit être après son début.");
+  const { error } = await createAdminClient()
+    .from("seasons")
+    .update({ label: String(formData.get("label")).trim(), starts_on: startsOn, ends_on: endsOn })
+    .eq("id", String(formData.get("season_id")));
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin", "layout");
 }
 
 /**
@@ -90,6 +106,7 @@ export async function createRace(formData: FormData) {
     status: "upcoming",
   });
   if (error) throw new Error(error.message);
+  await fillCourseOddsFromSeason(admin, stageId);
 
   revalidatePath("/admin");
 }
@@ -177,5 +194,12 @@ function courseFormFields(formData: FormData) {
     category: (COURSE_CATEGORIES as string[]).includes(category) ? category : null,
     jersey_color: /^#[0-9a-fA-F]{6}$/.test(color) ? color : null,
     jerseys,
+    // Couleurs des maillots sprint et montagne (migration 0059), seulement si le formulaire les donne.
+    ...(formData.has("points_jersey_color")
+      ? { points_jersey_color: POINTS_COLORS.some((c) => c.value === formData.get("points_jersey_color")) ? String(formData.get("points_jersey_color")) : null }
+      : {}),
+    ...(formData.has("mountain_jersey_color")
+      ? { mountain_jersey_color: MOUNTAIN_COLORS.some((c) => c.value === formData.get("mountain_jersey_color")) ? String(formData.get("mountain_jersey_color")) : null }
+      : {}),
   };
 }

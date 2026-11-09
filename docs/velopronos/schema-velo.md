@@ -41,7 +41,8 @@ test (21 étapes, 2 repos, 184 coureurs, 23 équipes, 1 519 cotes).
    heure_depart, date, pays, country_code, denivele`) : `R` = jour de repos. Option « décaler pour
    que la 1re étape tombe le… » pour rejouer une course passée en test.
 3. **Coureurs et cotes** (`numero, prenom, nom, equipe, nom_equipe, nationalite, statut,
-   cote_sprint, cote_montagne, cote_clm, cote_baroudeur, MJ, MV, MP, MJeune, SC`).
+   cote_sprint, cote_montagne, cote_clm, cote_baroudeur, cote_classique, MJ, MV, MP, MJeune, SC`).
+   Après l'import, les engagés sans cote propre reprennent celles de la liste de la saison.
 4. **Équipes** (`equipe, equipe_nom, cote_ME, CLME`) : nom complet, cotes « meilleure équipe » et
    CLM par équipes.
 
@@ -213,6 +214,127 @@ de son Grand Tour (`badgesInCourse`), plus dans celui de la saison.
 
 Reste à faire : textes du règlement.
 
+## Liste des coureurs de la saison et cote Classique (migration 0057, 07/11/2026)
+
+Demande de Guillaume du 07/11/2026 : une liste complète des coureurs de la saison, chacun avec sa
+cote par profil, que les courses reprennent ; plus une cote « Classique » pour les grandes
+classiques (Milan-San Remo, Flandres, Roubaix, Flèche Wallonne…).
+
+- **Import « Coureurs de la saison »** (onglet Calendrier, bloc 2) : `prenom, nom, equipe,
+  nom_equipe, nationalite, cote_sprint, cote_montagne, cote_clm, cote_baroudeur, cote_classique`.
+  Crée ou met à jour équipes et coureurs, et range les cotes dans `odds` avec `stage_id` null
+  (« cote de saison », historisée si elle change). Les colonnes de maillot sont ignorées : les
+  maillots se cotent course par course. Aucun engagé n'est créé.
+- **Reprise par les courses** (`fillCourseOddsFromSeason`) : pour chaque engagé d'une course et
+  chaque type d'étape de la course, la cote de saison est copiée si la course n'en a pas. Une cote
+  propre à la course n'est jamais écrasée. Elle se déclenche après l'import des coureurs d'une
+  course, à l'ajout d'un coureur, à la création d'une étape, au changement de type d'une étape,
+  et par le bouton « Compléter avec les cotes de la saison » (admin > Coureurs & cotes). Les pages
+  de pronostic et le moteur de points continuent de lire les cotes de la course : rien ne change
+  pour eux.
+- **Type d'étape « Classique »** (`race_format` et `odds_format`, migration 0057 à exécuter
+  seule) : une classique dont l'étape est de type Classique utilise la colonne `cote_classique`.
+  Mêmes règles de points qu'un type individuel (règles spéciales permises).
+- **Courses d'un jour et leur cote** : une classique utilise la cote du type de son étape unique.
+  À l'import du calendrier, **un monument reçoit le type Classique, les autres classiques le type
+  Baroudeurs** (à confirmer) ; Guillaume change le type d'une classique précise (ex. Flèche
+  Wallonne → Classique) dans sa fiche d'étape, et les cotes de saison suivent.
+
+## Ouverture des pronostics : lundi 17 h (07/11/2026)
+
+Règle de Guillaume du 07/11/2026, à la place des « 7 jours avant » hérités : les pronostics d'une
+course (liste des coureurs et cotes) ouvrent **le lundi à 17 h, heure de Paris, de la semaine de
+la course**. Une course qui part un lundi ouvre le lundi précédent (choix pragmatique, à
+confirmer). Code : `src/lib/predictionWindow.ts` (`predictionOpensOn`, `predictionOpensAt`,
+`isPredictionOpen`), lu par Ma saison, l'accueil, la page d'étape, l'enregistrement des pronostics
+et les rappels. Aucune migration : la règle est appliquée par l'app, comme avant.
+
+## Startlists par IA (migration 0058, 07/11/2026)
+
+Demande de Guillaume du 07/11/2026 : à partir du lundi 17 h de la semaine de course, on récupère la
+startlist provisoire, on alimente les courses de la semaine et on ouvre les pronostics ; la liste
+est mise à jour chaque jour à 17 h et une dernière fois à 7 h le matin de la course.
+
+- **Code** : `src/lib/velo/aiStartlist.ts` (appel à Claude avec recherche web, même mécanique que
+  les résultats par IA) et `src/lib/velo/startlistSync.ts` (créneaux, rapprochement, mise à jour).
+  Route `/api/startlists/cron`, protégée par `CRON_SECRET`.
+- **Sources** : la page des engagés donnée pour la course (facultatif), puis le **site prioritaire
+  de la saison** (réglable dans admin > Coureurs & cotes ; vide = ProCyclingStats), puis PCS, puis
+  le site officiel.
+- **Ce que fait un passage** : l'IA donne noms, nations, équipes et dossards (jamais de cote).
+  Les coureurs sont retrouvés dans la saison (noms sans accents, dans les deux sens) ; les engagés
+  absents de la nouvelle liste sont retirés (leurs cotes de course aussi) ; les cotes de la saison
+  sont reprises. Une liste de moins de 20 coureurs ou « pas encore publiée » ne change rien.
+- **Coureur inconnu** de la liste de la saison : créé dans la saison et engagé **sans cote**
+  (donc pas pronostiquable) ; il est signalé « ⚠️ » dans le compte rendu de la course (à
+  confirmer : autre option, une cote par défaut).
+- **Joueurs** : si un coureur de leur pronostic n'est plus au départ, la page de l'étape affiche
+  « Un coureur de ton pronostic n'est plus au départ : remplace-le avant la course. » Pas de
+  notification push ni d'e-mail pour l'instant.
+- **Quand** : seulement entre l'ouverture des pronostics (lundi 17 h) et le départ de la 1re étape ;
+  ensuite rien n'est touché (abandons à la main). Le WE des Champions n'est pas concerné. Une case
+  « Mise à jour automatique » par course permet de garder une liste importée à la main. Bouton
+  « Mettre à jour la startlist maintenant » dans admin > Coureurs & cotes.
+- **Coût** : un appel IA (Opus 5.5 avec recherche web) par course et par passage, soit environ 8
+  par course (7 soirs + le matin), quelques dizaines de centimes chacun.
+
+**Mise en route (une fois, après la migration 0058)** : `CRON_SECRET` et `ANTHROPIC_API_KEY` doivent
+être dans Vercel ; activer `pg_cron` et `pg_net` dans Supabase (Database > Extensions) ; puis dans
+l'éditeur SQL (remplacer `CRON_SECRET_ICI`) :
+
+```sql
+select cron.schedule(
+  'startlists-ia',
+  '*/10 5,6,15,16 * * *',
+  $$select net.http_get(
+    url := 'https://velopronos.vercel.app/api/startlists/cron',
+    headers := jsonb_build_object('Authorization', 'Bearer CRON_SECRET_ICI'),
+    timeout_milliseconds := 300000
+  )$$
+);
+```
+
+Les heures sont en UTC (5-6 h et 15-16 h couvrent 7 h et 17 h de Paris, hiver comme été) ; la
+route ne fait rien en dehors de 7 h et 17 h de Paris et traite une course par appel (toutes les
+10 minutes). Durée d'un appel : jusqu'à 300 s (`maxDuration`), ce qui suppose « Fluid compute »
+activé sur Vercel (réglage par défaut des projets récents).
+
+## Demandes du 08/11/2026 (admin, classement, Grands Tours)
+
+- **Admin** : les saisons ont un crayon (page `/admin/seasons/<id>` : nom, dates, import du
+  calendrier, création d'une course, import des coureurs de la saison). La page d'une course
+  (crayon) contient les imports étapes, coureurs et équipes de cette course. Le combatif du jour se
+  saisit sous le top 10. L'onglet Cartes bonus plantait (carte Chat noir sans libellé) : corrigé,
+  libellés vélo, option « Débloquer tout de suite » retirée (sans effet en vélo).
+- **Joker retardataire** : il reste ouvert sur toutes les classiques (confirmé par Guillaume).
+- **Classement** : encadré « Mon classement » > « Jokers de fin de saison » en accordéon : courses
+  jouées, retenues ou écartées par la règle des résultats retenus, et points écartés
+  (`getPlayerRetainedCourses`).
+- **Calendrier (Ma saison)** : jours de repos affichés entre les étapes (« 🏖️ Repos · date ») ;
+  pastille de couleur par type d'étape (`src/lib/velo/stageTypeStyle.ts` : sprint vert, montagne
+  blanc à pois rouges, baroudeurs bleu, CLM jaune, CLM par équipes jaune foncé, classique orange
+  brique, *à confirmer*) ; petit drapeau du pays de l'étape.
+- **Pays de l'étape** (`races.country_code`, migration 0059) : lu dans la colonne `country_code`
+  (ou `pays`) du fichier des étapes, modifiable dans la fiche de l'étape.
+- **Profil de l'étape** (`races.profile_image_url`, stockage public `stage-profiles`, migration
+  0059) : image PNG/JPG/WebP de 5 Mo maximum envoyée depuis la fiche de l'étape, affichée au-dessus
+  de « L'avis de VéloPronos ».
+- **Couleurs des maillots** au choix dans la fiche de la course : leader jaune, rose ou rouge
+  (`stages.jersey_color`) ; sprint vert ou cyclamen ; montagne à pois rouges, à pois bleus ou bleu
+  (`stages.points_jersey_color`, `stages.mountain_jersey_color`, migration 0059). Par défaut :
+  Giro cyclamen et bleu, Vuelta vert et pois bleus, sinon vert et pois rouges
+  (`src/lib/velo/jerseyColors.ts`).
+- **Import des étapes** : variantes de contre-la-montre reconnues (« CLM individuel », « Contre la
+  montre », « ITT », « Chrono », « Cronometro » ; « TTT » ou « équipes » = CLM par équipes) ; heure
+  avec secondes (« 13:10:00 ») ou plage de départ d'un CLM (« 13:10-17:25 » = 13:10). Le fichier du
+  Giro n'est pas dans le dépôt : correctif à vérifier avec lui (*à confirmer*).
+- **Heures d'import** : toutes les heures des fichiers sont lues en heure de Paris (été comme hiver)
+  et enregistrées en UTC ; l'app les affiche en heure de Paris. Rien à changer.
+- **Picto de la semaine sans course** (accueil) : 🏖️ au lieu du ski.
+- **Équipe de cœur et nation favorite** : déjà le cas, la carte Équipe d'un Grand Tour reprend
+  l'équipe de cœur de la saison tant que le joueur n'en choisit pas une autre pour ce Grand Tour ;
+  la nation favorite est choisie pour la saison.
+
 ## Coureurs & cotes (admin > « Coureurs & cotes »)
 
 Une course à la fois (par défaut la prochaine qui a des engagés). Coureurs groupés par équipe :
@@ -229,7 +351,7 @@ retrait d'un coureur. Le CSV téléchargé reprend le format d'import et se réi
 - **Colonne « Statut »** (2 courses futures marquées « active ») : ignorée, le statut se déduit
   des dates. **Statut des coureurs** (« abandoned ») : ignoré à l'import, comme prévu.
 - **Classiques** : l'import du calendrier leur crée leur étape unique à **11 h (heure de Paris)**,
-  type **Baroudeurs**, à corriger (ou réimporter un fichier d'étape d'une ligne). Les cotes d'une
+  type **Classique** pour un monument, **Baroudeurs** sinon (07/11/2026), à corriger (ou réimporter un fichier d'étape d'une ligne). Les cotes d'une
   classique sont celles du type choisi.
 - **Heures de départ** des fichiers d'étapes lues en **heure de Paris** (les courses hors fuseau,
   Québec, Montréal, seront à saisir en conséquence).
@@ -343,13 +465,14 @@ Spécification de Guillaume du 05/11/2026 : événement bonus autonome, hors du 
   défaut 0/50/120/220/350/500/700/950/1250/1600/2000) et `stages.champions_closed_at` ;
   `score_ledger.bonus_kind` (= 'champions'), une ligne par joueur et par événement.
 - **Événement** : la course existante (`stages`, `kind = bonus_event`, catégorie
-  `national_championships` de l'import plutôt que `bonus_champions`, *à confirmer*). Nombre de
+  `national_championships` de l'import plutôt que `bonus_champions`, catégorie à part, confirmé par Guillaume le 07/11/2026). Nombre de
   championnats libre (10 par défaut côté admin).
 - **Pronostics** : modifiables jusqu'à la limite de **chaque** championnat (RLS
   `champion_championship_open`, horloge simulée comprise) ; ceux des autres ne sont lisibles qu'une
   fois le championnat verrouillé. Coureurs proposés : ceux de la saison qui ont la nationalité du
-  pays ; l'admin peut en ajouter un depuis la page du WE (*à confirmer*). Limite par défaut = heure
-  de départ (*à confirmer*).
+  pays ; l'admin peut en ajouter un depuis la page du WE (confirmé le 07/11/2026). Limite par défaut =
+  heure de départ (confirmé) ; en pratique Guillaume fixera **une limite unique** pour tout le WE
+  (bouton « Même limite pour tous »), même si les championnats courent samedi et dimanche.
 - **Calcul** (`src/lib/velo/champions.ts`, testé) : palier atteint (`championsScore`, jamais
   50 × bonnes réponses), score provisoire au fil des résultats (`summarizeChampions`), classement
   du WE par score puis champions trouvés, ex æquo sans départage (`rankChampions`).

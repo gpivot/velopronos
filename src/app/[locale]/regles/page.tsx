@@ -157,7 +157,7 @@ export default async function ReglesPage() {
               ).map(([format, state, cls, icon], i) => (
                 <div key={format} className="relative flex flex-col gap-1">
                   <span className="font-display text-[11px] font-bold text-text-dim">
-                    {i + 1}. {tFormat(format)}
+                    {t("burntStage", { n: i + 1 })}
                   </span>
                   <div className={`flex flex-col items-center gap-0.5 rounded-xl border px-1 py-2 ${cls}`}>
                     <span className="text-lg leading-none">{icon}</span>
@@ -183,7 +183,7 @@ export default async function ReglesPage() {
               </div>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {(["sprint", "montagne", "baroudeurs", "clm", "clm_equipes"] as const).map((f) => (
+              {(["sprint", "montagne", "baroudeurs", "clm", "classique", "clm_equipes"] as const).map((f) => (
                 <span key={f} className="rounded-full border border-border bg-card2 px-2.5 py-1 font-display text-[11px] font-bold">
                   {tFormat(f)}
                 </span>

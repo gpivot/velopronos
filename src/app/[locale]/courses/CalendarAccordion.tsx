@@ -1,16 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ChevronDownIcon } from "@/components/icons";
 import { PredictedBadge } from "@/components/PredictedBadge";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { RaceDisplayStatus } from "@/lib/raceStatus";
-import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
+import { DISPLAY_TIME_ZONE, toParisWallTime } from "@/lib/displayTimeZone";
 import { raceTitle, stageRoute } from "@/lib/raceLabel";
 import { SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
+import { stageTypeSwatch } from "@/lib/velo/stageTypeStyle";
 import { COURSE_FILTERS, FLAG_STRIPES, courseLook, isMultiStage, matchesCourseFilter, type CourseFilter } from "@/lib/velo/courseLook";
+
+/** Jour (heure de Paris, "2027-07-13") d'un instant. */
+function parisDayOf(iso: string): string {
+  return toParisWallTime(new Date(iso)).slice(0, 10);
+}
 
 export interface CalendarRace {
   id: string;
@@ -32,6 +38,8 @@ export interface CalendarRace {
   start_city?: string | null;
   end_city?: string | null;
   distance_km?: number | null;
+  /** Pays de l'étape (migration 0059), pour un petit drapeau ; absent avant la migration. */
+  country_code?: string | null;
 }
 
 export interface CalendarStage {
@@ -43,12 +51,14 @@ export interface CalendarStage {
   category?: string | null;
   jerseyColor?: string | null;
   country_code: string;
+  /** Jours de repos de la course ("2027-07-13"), affichés entre les étapes. */
+  restDays?: string[];
   starts_on: string;
   ends_on: string;
   coefficient: 1 | 2;
   /** false : étape « Autre (×0) », hors classement de la saison (affichée grisée). */
   counts_in_standings?: boolean;
-  /** Jour d'ouverture des pronostics ("2027-01-02") tant qu'ils sont fermés (7 jours avant l'étape), null sinon. */
+  /** Jour d'ouverture des pronostics ("2027-01-04", un lundi, à 17 h) tant qu'ils sont fermés, null sinon. */
   opensOn: string | null;
   /** VéloPronos : nombre de maillots pronostiqués sur la course, et choisis par le joueur. */
   jerseys?: number;
@@ -296,17 +306,31 @@ export function CalendarAccordion({
                 {look === "bonus" && stage.races.length === 0 ? null : stage.races.length === 0 ? (
                   <div className="px-1.5 py-2 text-[12px] text-text-dim">{t("noRacesInStage")}</div>
                 ) : (
-                  stage.races.map((race) => {
+                  stage.races.map((race, raceIndex) => {
+                    // Jours de repos tombant entre l'étape précédente et celle-ci (Grands Tours).
+                    const raceDay = parisDayOf(race.locks_at);
+                    const previousDay = raceIndex > 0 ? parisDayOf(stage.races[raceIndex - 1].locks_at) : "";
+                    const restBefore = (stage.restDays ?? []).filter((d) => d < raceDay && d > previousDay).sort();
                     const link = (
                       <Link
                         href={`/courses/${race.id}`}
                         className="flex items-center gap-3 rounded-xl border border-border bg-bg px-3.5 py-3"
                       >
                         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                          <div className="text-sm font-semibold">
+                          <div className="flex items-center gap-2 text-sm font-semibold">
+                            <span
+                              aria-hidden
+                              className="h-3 w-3 flex-shrink-0 rounded-full border border-black/10"
+                              style={{ background: stageTypeSwatch(race.format) }}
+                            />
                             {raceTitle(race, tFormat, tRace)}
                           </div>
-                          {stageRoute(race) && <div className="truncate text-xs text-text-dim">{stageRoute(race)}</div>}
+                          {(stageRoute(race) || race.country_code) && (
+                            <div className="truncate text-xs text-text-dim">
+                              {race.country_code && <span className="mr-1">{nationFlagEmoji(race.country_code)}</span>}
+                              {stageRoute(race)}
+                            </div>
+                          )}
                           <div className="text-xs text-text-dim">
                             {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                             {" · "}
@@ -351,18 +375,38 @@ export function CalendarAccordion({
                         </div>
                       </Link>
                     );
-                    if (!race.special_rule) return <div key={race.id}>{link}</div>;
+                    const restRows = restBefore.map((day) => (
+                      <div
+                        key={`rest-${day}`}
+                        className="flex items-center gap-2 rounded-xl border border-dashed border-border px-3.5 py-2 text-xs text-text-dim"
+                      >
+                        <span>🏖️</span>
+                        <span className="font-semibold">{t("restDay")}</span>
+                        <span>·</span>
+                        <span>{new Date(`${day}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, weekday: "long", day: "numeric", month: "long" })}</span>
+                      </div>
+                    ));
+                    if (!race.special_rule)
+                      return (
+                        <Fragment key={race.id}>
+                          {restRows}
+                          <div>{link}</div>
+                        </Fragment>
+                      );
                     // Course malus : bandeau et contour rouges, avec le picto du malus (modèle VéloPronos).
                     // Course bonus (Fête nationale) : même bandeau, en doré.
                     const bonus = isBonusRule(race.special_rule);
                     return (
-                      <div key={race.id} className={`overflow-hidden rounded-xl border-2 ${bonus ? "border-gold bg-gold" : "border-red bg-red"}`}>
+                      <Fragment key={race.id}>
+                      {restRows}
+                      <div className={`overflow-hidden rounded-xl border-2 ${bonus ? "border-gold bg-gold" : "border-red bg-red"}`}>
                         <div className={`flex items-center gap-1.5 px-3 py-1 font-display text-[11px] font-bold uppercase tracking-wide ${bonus ? "text-bg" : "text-white"}`}>
                           <span>{SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"}</span>
                           {t(bonus ? "specialBonusBanner" : "specialRaceBanner", { name: tFormat(`specialRule_${race.special_rule}`) })}
                         </div>
                         <div className="[&>a]:rounded-none [&>a]:border-0">{link}</div>
                       </div>
+                      </Fragment>
                     );
                   })
                 )}

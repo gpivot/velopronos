@@ -24,16 +24,18 @@ export function CourseImports({
 
   return (
     <div className="flex flex-col gap-3">
-      <label className="flex flex-wrap items-center gap-2 text-sm">
-        Course
-        <select value={courseId} onChange={(e) => setCourseId(e.target.value)} className={inputClass}>
-          {courses.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.label}
-            </option>
-          ))}
-        </select>
-      </label>
+      {courses.length > 1 && (
+        <label className="flex flex-wrap items-center gap-2 text-sm">
+          Course
+          <select value={courseId} onChange={(e) => setCourseId(e.target.value)} className={inputClass}>
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
 
       <CsvImportPanel
         key={`stages-${courseId}`}
@@ -42,7 +44,7 @@ export function CourseImports({
           <div className="flex flex-col gap-2">
             <span>
               Une ligne par étape, « R » en numéro pour un jour de repos. Heure de départ = heure de Paris. Types : Sprint,
-              Montagne, Baroudeurs, CLM, CLME. Réimporter met à jour les étapes (retrouvées par leur numéro).
+              Montagne, Baroudeurs, Classique, CLM, CLME. Réimporter met à jour les étapes (retrouvées par leur numéro).
             </span>
             <label className="flex flex-wrap items-center gap-2">
               Décaler pour que la 1re étape tombe le (facultatif, course de test)

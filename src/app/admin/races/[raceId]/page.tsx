@@ -16,7 +16,7 @@ import {
 import { ConfirmButton } from "../../_components/ConfirmButton";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
-import { removeRace, resetResults, updateCombatif, updateRace, updateRaceOpinion } from "./actions";
+import { removeRace, removeStageProfile, resetResults, updateCombatif, updateRace, updateRaceOpinion, uploadStageProfile } from "./actions";
 import { ArrowLeftIcon } from "@/components/icons";
 import { START_LIST_FORMATS, getStartList } from "@/lib/startList";
 import { StartListPanel } from "./StartListPanel";
@@ -190,6 +190,14 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           <input name="distance_km" type="number" step="0.1" min={0} defaultValue={race.distance_km ?? ""} placeholder="km" className={`${inputClass} w-20`} />
           <input name="elevation_m" type="number" min={0} defaultValue={race.elevation_m ?? ""} placeholder="D+ (m)" className={`${inputClass} w-24`} />
           <input
+            name="country_code"
+            defaultValue={race.country_code ?? ""}
+            placeholder="Pays (ESP)"
+            maxLength={3}
+            title="Pays de l'étape (code à 3 lettres) : petit drapeau dans le calendrier"
+            className={`${inputClass} w-24 uppercase`}
+          />
+          <input
             name="locks_at"
             type="datetime-local"
             required
@@ -205,27 +213,29 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
         <p className="text-xs text-text-dim">Heure de départ en heure de Paris : c&apos;est aussi l&apos;heure de verrouillage des pronostics.</p>
       </form>
 
-      {race.format !== "clm_equipes" && riders.length > 0 && (
-        <form action={updateCombatif} className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-4">
+      <section className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+        <div className="text-sm font-semibold">Profil de l&apos;étape</div>
+        {race.profile_image_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={race.profile_image_url} alt="Profil de l'étape" className="max-h-64 w-full rounded-lg border border-border bg-white object-contain" />
+        )}
+        <form action={uploadStageProfile} className="flex flex-wrap items-center gap-2">
           <input type="hidden" name="race_id" value={race.id} />
-          <span className="text-sm font-semibold">Combatif du jour</span>
-          <select name="combatif_athlete_id" defaultValue={race.combatif_athlete_id ?? ""} className={inputClass}>
-            <option value="">— Aucun —</option>
-            {riders.map((e) => (
-              <option key={e.athlete_id} value={e.athlete_id}>
-                {e.bib ? `${e.bib} · ` : ""}
-                {fullAthleteName(e.athletes)}
-              </option>
-            ))}
-          </select>
+          <input name="profile" type="file" required accept="image/png,image/jpeg,image/webp" className="text-xs" />
           <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
-            Enregistrer
+            {race.profile_image_url ? "Remplacer" : "Envoyer"}
           </button>
-          <p className="w-full text-xs text-text-dim">
-            +50 (doublé par le ×2) aux joueurs dont le super combatif pronostiqué est ce coureur. Une étape déjà notée est renotée.
-          </p>
         </form>
-      )}
+        {race.profile_image_url && (
+          <form action={removeStageProfile}>
+            <input type="hidden" name="race_id" value={race.id} />
+            <button type="submit" className="rounded border border-red/50 px-3 py-1 text-xs text-red">
+              Retirer le profil
+            </button>
+          </form>
+        )}
+        <p className="text-xs text-text-dim">PNG ou JPG, 5 Mo maximum. Affiché au-dessus de « L&apos;avis de VéloPronos » sur la page de l&apos;étape.</p>
+      </section>
 
       <form action={updateRaceOpinion} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">L&apos;avis de VéloPronos</div>
@@ -264,6 +274,28 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           specialRule={race.special_rule}
           candidates={candidates}
         />
+      )}
+
+      {race.format !== "clm_equipes" && riders.length > 0 && (
+        <form action={updateCombatif} className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-4">
+          <input type="hidden" name="race_id" value={race.id} />
+          <span className="text-sm font-semibold">Combatif du jour</span>
+          <select name="combatif_athlete_id" defaultValue={race.combatif_athlete_id ?? ""} className={inputClass}>
+            <option value="">— Aucun —</option>
+            {riders.map((e) => (
+              <option key={e.athlete_id} value={e.athlete_id}>
+                {e.bib ? `${e.bib} · ` : ""}
+                {fullAthleteName(e.athletes)}
+              </option>
+            ))}
+          </select>
+          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
+            Enregistrer
+          </button>
+          <p className="w-full text-xs text-text-dim">
+            +50 (doublé par le ×2) aux joueurs dont le super combatif pronostiqué est ce coureur. Une étape déjà notée est renotée.
+          </p>
+        </form>
       )}
 
       <div className="flex flex-wrap gap-2 border-t border-border pt-4">

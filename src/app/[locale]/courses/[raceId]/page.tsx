@@ -286,9 +286,12 @@ export default async function RacePage({
     startList.status === "known" ? athletesWithOdds.filter((a) => startOrder[a.athlete_id] != null) : athletesWithOdds;
 
   const hasOdds = isTeamRace ? teamsWithOdds.length > 0 : isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
-  // Liste des biathlètes visible 7 jours avant l'étape seulement (cotes mises à jour pendant les pauses).
+  // Liste des coureurs visible à partir du lundi 17 h de la semaine de course (predictionWindow.ts).
   const predictionsOpen = isPredictionOpen(stage.starts_on, now);
   const showForm = displayStatus === "upcoming" && hasOdds && !startListPending && predictionsOpen;
+  // Startlist mise à jour (IA ou admin) : un coureur choisi n'est plus au départ (plus de cote).
+  const selectableIds = new Set(selectableAthletes.map((a) => a.athlete_id));
+  const hasWithdrawnPick = showForm && !isTeamRace && !isRelay && initialAthleteSelection.some((id) => !selectableIds.has(id));
   // « L'avis de Biathlonpronos » saisi dans le back-office ; rubrique masquée s'il est vide.
   const opinion = typeof race.opinion === "string" ? race.opinion.trim() : "";
   const hasPrediction = isTeamRace ? initialTeamSelection.length > 0 : isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
@@ -448,10 +451,24 @@ export default async function RacePage({
           )}
         </div>
 
+        {typeof race.profile_image_url === "string" && race.profile_image_url && (
+          // Profil de l'étape envoyé par l'admin (migration 0059), au-dessus de l'avis.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={race.profile_image_url}
+            alt={t("profileAlt")}
+            className="w-full rounded-2xl border border-border bg-white object-contain"
+            loading="lazy"
+          />
+        )}
         {opinion && <RaceOpinion title={t("opinionTitle")} text={opinion} />}
 
         {/* Questions bonus juste sous l'avis, pour qu'elles soient vues (avant le départ et en live). */}
         {(displayStatus === "upcoming" || displayStatus === "ongoing") && bonusQuestionsBlock}
+
+        {hasWithdrawnPick && (
+          <div className="rounded-2xl border border-red/50 bg-card p-4 text-[13px] font-semibold text-red">{t("riderWithdrawn")}</div>
+        )}
 
         {displayStatus === "upcoming" &&
           (!predictionsOpen ? (
