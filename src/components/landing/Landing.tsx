@@ -152,7 +152,7 @@ export async function Landing() {
         </div>
         <p className="mx-auto mt-8 max-w-sm text-center text-xs leading-relaxed text-text-dim/80">{t("footerDisclaimer")}</p>
         <p className="mt-4 text-center text-xs text-text-dim/70">
-          © {new Date().getFullYear()} Vélo<span className="text-blue">Pronos</span>
+          © {new Date().getFullYear()} Vélo<span className="text-ice">Pronos</span>
         </p>
       </footer>
     </div>
@@ -176,7 +176,7 @@ function Wordmark({ className }: { className: string }) {
   return (
     <div className={`font-display font-extrabold tracking-tight ${className}`}>
       <span className="text-text">Vélo</span>
-      <span className="text-blue">Pronos</span>
+      <span className="text-ice">Pronos</span>
     </div>
   );
 }

@@ -103,7 +103,7 @@ export interface EmailLayout {
 
 /** Gabarit commun, aux couleurs des e-mails de connexion (fond nuit, carte, liseré or). */
 export function renderEmail(layout: EmailLayout): { html: string; text: string } {
-  const html = `<div style="background:#1C140F;padding:24px;font-family:Arial,sans-serif;text-align:center"><div style="max-width:440px;margin:auto;background:#2B2018;border-radius:18px;padding:24px;border-bottom:6px solid #F2C94C;text-align:left"><div style="text-align:center"><b style="font-size:22px;color:#F6EEDC">Vélo<span style="color:#F5D33A">Pronos</span></b></div><h2 style="margin:18px 0 10px;color:#ffffff;font-size:19px">${escapeHtml(
+  const html = `<div style="background:#1C140F;padding:24px;font-family:Arial,sans-serif;text-align:center"><div style="max-width:440px;margin:auto;background:#2B2018;border-radius:18px;padding:24px;border-bottom:6px solid #F2C94C;text-align:left"><div style="text-align:center"><b style="font-size:22px;color:#F6EEDC">Vélo<span style="color:#EEC748">Pronos</span></b></div><h2 style="margin:18px 0 10px;color:#ffffff;font-size:19px">${escapeHtml(
     layout.title
   )}</h2><div style="color:#E3D6BE;font-size:15px;line-height:1.5">${layout.bodyHtml}</div><div style="text-align:center;margin:22px 0 4px"><a href="${escapeHtml(
     layout.button.url
