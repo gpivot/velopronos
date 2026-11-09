@@ -3,6 +3,8 @@
 # Le code de l'appli est dans mobile/ (Capacitor) ; elle affiche le site en ligne, donc seules les
 # évolutions natives (notifications, icône…) demandent un nouveau build.
 #
+# Pas à pas complet (comptes, clés, Firebase) : docs/velopronos/publication-stores.md.
+#
 # À régler une fois dans Codemagic (Team settings / Code signing identities) :
 #   - Android : la clé de signature (keystore) nommée « VeloPronos » ;
 #   - iOS : la clé API App Store Connect nommée « VeloPronos » (Integrations), puis un
@@ -16,9 +18,17 @@ workflows:
     environment:
       android_signing:
         - VeloPronos
+      # Build de test avant la bascule du domaine velopronos.fr : décommenter.
+      # vars:
+      #   VELOPRONOS_URL: https://velopronos.vercel.app/
       node: 22
       java: 21
     scripts:
+      - name: Vérifier les fichiers Firebase
+        script: |
+          # Tant que ce sont ceux de Biathlonpronos, les notifications ne marcheraient pas.
+          grep -q '"package_name": "fr.velopronos.app"' mobile/android/app/google-services.json \
+            || { echo "google-services.json n'est pas celui de VéloPronos (docs/velopronos/publication-stores.md)"; exit 1; }
       - name: Installer Capacitor
         script: cd mobile && npm ci
       - name: Préparer le projet Android
@@ -47,9 +57,16 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.base6a1f0e7a3cd8ee2103802f51.app
+      # Build de test avant la bascule du domaine velopronos.fr : décommenter.
+      # vars:
+      #   VELOPRONOS_URL: https://velopronos.vercel.app/
       node: 22
       xcode: latest
     scripts:
+      - name: Vérifier les fichiers Firebase
+        script: |
+          grep -q '<string>com.base6a1f0e7a3cd8ee2103802f51.app</string>' mobile/ios/App/App/GoogleService-Info.plist \
+            || { echo "GoogleService-Info.plist n'est pas celui de VéloPronos (docs/velopronos/publication-stores.md)"; exit 1; }
       - name: Installer Capacitor
         script: cd mobile && npm ci
       - name: Préparer le projet iOS

@@ -4,15 +4,17 @@
 
 type IconProps = { className?: string };
 
+/**
+ * Logo VéloPronos (fourni par Guillaume le 09/11/2026) : roue épaisse avec moyeu, et deux traits de
+ * vitesse, le second en jaune (couleur d'accent du thème). Le reste prend la couleur du texte.
+ */
 export function LogoMark({ className }: IconProps) {
   return (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" className={className}>
-      <circle cx="24" cy="24" r="15" />
-      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none" />
-      <line x1="24" y1="2" x2="24" y2="9" />
-      <line x1="24" y1="39" x2="24" y2="46" />
-      <line x1="2" y1="24" x2="9" y2="24" />
-      <line x1="39" y1="24" x2="46" y2="24" />
+    <svg viewBox="-84 -70 140 140" fill="none" stroke="currentColor" strokeLinecap="round" className={className}>
+      <line x1="-78" y1="-30.5" x2="-54" y2="-30.5" strokeWidth={8} />
+      <line x1="-78" y1="-16.5" x2="-68" y2="-16.5" strokeWidth={8} className="text-ice" />
+      <circle cx="0" cy="0" r="44" strokeWidth={16} />
+      <circle cx="0" cy="0" r="5" fill="currentColor" stroke="none" />
     </svg>
   );
 }

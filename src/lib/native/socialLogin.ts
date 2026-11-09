@@ -8,13 +8,15 @@ import { nativePlatform } from "./firebaseMessaging";
  * plugin renvoie un jeton d'identité que Supabase vérifie (signInWithIdToken).
  *
  * Identifiants OAuth Google (publics, ils ne donnent accès à rien) : le client « Application Web »
- * déjà utilisé par Supabase, et un client « iOS » créé pour fr.biathlonpronos.app dans la même
- * console Google Cloud (projet biathlonpronos-6eae5). Vides = bouton masqué.
+ * utilisé par Supabase, et un client « iOS » créé pour l'identifiant iOS de l'appli, dans la console
+ * Google Cloud du projet Firebase VéloPronos. Vides = bouton masqué.
+ * VéloPronos (09/11/2026) : vidés en attendant le projet Firebase / Google Cloud VéloPronos (ceux de
+ * Biathlonpronos ne marchent pas ici). Voir docs/velopronos/publication-stores.md, étape 6.
  * Le client iOS doit aussi figurer, à l'envers, dans mobile/ios/App/App/Info.plist (URL scheme),
  * sinon le SDK Google fait planter l'appli.
  */
-export const GOOGLE_WEB_CLIENT_ID = "226990944454-095hdai0vcus04bjbskvqhsb660v5lff.apps.googleusercontent.com";
-export const GOOGLE_IOS_CLIENT_ID = "226990944454-gug2cblnrvl8flg88rs8fektk64i9fnv.apps.googleusercontent.com";
+export const GOOGLE_WEB_CLIENT_ID = "";
+export const GOOGLE_IOS_CLIENT_ID = "";
 
 interface SocialLoginPlugin {
   initialize(options: {
