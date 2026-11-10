@@ -185,7 +185,8 @@ export async function getBonusQuestionLedger(
   if (raceIds.length === 0) return [];
   const { data, error } = await supabase
     .from("score_ledger")
-    .select("user_id, points, profiles(pseudo), bonus_questions!inner(race_id)")
+    .select("user_id, points, profiles!inner(pseudo, signup_pending), bonus_questions!inner(race_id)")
+    .eq("profiles.signup_pending", false)
     .in("bonus_questions.race_id", raceIds);
   if (error) {
     console.error("getBonusQuestionLedger:", error.message);

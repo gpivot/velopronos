@@ -9,10 +9,22 @@ import { routing } from "@/i18n/routing";
 import { CloseIcon } from "@/components/icons";
 import { GuestSignupDialog } from "@/components/GuestSignupDialog";
 
-/** Pages qu'un invité (bouton « Je joue », session anonyme) peut ouvrir. */
-const GUEST_PAGES = [/^\/$/, /^\/jouer$/, /^\/sign-in$/, /^\/courses\/[^/]+$/, /^\/regles$/, /^\/confidentialite$/, /^\/cgu$/, /^\/support$/];
+/** Pages d'information toujours ouvertes. */
+const INFO_PAGES = [/^\/jouer$/, /^\/sign-in$/, /^\/inscription$/, /^\/regles$/, /^\/confidentialite$/, /^\/cgu$/, /^\/support$/];
+/**
+ * Pages qu'un invité peut ouvrir : sa course, et l'accueil vitrine tant qu'il est anonyme (un
+ * compte en attente d'inscription verrait le tableau de bord des joueurs).
+ */
+function allowedPages(status: GuestStatus) {
+  return [...INFO_PAGES, /^\/courses\/[^/]+$/, ...(status === "anonymous" ? [/^\/$/] : [])];
+}
 /** Liens qu'un invité peut suivre depuis une page : pas de navigation vers les autres onglets ni les autres courses. */
-const GUEST_LINKS = [/^\/$/, /^\/jouer$/, /^\/sign-in$/, /^\/regles$/, /^\/confidentialite$/, /^\/cgu$/, /^\/support$/];
+function allowedLinks(status: GuestStatus) {
+  return [...INFO_PAGES, ...(status === "anonymous" ? [/^\/$/] : [])];
+}
+
+/** « anonymous » : session invitée ; « pending » : e-mail donné, inscription pas terminée (migration 0045). */
+type GuestStatus = "none" | "anonymous" | "pending";
 
 /** Chemin sans le préfixe de langue (/fr/courses/12 → /courses/12). */
 function stripLocale(path: string): string {
@@ -23,7 +35,8 @@ function stripLocale(path: string): string {
 
 /**
  * Parcours d'invité (demande de Guillaume, 10/11/2026) : tant que le joueur arrivé par « Je joue »
- * n'a pas de vrai compte, il reste sur sa course. Les onglets et boutons de navigation (marqués
+ * n'a pas de vrai compte (session anonyme, ou e-mail donné sans inscription terminée), il reste sur
+ * sa course. Les onglets et boutons de navigation (marqués
  * `data-guest-lock`) sont grisés, et tout clic vers une autre page ouvre une pop-up qui propose
  * l'inscription gratuite. Une page interdite ouverte directement (adresse tapée) affiche la même
  * pop-up ; la fermer ramène à la course.
@@ -32,19 +45,33 @@ export function GuestNavGuard() {
   const t = useTranslations("Guest");
   const pathname = usePathname();
   const router = useRouter();
-  const [guest, setGuest] = useState(false);
+  const [status, setStatus] = useState<GuestStatus>("none");
+  const guest = status !== "none";
   const [popup, setPopup] = useState(false);
   const [signup, setSignup] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => setGuest(Boolean(session?.user.is_anonymous)));
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => setGuest(Boolean(session?.user.is_anonymous)));
-    return () => data.subscription.unsubscribe();
+    let cancelled = false;
+    async function check(user: { id: string; is_anonymous?: boolean } | null | undefined) {
+      if (!user) return setStatus("none");
+      if (user.is_anonymous) return setStatus("anonymous");
+      // Colonne absente avant la migration 0045 : erreur ignorée, joueur normal.
+      const { data } = await supabase.from("profiles").select("signup_pending").eq("id", user.id).maybeSingle();
+      if (!cancelled) setStatus((data as { signup_pending?: boolean } | null)?.signup_pending ? "pending" : "none");
+    }
+    supabase.auth.getSession().then(({ data: { session } }) => check(session?.user));
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      check(session?.user);
+    });
+    return () => {
+      cancelled = true;
+      data.subscription.unsubscribe();
+    };
   }, []);
 
   const current = stripLocale(pathname ?? "/");
-  const pageBlocked = guest && !GUEST_PAGES.some((re) => re.test(current));
+  const pageBlocked = guest && !allowedPages(status).some((re) => re.test(current));
 
   // Grisage : classe sur <html>, lue par globals.css.
   useEffect(() => {
@@ -67,7 +94,7 @@ export function GuestNavGuard() {
         const url = new URL(anchor.href, window.location.href);
         if (url.origin === window.location.origin) {
           const path = stripLocale(url.pathname);
-          blocked = path !== current && !GUEST_LINKS.some((re) => re.test(path));
+          blocked = path !== current && !allowedLinks(status).some((re) => re.test(path));
         }
       }
       if (!blocked) return;
@@ -77,7 +104,7 @@ export function GuestNavGuard() {
     }
     document.addEventListener("click", onClick, true);
     return () => document.removeEventListener("click", onClick, true);
-  }, [guest, current]);
+  }, [guest, status, current]);
 
   if (!guest) return null;
 
@@ -110,24 +137,39 @@ export function GuestNavGuard() {
             </div>
             <p className="text-[13px] leading-relaxed text-frost">
               {t.rich("lockedBody", {
-                link: (chunks) => (
-                  <button type="button" onClick={() => setSignup(true)} className="font-semibold text-ice underline">
-                    {chunks}
-                  </button>
-                ),
+                link: (chunks) =>
+                  status === "pending" ? (
+                    <Link href="/inscription" className="font-semibold text-ice underline">
+                      {chunks}
+                    </Link>
+                  ) : (
+                    <button type="button" onClick={() => setSignup(true)} className="font-semibold text-ice underline">
+                      {chunks}
+                    </button>
+                  ),
               })}
             </p>
-            <button
-              type="button"
-              onClick={() => setSignup(true)}
-              className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice"
-            >
-              {t("lockedSignUp")}
-            </button>
-            <div className="flex justify-between text-xs text-text-dim">
-              <Link href="/sign-in" className="underline">
-                {t("lockedSignIn")}
+            {status === "pending" ? (
+              <Link href="/inscription" className="rounded-xl bg-ice py-3 text-center font-display text-sm font-bold text-on-ice">
+                {t("lockedSignUp")}
               </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSignup(true)}
+                className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice"
+              >
+                {t("lockedSignUp")}
+              </button>
+            )}
+            <div className="flex justify-between text-xs text-text-dim">
+              {status === "anonymous" ? (
+                <Link href="/sign-in" className="underline">
+                  {t("lockedSignIn")}
+                </Link>
+              ) : (
+                <span />
+              )}
               <button type="button" onClick={close} className="underline">
                 {pageBlocked ? t("lockedBackToRace") : t("lockedContinue")}
               </button>
@@ -143,7 +185,7 @@ export function GuestNavGuard() {
             onDone={() => {
               setSignup(false);
               setPopup(false);
-              setGuest(false);
+              setStatus("none");
               router.refresh();
             }}
           />
