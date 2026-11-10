@@ -10,6 +10,7 @@ import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { filterBySearch } from "@/lib/searchFilter";
 import { SearchField } from "@/components/SearchField";
+import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 
 export type NationWithOdds = {
   nation_code: string;
@@ -65,6 +66,9 @@ export function RelayPredictionForm({
       setSaving(false);
       return;
     }
+
+    // Invité devenu joueur mais jeton encore « anonyme » : renouvellement avant d'écrire.
+    if (await hasStaleGuestToken(supabase)) await supabase.auth.refreshSession();
 
     const { error } = await supabase.from("predictions").upsert(
       {

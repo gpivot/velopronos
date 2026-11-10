@@ -823,7 +823,7 @@ function RaceNavLink({ raceId, label, direction }: { raceId: string | null; labe
     );
   if (!raceId) return <span className={`${className} text-text-dim opacity-40`}>{content}</span>;
   return (
-    <Link href={`/courses/${raceId}`} className={`${className} text-ice`}>
+    <Link href={`/courses/${raceId}`} className={`${className} text-ice`} data-guest-lock>
       {content}
     </Link>
   );

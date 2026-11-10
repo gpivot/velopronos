@@ -85,3 +85,9 @@ html.light {
   --c-nav: 255 255 255;
   color-scheme: light;
 }
+
+/* Invité « Je joue » sans vrai compte : onglets et boutons de navigation grisés (GuestNavGuard). */
+html.guest-mode [data-guest-lock] {
+  opacity: 0.35;
+  filter: grayscale(1);
+}

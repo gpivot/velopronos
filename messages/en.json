@@ -1034,7 +1034,16 @@
     "goHome": "Home",
     "loadingRace": "Opening the next stage…",
     "noRace": "No stage is open for predictions right now.",
-    "seeCalendar": "See the calendar"
+    "seeCalendar": "See the calendar",
+    "lockedTitle": "Sign up to go further",
+    "lockedBody": "<link>Sign up for free by clicking here</link> to discover everything Biathlonpronos has to offer: standings, leagues with friends, season predictions, bonus cards…",
+    "lockedSignUp": "Sign up for free",
+    "lockedSignIn": "I already have an account",
+    "lockedContinue": "Continue my prediction",
+    "lockedBackToRace": "Back to the race",
+    "accountTitle": "Create your free account",
+    "accountIntro": "No password: a code sent by e-mail is all it takes. You'll then be able to explore the whole app.",
+    "accountVerify": "Create my account"
   },
   "BonusQuestions": {
     "sectionTitle": "Bonus questions",

@@ -1034,7 +1034,16 @@
     "goHome": "Startseite",
     "loadingRace": "Das nächste Etappe wird geöffnet…",
     "noRace": "Gerade ist kein Etappe für Tipps geöffnet.",
-    "seeCalendar": "Kalender ansehen"
+    "seeCalendar": "Kalender ansehen",
+    "lockedTitle": "Registriere dich, um weiterzumachen",
+    "lockedBody": "<link>Registriere dich kostenlos, indem du hier klickst</link>, und entdecke alle Facetten von Biathlonpronos: Ranglisten, Ligen mit Freunden, Saisontipps, Bonuskarten…",
+    "lockedSignUp": "Kostenlos registrieren",
+    "lockedSignIn": "Ich habe schon ein Konto",
+    "lockedContinue": "Weiter mit meinem Tipp",
+    "lockedBackToRace": "Zurück zum Rennen",
+    "accountTitle": "Erstelle dein kostenloses Konto",
+    "accountIntro": "Kein Passwort: Ein per E-Mail erhaltener Code genügt. Danach kannst du die ganze App nutzen.",
+    "accountVerify": "Konto erstellen"
   },
   "BonusQuestions": {
     "sectionTitle": "Bonusfragen",

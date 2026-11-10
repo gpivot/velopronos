@@ -13,7 +13,16 @@ import { CloseIcon } from "@/components/icons";
  * « email_change »), sans mot de passe. `onDone` est appelé une fois le compte confirmé : le
  * formulaire enregistre alors le pronostic.
  */
-export function GuestSignupDialog({ onDone, onClose }: { onDone: () => void; onClose: () => void }) {
+export function GuestSignupDialog({
+  onDone,
+  onClose,
+  mode = "prediction",
+}: {
+  onDone: () => void;
+  onClose: () => void;
+  /** « account » : ouvert depuis la pop-up de navigation bloquée, sans pronostic à valider. */
+  mode?: "prediction" | "account";
+}) {
   const t = useTranslations("Guest");
   const locale = useLocale();
   const supabase = createClient();
@@ -72,6 +81,9 @@ export function GuestSignupDialog({ onDone, onClose }: { onDone: () => void; onC
       setError(t("wrongCode"));
       return;
     }
+    // Le jeton de session garde « is_anonymous » jusqu'à son renouvellement : sans cela, la base
+    // refuse encore les écritures (règles RLS « no guest ») et le pronostic paraît fermé.
+    await supabase.auth.refreshSession();
     // Le profil a été créé avec « Invité » : il prend maintenant le vrai pseudo.
     await supabase.from("profiles").update({ pseudo: pseudo.trim() }).eq("id", data.user.id);
     setBusy(false);
@@ -92,9 +104,9 @@ export function GuestSignupDialog({ onDone, onClose }: { onDone: () => void; onC
       <div className="flex max-h-[90dvh] w-full max-w-md flex-col gap-4 overflow-y-auto rounded-t-2xl border border-border bg-bg p-5 sm:rounded-2xl">
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
-            <div className="font-display text-base font-bold">{step === "details" ? t("title") : t("codeTitle")}</div>
+            <div className="font-display text-base font-bold">{step === "details" ? t(mode === "account" ? "accountTitle" : "title") : t("codeTitle")}</div>
             <div className="text-[13px] leading-relaxed text-text-dim">
-              {step === "details" ? t("intro") : t("codeIntro", { email: email.trim() })}
+              {step === "details" ? t(mode === "account" ? "accountIntro" : "intro") : t("codeIntro", { email: email.trim() })}
             </div>
           </div>
           <button
@@ -150,7 +162,7 @@ export function GuestSignupDialog({ onDone, onClose }: { onDone: () => void; onC
             />
             {error && <div className="text-xs text-red">{error}</div>}
             <button type="submit" disabled={busy} className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice disabled:opacity-60">
-              {busy ? t("verifying") : t("verify")}
+              {busy ? t("verifying") : t(mode === "account" ? "accountVerify" : "verify")}
             </button>
             <div className="flex justify-between text-xs text-text-dim">
               <button type="button" onClick={() => setStep("details")} className="underline">

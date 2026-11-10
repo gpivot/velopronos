@@ -1198,6 +1198,17 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   après la création du compte, un encart « Bienvenue » propose déjà de rejoindre une ligue.
 - Un invité est traité comme un visiteur ailleurs (accueil vitrine, Profil, Ligues, Globes, Ma
   saison, notifications).
+- **Navigation bloquée (10/11/2026)** : tant qu'il n'a pas de vrai compte, l'invité reste sur sa
+  course (`GuestNavGuard`, monté dans le layout). Les éléments marqués `data-guest-lock` (barre
+  basse, flèche retour, course précédente/suivante, rond du profil) sont grisés ; tout clic vers une
+  autre page (sauf accueil, `/jouer`, connexion, règlement, CGU, confidentialité, support) ouvre la
+  pop-up « Inscris-toi gratuitement en cliquant ici… », qui ouvre le formulaire d'inscription
+  (`GuestSignupDialog` en mode « account ») ou renvoie vers la connexion. Une page interdite ouverte
+  par son adresse affiche la même pop-up ; la fermer ramène à la course (`/jouer`).
+- **Jeton périmé** : après la conversion, le jeton de session garde `is_anonymous` jusqu'à son
+  renouvellement, et la base refusait le pronostic (« pronostics fermés » en rouge). La session est
+  désormais renouvelée après le code, et avant chaque enregistrement si le jeton dit encore
+  « anonyme » (`lib/supabase/guestToken.ts`).
 - **Base (migration 0031)** : profil « Invité » créé pour un compte sans e-mail (`handle_new_user`) ;
   `is_guest()` ; règles RLS **restrictives** : un invité ne peut rien écrire (pronostics, globes,
   Pépites, équipe favorite, ligues, pseudo) tant que son compte n'est pas confirmé ; garde-fou de

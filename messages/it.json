@@ -1034,7 +1034,16 @@
     "goHome": "Home",
     "loadingRace": "Apriamo la prossima tappa…",
     "noRace": "Nessuna tappa è aperta ai pronostici al momento.",
-    "seeCalendar": "Vedi il calendario"
+    "seeCalendar": "Vedi il calendario",
+    "lockedTitle": "Iscriviti per andare oltre",
+    "lockedBody": "<link>Iscriviti gratuitamente cliccando qui</link> per scoprire tutte le sfaccettature di Biathlonpronos: classifiche, leghe tra amici, pronostici stagionali, carte bonus…",
+    "lockedSignUp": "Iscriviti gratis",
+    "lockedSignIn": "Ho già un account",
+    "lockedContinue": "Continua il mio pronostico",
+    "lockedBackToRace": "Torna alla gara",
+    "accountTitle": "Crea il tuo account gratuito",
+    "accountIntro": "Nessuna password: basta un codice ricevuto via e-mail. Poi potrai navigare in tutta l'app.",
+    "accountVerify": "Crea il mio account"
   },
   "BonusQuestions": {
     "sectionTitle": "Domande bonus",

@@ -11,6 +11,7 @@ import { RuleInfoButton } from "./RuleInfoButton";
 import { fullAthleteName, shortAthleteName } from "@/lib/athleteName";
 import { filterBySearch } from "@/lib/searchFilter";
 import { SearchField } from "@/components/SearchField";
+import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 
 export type AthleteWithOdds = {
   athlete_id: string;
@@ -136,6 +137,10 @@ export function PredictionForm({
       setSaving(false);
       return;
     }
+
+    // Invité devenu joueur (e-mail rattaché) mais jeton de session encore « anonyme » : la base
+    // refuserait le pronostic (« pronostics fermés »). On renouvelle d'abord le jeton.
+    if (await hasStaleGuestToken(supabase)) await supabase.auth.refreshSession();
 
     const { error: predictionError } = await supabase.from("predictions").upsert(
       {

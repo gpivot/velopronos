@@ -4,6 +4,7 @@ import { NavigationTracker } from "@/components/NavigationTracker";
 import { PushRegistrar } from "@/components/PushRegistrar";
 import { LiveQuestionPopup } from "@/components/LiveQuestionInvite";
 import { LocaleSync } from "@/components/LocaleSync";
+import { GuestNavGuard } from "@/components/GuestNavGuard";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -67,6 +68,8 @@ export default async function LocaleLayout({
           {/* Questions live ouvertes : pop-up sur toutes les pages (questions bonus, 02/11/2026). */}
           <LiveQuestionPopup />
           <LocaleSync />
+          {/* Invité « Je joue » : navigation grisée et pop-up d'inscription (10/11/2026). */}
+          <GuestNavGuard />
           {children}
         </NextIntlClientProvider>
       </body>
