@@ -1,5 +1,5 @@
-import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Link, redirect } from "@/i18n/navigation";
 import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
@@ -63,6 +63,22 @@ async function getHomeData(): Promise<HomeData> {
   ]);
   // Invité (session anonyme du bouton « Jouer ») : traité comme un visiteur, il voit la vitrine.
   const user = userResult.user && !userResult.user.is_anonymous ? userResult.user : null;
+
+  // Invité « e-mail seulement » revenu par son code (migration 0045) : pas de tableau de bord avant
+  // la fin de l'inscription, direction sa dernière course pronostiquée (score + invitation).
+  if (user) {
+    const { data: me } = await supabase.from("profiles").select("signup_pending").eq("id", user.id).maybeSingle();
+    if ((me as { signup_pending?: boolean } | null)?.signup_pending) {
+      const { data: last } = await supabase
+        .from("predictions")
+        .select("race_id")
+        .eq("user_id", user.id)
+        .order("submitted_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      redirect({ href: last ? `/courses/${last.race_id}` : "/jouer", locale: await getLocale() });
+    }
+  }
 
   if (!season) {
     return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, seasonPicksBeforeStart: null, canChooseFavoriteTeam: false, cards: null };

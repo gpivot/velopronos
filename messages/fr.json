@@ -590,7 +590,10 @@
     "stageTitle": "{stage} · {type}",
     "lateJokerTitle": "Joker retardataire",
     "lateJokerHint": "Tu as oublié cette étape ? Tu peux encore la pronostiquer jusqu'à 1 h après le départ, une fois par course. Tes points seront divisés par 2.",
-    "lateJokerBadge": "Joker retardataire · points ÷ 2"
+    "lateJokerBadge": "Joker retardataire · points ÷ 2",
+    "signupInviteTitle": "Et ton classement ?",
+    "signupInviteBody": "Crée ton compte gratuitement pour découvrir ton classement, pronostiquer la prochaine course et avoir accès à toutes les fonctionnalités.",
+    "signupInviteButton": "Créer mon compte gratuitement"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 coureurs",
@@ -663,7 +666,9 @@
     "codeUnknownEmail": "Aucun compte avec cet e-mail.",
     "oauthUnavailable": "La connexion avec {provider} n'est pas encore disponible. Utilise ton e-mail en attendant.",
     "oauthFailed": "La connexion a échoué ({detail}). Réessaie ou utilise ton e-mail.",
-    "oauthNoEmail": "Ce compte ne nous a pas transmis d'adresse e-mail. Autorise le partage de l'e-mail ou utilise ton e-mail."
+    "oauthNoEmail": "Ce compte ne nous a pas transmis d'adresse e-mail. Autorise le partage de l'e-mail ou utilise ton e-mail.",
+    "codeHave": "Saisis ton e-mail et le code reçu.",
+    "codeAlready": "J'ai déjà un code"
   },
   "Support": {
     "title": "Support",
@@ -1043,7 +1048,14 @@
     "lockedBackToRace": "Revenir à la course",
     "accountTitle": "Crée ton compte gratuit",
     "accountIntro": "Pas de mot de passe : un code reçu par e-mail suffit. Tu pourras ensuite naviguer dans toute l'appli.",
-    "accountVerify": "Créer mon compte"
+    "accountVerify": "Créer mon compte",
+    "emailTitle": "Valide ton pronostic",
+    "emailIntro": "Dès la fin de la course, reçois ton code privé par e-mail pour découvrir ton score.",
+    "emailPrivacy": "Ton e-mail reste privé : il sert seulement à t'envoyer ton score.",
+    "emailSubmit": "Valider mon pronostic",
+    "invalidEmail": "Cette adresse e-mail n'est pas valide.",
+    "saveFailed": "Ton pronostic n'a pas pu être validé, réessaie dans un moment.",
+    "welcomeEmailBody": "Ton pronostic est validé. Dès la fin de la course, ton code privé arrive à {email} pour découvrir ton score."
   },
   "BonusQuestions": {
     "sectionTitle": "Questions bonus",
@@ -1092,7 +1104,13 @@
     "footer": "Tu reçois cet e-mail parce que tu joues à VéloPronos.",
     "manage": "Gérer mes notifications",
     "unsubscribe": "Ne plus recevoir ces e-mails",
-    "supportReplyPushTitle": "💬 VéloPronos t'a répondu"
+    "supportReplyPushTitle": "💬 VéloPronos t'a répondu",
+    "guestResultsSubject": "🏁 {race} à {location} : ton score est prêt",
+    "guestResultsTitle": "Ton score est prêt !",
+    "guestResultsBody": "La course {race} à {location} est terminée. Découvre ton score et le détail de tes points.",
+    "guestResultsCodeLabel": "Ton code privé :",
+    "guestResultsCodeHint": "Dans l'appli : écran de connexion, « Se connecter avec un code reçu par e-mail », puis « J'ai déjà un code ».",
+    "guestResultsButton": "Découvrir mon score"
   },
   "Unsubscribe": {
     "title": "Se désabonner",
@@ -1209,5 +1227,21 @@
     "back": "Retour",
     "link": "Mes pronostics du WE des Champions",
     "link_hint": "1 coureur par pays, sans cote"
+  },
+  "CompleteSignup": {
+    "title": "Crée ton compte gratuit",
+    "intro": "Ton score est conservé : choisis ton pseudo pour apparaître dans les classements. Compte : {email}",
+    "pseudo": "Pseudo (visible dans les classements)",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "privacy": "Ton prénom et ton nom restent privés ; seul ton pseudo est visible des autres joueurs.",
+    "privacyLink": "Confidentialité",
+    "submit": "Créer mon compte",
+    "saving": "Création…",
+    "error_pseudoLength": "Ton pseudo doit faire entre 2 et 20 caractères.",
+    "error_pseudoTaken": "Ce pseudo est déjà pris, choisis-en un autre.",
+    "error_missingName": "Indique ton prénom et ton nom.",
+    "error_notPending": "Ton compte est déjà créé.",
+    "error_unknown": "Une erreur est survenue, réessaie."
   }
 }

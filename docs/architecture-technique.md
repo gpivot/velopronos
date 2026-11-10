@@ -1205,6 +1205,23 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   pop-up « Inscris-toi gratuitement en cliquant ici… », qui ouvre le formulaire d'inscription
   (`GuestSignupDialog` en mode « account ») ou renvoie vers la connexion. Une page interdite ouverte
   par son adresse affiche la même pop-up ; la fermer ramène à la course (`/jouer`).
+- **Parcours « e-mail seulement » (10/11/2026, migration 0045, remplace la création de compte à
+  la validation)** : pour valider son pronostic, l'invité ne donne que son e-mail (« Dès la fin de
+  la course, reçois ton code privé par e-mail pour découvrir ton score », `GuestEmailDialog`).
+  L'adresse est rattachée côté serveur à son compte anonyme (`registerGuestEmail`, clé service,
+  sans code) : le compte n'est plus anonyme et le pronostic s'enregistre, mais il reste « en
+  attente d'inscription » (`profiles.signup_pending`) : absent des classements (filtre dans
+  `leaderboard.ts`, `standings.ts`, `racePlayers.ts`, `bonusQuestions.ts`), sans rappels ni récap
+  par e-mail (`player_emails`), navigation bloquée sur sa course (`GuestNavGuard`). À la saisie
+  des résultats, `notifyGuestResults` lui envoie « Ton score est prêt » (Resend) avec un lien de
+  connexion (`/auth/confirm`, jeton `generateLink` magiclink) vers la course et le même code privé
+  (à saisir dans Connexion > code > « J'ai déjà un code »). Sur la course : son score, puis
+  « Crée ton compte gratuitement… » à la place du classement des joueurs, vers `/inscription`
+  (pseudo, prénom, nom, `completeGuestSignup`) ; ses points sont conservés. Inscriptions jamais
+  terminées : supprimées après 60 jours sans pronostic. **À confirmer** : l'e-mail n'est pas
+  vérifié au moment où il est donné (il l'est au retour par le code) ; le score n'est pas écrit
+  dans l'e-mail (il se découvre dans l'appli) ; les invités en attente n'apparaissent pas dans les
+  classements tant qu'ils n'ont pas de pseudo.
 - **Jeton périmé** : après la conversion, le jeton de session garde `is_anonymous` jusqu'à son
   renouvellement, et la base refusait le pronostic (« pronostics fermés » en rouge). La session est
   désormais renouvelée après le code, et avant chaque enregistrement si le jeton dit encore

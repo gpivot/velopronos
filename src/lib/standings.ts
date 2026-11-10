@@ -144,11 +144,12 @@ export async function getRacesStandings(
   const lockedRaces = races.filter((r) => r.displayStatus !== "upcoming");
 
   const [{ data: ledger, error }, { data: predictions }, bonusLedger, { data: jerseyLedger }] = await Promise.all([
-    supabase.from("score_ledger").select("user_id, points, profiles(pseudo)").in("race_id", raceIds),
+    supabase.from("score_ledger").select("user_id, points, profiles!inner(pseudo, signup_pending)").eq("profiles.signup_pending", false).in("race_id", raceIds),
     withPicks && lockedRaces.length
       ? supabase
           .from("predictions")
-          .select("user_id, race_id, athlete_ids, nation_code, profiles(pseudo)")
+          .select("user_id, race_id, athlete_ids, nation_code, profiles!inner(pseudo, signup_pending)")
+          .eq("profiles.signup_pending", false)
           .in(
             "race_id",
             lockedRaces.map((r) => r.id)

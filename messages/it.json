@@ -590,7 +590,10 @@
     "stageTitle": "{stage} · {type}",
     "lateJokerTitle": "Jolly ritardatario",
     "lateJokerHint": "Hai dimenticato questa tappa? Puoi ancora pronosticarla fino a 1 ora dopo la partenza, una volta per corsa. I tuoi punti saranno divisi per 2.",
-    "lateJokerBadge": "Jolly ritardatario · punti ÷ 2"
+    "lateJokerBadge": "Jolly ritardatario · punti ÷ 2",
+    "signupInviteTitle": "E la tua classifica?",
+    "signupInviteBody": "Crea gratis il tuo account per scoprire la tua classifica, pronosticare la prossima gara e accedere a tutte le funzionalità.",
+    "signupInviteButton": "Crea il mio account gratis"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 ciclisti",
@@ -663,7 +666,9 @@
     "codeUnknownEmail": "Nessun account con questa e-mail.",
     "oauthUnavailable": "L'accesso con {provider} non è ancora disponibile. Per ora usa la tua e-mail.",
     "oauthFailed": "Accesso non riuscito ({detail}). Riprova o usa la tua e-mail.",
-    "oauthNoEmail": "Questo account non ci ha condiviso un indirizzo e-mail. Consenti la condivisione dell'e-mail o accedi con la tua e-mail."
+    "oauthNoEmail": "Questo account non ci ha condiviso un indirizzo e-mail. Consenti la condivisione dell'e-mail o accedi con la tua e-mail.",
+    "codeHave": "Inserisci la tua e-mail e il codice ricevuto.",
+    "codeAlready": "Ho già un codice"
   },
   "Support": {
     "title": "Assistenza",
@@ -1043,7 +1048,14 @@
     "lockedBackToRace": "Torna alla gara",
     "accountTitle": "Crea il tuo account gratuito",
     "accountIntro": "Nessuna password: basta un codice ricevuto via e-mail. Poi potrai navigare in tutta l'app.",
-    "accountVerify": "Crea il mio account"
+    "accountVerify": "Crea il mio account",
+    "emailTitle": "Conferma il tuo pronostico",
+    "emailIntro": "Appena finisce la gara, ricevi il tuo codice privato via e-mail per scoprire il tuo punteggio.",
+    "emailPrivacy": "La tua e-mail resta privata: serve solo a inviarti il punteggio.",
+    "emailSubmit": "Conferma il mio pronostico",
+    "invalidEmail": "Questo indirizzo e-mail non è valido.",
+    "saveFailed": "Non è stato possibile confermare il pronostico, riprova tra poco.",
+    "welcomeEmailBody": "Il tuo pronostico è confermato. Appena finisce la gara, il tuo codice privato arriverà a {email} per scoprire il punteggio."
   },
   "BonusQuestions": {
     "sectionTitle": "Domande bonus",
@@ -1092,7 +1104,13 @@
     "footer": "Ricevi questa e-mail perché giochi a VéloPronos.",
     "manage": "Gestisci le mie notifiche",
     "unsubscribe": "Non ricevere più queste e-mail",
-    "supportReplyPushTitle": "💬 VéloPronos ti ha risposto"
+    "supportReplyPushTitle": "💬 VéloPronos ti ha risposto",
+    "guestResultsSubject": "🏁 {race} a {location}: il tuo punteggio è pronto",
+    "guestResultsTitle": "Il tuo punteggio è pronto!",
+    "guestResultsBody": "La gara {race} a {location} è finita. Scopri il tuo punteggio e il dettaglio dei punti.",
+    "guestResultsCodeLabel": "Il tuo codice privato:",
+    "guestResultsCodeHint": "Nell'app: schermata di accesso, «Accedi con un codice ricevuto via e-mail», poi «Ho già un codice».",
+    "guestResultsButton": "Scopri il mio punteggio"
   },
   "Unsubscribe": {
     "title": "Annulla iscrizione",
@@ -1209,5 +1227,21 @@
     "back": "Indietro",
     "link": "I miei pronostici del Weekend dei Campioni",
     "link_hint": "1 corridore per paese, senza quote"
+  },
+  "CompleteSignup": {
+    "title": "Crea il tuo account gratuito",
+    "intro": "Il tuo punteggio è conservato: scegli il tuo pseudonimo per comparire nelle classifiche. Account: {email}",
+    "pseudo": "Pseudonimo (visibile nelle classifiche)",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "privacy": "Nome e cognome restano privati; solo il tuo pseudonimo è visibile agli altri giocatori.",
+    "privacyLink": "Privacy",
+    "submit": "Crea il mio account",
+    "saving": "Creazione…",
+    "error_pseudoLength": "Il pseudonimo deve avere tra 2 e 20 caratteri.",
+    "error_pseudoTaken": "Questo pseudonimo è già preso, scegline un altro.",
+    "error_missingName": "Inserisci nome e cognome.",
+    "error_notPending": "Il tuo account è già stato creato.",
+    "error_unknown": "Si è verificato un errore, riprova."
   }
 }

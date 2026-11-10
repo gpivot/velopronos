@@ -590,7 +590,10 @@
     "stageTitle": "{stage} · {type}",
     "lateJokerTitle": "Late joker",
     "lateJokerHint": "Forgot this stage? You can still predict it up to 1 hour after the start, once per race. Your points will be halved.",
-    "lateJokerBadge": "Late joker · points ÷ 2"
+    "lateJokerBadge": "Late joker · points ÷ 2",
+    "signupInviteTitle": "What about your ranking?",
+    "signupInviteBody": "Create your free account to see your ranking, predict the next race and access every feature.",
+    "signupInviteButton": "Create my free account"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 riders",
@@ -663,7 +666,9 @@
     "codeUnknownEmail": "No account with this email.",
     "oauthUnavailable": "Sign-in with {provider} isn't available yet. Please use your email for now.",
     "oauthFailed": "Sign-in failed ({detail}). Try again or use your email.",
-    "oauthNoEmail": "This account didn't share an email address with us. Allow email sharing or sign in with your email."
+    "oauthNoEmail": "This account didn't share an email address with us. Allow email sharing or sign in with your email.",
+    "codeHave": "Enter your e-mail and the code you received.",
+    "codeAlready": "I already have a code"
   },
   "Support": {
     "title": "Support",
@@ -1043,7 +1048,14 @@
     "lockedBackToRace": "Back to the race",
     "accountTitle": "Create your free account",
     "accountIntro": "No password: a code sent by e-mail is all it takes. You'll then be able to explore the whole app.",
-    "accountVerify": "Create my account"
+    "accountVerify": "Create my account",
+    "emailTitle": "Confirm your prediction",
+    "emailIntro": "As soon as the race ends, get your private code by e-mail to discover your score.",
+    "emailPrivacy": "Your e-mail stays private: it is only used to send you your score.",
+    "emailSubmit": "Confirm my prediction",
+    "invalidEmail": "This e-mail address is not valid.",
+    "saveFailed": "Your prediction could not be confirmed, please try again shortly.",
+    "welcomeEmailBody": "Your prediction is confirmed. As soon as the race ends, your private code will be sent to {email} so you can discover your score."
   },
   "BonusQuestions": {
     "sectionTitle": "Bonus questions",
@@ -1092,7 +1104,13 @@
     "footer": "You're receiving this email because you play VéloPronos.",
     "manage": "Manage my notifications",
     "unsubscribe": "Stop receiving these emails",
-    "supportReplyPushTitle": "💬 VéloPronos replied to you"
+    "supportReplyPushTitle": "💬 VéloPronos replied to you",
+    "guestResultsSubject": "🏁 {race} in {location}: your score is ready",
+    "guestResultsTitle": "Your score is ready!",
+    "guestResultsBody": "The {race} in {location} is over. Discover your score and how your points were earned.",
+    "guestResultsCodeLabel": "Your private code:",
+    "guestResultsCodeHint": "In the app: sign-in screen, “Sign in with a code sent by e-mail”, then “I already have a code”.",
+    "guestResultsButton": "Discover my score"
   },
   "Unsubscribe": {
     "title": "Unsubscribe",
@@ -1209,5 +1227,21 @@
     "back": "Back",
     "link": "My Champions Weekend predictions",
     "link_hint": "1 rider per country, no odds"
+  },
+  "CompleteSignup": {
+    "title": "Create your free account",
+    "intro": "Your score is kept: choose your username to appear in the standings. Account: {email}",
+    "pseudo": "Username (shown in the standings)",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "privacy": "Your first and last name stay private; only your username is visible to other players.",
+    "privacyLink": "Privacy",
+    "submit": "Create my account",
+    "saving": "Creating…",
+    "error_pseudoLength": "Your username must be 2 to 20 characters long.",
+    "error_pseudoTaken": "This username is already taken, choose another one.",
+    "error_missingName": "Please enter your first and last name.",
+    "error_notPending": "Your account has already been created.",
+    "error_unknown": "Something went wrong, please try again."
   }
 }

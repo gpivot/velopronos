@@ -15,6 +15,8 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
   const [codeSent, setCodeSent] = useState(false);
+  // Code déjà en main (e-mail « Ton score est prêt » d'un invité) : on le saisit sans en redemander.
+  const [haveCode, setHaveCode] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [oauthError, setOauthError] = useState<string | null>(null);
@@ -41,8 +43,14 @@ export default function SignInPage() {
 
   // Erreur renvoyée par /auth/callback (refus du fournisseur, compte sans e-mail, etc.).
   useEffect(() => {
-    const detail = new URLSearchParams(window.location.search).get("oauth_error");
+    const query = new URLSearchParams(window.location.search);
+    const detail = query.get("oauth_error");
     if (detail) setOauthError(oauthErrorMessage(detail));
+    if (query.get("code") === "1") {
+      setMode("code");
+      setCodeSent(true);
+      setHaveCode(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -197,7 +205,7 @@ export default function SignInPage() {
         {mode === "code" ? (
           codeSent && (
             <>
-              <div className="text-xs text-text-dim">{t("codeSent", { email: email.trim() })}</div>
+              <div className="text-xs text-text-dim">{haveCode ? t("codeHave") : t("codeSent", { email: email.trim() })}</div>
               <input
                 required
                 inputMode="numeric"
@@ -239,10 +247,24 @@ export default function SignInPage() {
         </button>
       </form>
 
+      {mode === "code" && !codeSent && (
+        <button
+          onClick={() => {
+            setCodeSent(true);
+            setHaveCode(true);
+            setError(null);
+          }}
+          className="text-xs font-semibold text-ice underline"
+        >
+          {t("codeAlready")}
+        </button>
+      )}
+
       <button
         onClick={() => {
           setMode(mode === "code" ? "sign-in" : "code");
           setCodeSent(false);
+          setHaveCode(false);
           setCode("");
           setError(null);
         }}

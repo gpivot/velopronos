@@ -590,7 +590,10 @@
     "stageTitle": "{stage} · {type}",
     "lateJokerTitle": "Comodín rezagado",
     "lateJokerHint": "¿Olvidaste esta etapa? Aún puedes pronosticarla hasta 1 h después de la salida, una vez por carrera. Tus puntos se dividirán entre 2.",
-    "lateJokerBadge": "Comodín rezagado · puntos ÷ 2"
+    "lateJokerBadge": "Comodín rezagado · puntos ÷ 2",
+    "signupInviteTitle": "¿Y tu clasificación?",
+    "signupInviteBody": "Crea tu cuenta gratis para descubrir tu clasificación, pronosticar la próxima carrera y acceder a todas las funciones.",
+    "signupInviteButton": "Crear mi cuenta gratis"
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 ciclistas",
@@ -663,7 +666,9 @@
     "codeUnknownEmail": "No hay ninguna cuenta con este correo.",
     "oauthUnavailable": "El inicio de sesión con {provider} aún no está disponible. Usa tu correo electrónico por ahora.",
     "oauthFailed": "Error al iniciar sesión ({detail}). Inténtalo de nuevo o usa tu correo electrónico.",
-    "oauthNoEmail": "Esta cuenta no nos ha compartido una dirección de correo. Permite compartir el correo o inicia sesión con tu correo electrónico."
+    "oauthNoEmail": "Esta cuenta no nos ha compartido una dirección de correo. Permite compartir el correo o inicia sesión con tu correo electrónico.",
+    "codeHave": "Introduce tu e-mail y el código recibido.",
+    "codeAlready": "Ya tengo un código"
   },
   "Support": {
     "title": "Soporte",
@@ -1043,7 +1048,14 @@
     "lockedBackToRace": "Volver a la carrera",
     "accountTitle": "Crea tu cuenta gratuita",
     "accountIntro": "Sin contraseña: basta con un código recibido por e-mail. Después podrás navegar por toda la app.",
-    "accountVerify": "Crear mi cuenta"
+    "accountVerify": "Crear mi cuenta",
+    "emailTitle": "Confirma tu pronóstico",
+    "emailIntro": "En cuanto termine la carrera, recibe tu código privado por e-mail para descubrir tu puntuación.",
+    "emailPrivacy": "Tu e-mail sigue siendo privado: solo sirve para enviarte tu puntuación.",
+    "emailSubmit": "Confirmar mi pronóstico",
+    "invalidEmail": "Esta dirección de e-mail no es válida.",
+    "saveFailed": "No se ha podido confirmar tu pronóstico, inténtalo de nuevo en un momento.",
+    "welcomeEmailBody": "Tu pronóstico está confirmado. En cuanto termine la carrera, tu código privado llegará a {email} para descubrir tu puntuación."
   },
   "BonusQuestions": {
     "sectionTitle": "Preguntas extra",
@@ -1092,7 +1104,13 @@
     "footer": "Recibes este email porque juegas a VéloPronos.",
     "manage": "Gestionar mis notificaciones",
     "unsubscribe": "Dejar de recibir estos emails",
-    "supportReplyPushTitle": "💬 VéloPronos te ha respondido"
+    "supportReplyPushTitle": "💬 VéloPronos te ha respondido",
+    "guestResultsSubject": "🏁 {race} en {location}: tu puntuación está lista",
+    "guestResultsTitle": "¡Tu puntuación está lista!",
+    "guestResultsBody": "La carrera {race} en {location} ha terminado. Descubre tu puntuación y el detalle de tus puntos.",
+    "guestResultsCodeLabel": "Tu código privado:",
+    "guestResultsCodeHint": "En la app: pantalla de inicio de sesión, «Iniciar sesión con un código recibido por e-mail» y luego «Ya tengo un código».",
+    "guestResultsButton": "Descubrir mi puntuación"
   },
   "Unsubscribe": {
     "title": "Darse de baja",
@@ -1209,5 +1227,21 @@
     "back": "Volver",
     "link": "Mis pronósticos del fin de semana de Campeones",
     "link_hint": "1 corredor por país, sin cuotas"
+  },
+  "CompleteSignup": {
+    "title": "Crea tu cuenta gratuita",
+    "intro": "Tu puntuación se conserva: elige tu apodo para aparecer en las clasificaciones. Cuenta: {email}",
+    "pseudo": "Apodo (visible en las clasificaciones)",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "privacy": "Tu nombre y apellido siguen siendo privados; solo tu apodo es visible para los demás jugadores.",
+    "privacyLink": "Privacidad",
+    "submit": "Crear mi cuenta",
+    "saving": "Creando…",
+    "error_pseudoLength": "Tu apodo debe tener entre 2 y 20 caracteres.",
+    "error_pseudoTaken": "Este apodo ya está cogido, elige otro.",
+    "error_missingName": "Indica tu nombre y apellido.",
+    "error_notPending": "Tu cuenta ya está creada.",
+    "error_unknown": "Se ha producido un error, inténtalo de nuevo."
   }
 }

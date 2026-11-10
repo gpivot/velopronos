@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/navigation";
 import { CheckIcon } from "@/components/icons";
-import { GuestSignupDialog, GuestWelcome } from "@/components/GuestSignupDialog";
+import { GuestEmailDialog, GuestWelcome } from "@/components/GuestSignupDialog";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { filterBySearch } from "@/lib/searchFilter";
@@ -42,7 +42,7 @@ export function RelayPredictionForm({
   const [error, setError] = useState<string | null>(null);
   // Parcours d'invité : création du compte à la validation du premier pronostic.
   const [guestDialog, setGuestDialog] = useState(false);
-  const [welcome, setWelcome] = useState(false);
+  const [welcome, setWelcome] = useState<string | null>(null);
   // Dernier pronostic enregistré, pour signaler une modification pas encore validée.
   const [savedState, setSavedState] = useState({ nation: initialSelection, bonusX2: initialBonusX2 });
   const supabase = createClient();
@@ -120,13 +120,13 @@ export function RelayPredictionForm({
         error={error}
       />
 
-      {welcome && validated && <GuestWelcome />}
+      {welcome && validated && <GuestWelcome email={welcome} />}
       {guestDialog && (
-        <GuestSignupDialog
+        <GuestEmailDialog
           onClose={() => setGuestDialog(false)}
-          onDone={async () => {
+          onDone={async (email) => {
             setGuestDialog(false);
-            setWelcome(true);
+            setWelcome(email);
             await submit();
             router.refresh();
           }}

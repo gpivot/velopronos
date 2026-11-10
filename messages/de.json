@@ -590,7 +590,10 @@
     "stageTitle": "{stage} · {type}",
     "lateJokerTitle": "Nachzügler-Joker",
     "lateJokerHint": "Etappe vergessen? Du kannst sie noch bis 1 Std. nach dem Start tippen, einmal pro Rennen. Deine Punkte werden halbiert.",
-    "lateJokerBadge": "Nachzügler-Joker · Punkte ÷ 2"
+    "lateJokerBadge": "Nachzügler-Joker · Punkte ÷ 2",
+    "signupInviteTitle": "Und deine Platzierung?",
+    "signupInviteBody": "Erstelle kostenlos dein Konto, um deine Platzierung zu sehen, das nächste Rennen zu tippen und alle Funktionen zu nutzen.",
+    "signupInviteButton": "Kostenloses Konto erstellen"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Fahrer",
@@ -663,7 +666,9 @@
     "codeUnknownEmail": "Kein Konto mit dieser E-Mail.",
     "oauthUnavailable": "Die Anmeldung mit {provider} ist noch nicht verfügbar. Nutze vorerst deine E-Mail.",
     "oauthFailed": "Anmeldung fehlgeschlagen ({detail}). Versuche es erneut oder nutze deine E-Mail.",
-    "oauthNoEmail": "Dieses Konto hat uns keine E-Mail-Adresse übermittelt. Erlaube die Freigabe der E-Mail oder melde dich mit deiner E-Mail an."
+    "oauthNoEmail": "Dieses Konto hat uns keine E-Mail-Adresse übermittelt. Erlaube die Freigabe der E-Mail oder melde dich mit deiner E-Mail an.",
+    "codeHave": "Gib deine E-Mail und den erhaltenen Code ein.",
+    "codeAlready": "Ich habe schon einen Code"
   },
   "Support": {
     "title": "Support",
@@ -1043,7 +1048,14 @@
     "lockedBackToRace": "Zurück zum Rennen",
     "accountTitle": "Erstelle dein kostenloses Konto",
     "accountIntro": "Kein Passwort: Ein per E-Mail erhaltener Code genügt. Danach kannst du die ganze App nutzen.",
-    "accountVerify": "Konto erstellen"
+    "accountVerify": "Konto erstellen",
+    "emailTitle": "Bestätige deinen Tipp",
+    "emailIntro": "Gleich nach dem Rennen bekommst du deinen privaten Code per E-Mail und entdeckst deine Punktzahl.",
+    "emailPrivacy": "Deine E-Mail bleibt privat: Sie dient nur dazu, dir deine Punktzahl zu schicken.",
+    "emailSubmit": "Tipp bestätigen",
+    "invalidEmail": "Diese E-Mail-Adresse ist ungültig.",
+    "saveFailed": "Dein Tipp konnte nicht bestätigt werden, versuche es gleich noch einmal.",
+    "welcomeEmailBody": "Dein Tipp ist bestätigt. Gleich nach dem Rennen geht dein privater Code an {email}, damit du deine Punktzahl entdeckst."
   },
   "BonusQuestions": {
     "sectionTitle": "Bonusfragen",
@@ -1092,7 +1104,13 @@
     "footer": "Du erhältst diese E-Mail, weil du bei VéloPronos mitspielst.",
     "manage": "Benachrichtigungen verwalten",
     "unsubscribe": "Diese E-Mails nicht mehr erhalten",
-    "supportReplyPushTitle": "💬 VéloPronos hat dir geantwortet"
+    "supportReplyPushTitle": "💬 VéloPronos hat dir geantwortet",
+    "guestResultsSubject": "🏁 {race} in {location}: deine Punktzahl ist da",
+    "guestResultsTitle": "Deine Punktzahl ist da!",
+    "guestResultsBody": "Das Rennen {race} in {location} ist vorbei. Entdecke deine Punktzahl und wie sie zustande kommt.",
+    "guestResultsCodeLabel": "Dein privater Code:",
+    "guestResultsCodeHint": "In der App: Anmeldebildschirm, „Mit einem per E-Mail erhaltenen Code anmelden“, dann „Ich habe schon einen Code“.",
+    "guestResultsButton": "Meine Punktzahl entdecken"
   },
   "Unsubscribe": {
     "title": "Abmelden",
@@ -1209,5 +1227,21 @@
     "back": "Zurück",
     "link": "Meine Tipps fürs Meister-Wochenende",
     "link_hint": "1 Fahrer pro Land, ohne Quoten"
+  },
+  "CompleteSignup": {
+    "title": "Erstelle dein kostenloses Konto",
+    "intro": "Deine Punkte bleiben erhalten: Wähle deinen Spielernamen, um in den Ranglisten zu erscheinen. Konto: {email}",
+    "pseudo": "Spielername (in den Ranglisten sichtbar)",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "privacy": "Vor- und Nachname bleiben privat; nur dein Spielername ist für andere sichtbar.",
+    "privacyLink": "Datenschutz",
+    "submit": "Konto erstellen",
+    "saving": "Wird erstellt…",
+    "error_pseudoLength": "Dein Spielername muss 2 bis 20 Zeichen lang sein.",
+    "error_pseudoTaken": "Dieser Spielername ist schon vergeben, wähle einen anderen.",
+    "error_missingName": "Gib deinen Vor- und Nachnamen ein.",
+    "error_notPending": "Dein Konto wurde bereits erstellt.",
+    "error_unknown": "Ein Fehler ist aufgetreten, versuche es noch einmal."
   }
 }

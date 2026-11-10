@@ -23,7 +23,12 @@ et l'en-tête de désabonnement en un clic exigé par Gmail et Yahoo
   Services > **Sign in with Apple for Email Communication** > ajouter `biathlonpronos.fr` et
   l'adresse d'envoi (`notifications@biathlonpronos.fr`). Le domaine doit avoir SPF/DKIM, déjà
   en place pour Resend.
-- Invités : pas d'adresse, pas d'e-mail (et pas d'accès au profil).
+- Invités anonymes : pas d'adresse, pas d'e-mail (et pas d'accès au profil).
+- Invités « e-mail seulement » (migration 0045, inscription pas terminée) : un seul e-mail par
+  course, « Ton score est prêt », envoyé à la saisie des résultats (`notifyGuestResults`), avec
+  lien de connexion et code privé. Ni rappels, ni récap, ni nouvelles avant l'inscription.
+  Réglage Supabase : Authentication > Providers > Email > « Email OTP Expiration » à 86400
+  (24 h, le maximum), pour que le lien et le code restent valables une journée.
 - La langue des e-mails est celle choisie à l'inscription (métadonnée `locale` de Supabase Auth),
   mise à jour quand le joueur change un réglage de notification.
 
