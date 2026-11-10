@@ -1218,7 +1218,7 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   (à saisir dans Connexion > code > « J'ai déjà un code »). Sur la course : son score, puis
   « Crée ton compte gratuitement… » à la place du classement des joueurs, vers `/inscription`
   (pseudo, prénom, nom, `completeGuestSignup`) ; ses points sont conservés. Inscriptions jamais
-  terminées : supprimées après 60 jours sans pronostic. **À confirmer** : l'e-mail n'est pas
+  terminées : supprimées après 60 jours sans pronostic. **Validé par Guillaume (10/11/2026)** : l'e-mail n'est pas
   vérifié au moment où il est donné (il l'est au retour par le code) ; le score n'est pas écrit
   dans l'e-mail (il se découvre dans l'appli) ; les invités en attente n'apparaissent pas dans les
   classements tant qu'ils n'ont pas de pseudo.
