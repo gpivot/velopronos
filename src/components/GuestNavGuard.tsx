@@ -7,7 +7,6 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { routing } from "@/i18n/routing";
 import { CloseIcon } from "@/components/icons";
-import { GuestSignupDialog } from "@/components/GuestSignupDialog";
 
 /** Pages d'information toujours ouvertes. */
 const INFO_PAGES = [/^\/jouer$/, /^\/sign-in$/, /^\/inscription$/, /^\/regles$/, /^\/confidentialite$/, /^\/cgu$/, /^\/support$/];
@@ -48,7 +47,6 @@ export function GuestNavGuard() {
   const [status, setStatus] = useState<GuestStatus>("none");
   const guest = status !== "none";
   const [popup, setPopup] = useState(false);
-  const [signup, setSignup] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -115,7 +113,7 @@ export function GuestNavGuard() {
 
   return (
     <>
-      {popup && !signup && (
+      {popup && (
         <div
           data-guest-popup
           role="dialog"
@@ -137,31 +135,16 @@ export function GuestNavGuard() {
             </div>
             <p className="text-[13px] leading-relaxed text-frost">
               {t.rich("lockedBody", {
-                link: (chunks) =>
-                  status === "pending" ? (
-                    <Link href="/inscription" className="font-semibold text-ice underline">
-                      {chunks}
-                    </Link>
-                  ) : (
-                    <button type="button" onClick={() => setSignup(true)} className="font-semibold text-ice underline">
-                      {chunks}
-                    </button>
-                  ),
+                link: (chunks) => (
+                  <Link href="/inscription" className="font-semibold text-ice underline">
+                    {chunks}
+                  </Link>
+                ),
               })}
             </p>
-            {status === "pending" ? (
-              <Link href="/inscription" className="rounded-xl bg-ice py-3 text-center font-display text-sm font-bold text-on-ice">
-                {t("lockedSignUp")}
-              </Link>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setSignup(true)}
-                className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice"
-              >
-                {t("lockedSignUp")}
-              </button>
-            )}
+            <Link href="/inscription" className="rounded-xl bg-ice py-3 text-center font-display text-sm font-bold text-on-ice">
+              {t("lockedSignUp")}
+            </Link>
             <div className="flex justify-between text-xs text-text-dim">
               {status === "anonymous" ? (
                 <Link href="/sign-in" className="underline">
@@ -175,20 +158,6 @@ export function GuestNavGuard() {
               </button>
             </div>
           </div>
-        </div>
-      )}
-      {signup && (
-        <div data-guest-popup>
-          <GuestSignupDialog
-            mode="account"
-            onClose={() => setSignup(false)}
-            onDone={() => {
-              setSignup(false);
-              setPopup(false);
-              setStatus("none");
-              router.refresh();
-            }}
-          />
         </div>
       )}
     </>

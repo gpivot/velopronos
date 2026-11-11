@@ -5,8 +5,8 @@ import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { CompleteSignupForm } from "./CompleteSignupForm";
 
 /**
- * Fin d'inscription d'un invité « e-mail seulement » (migration 0045) : il a validé un pronostic
- * avec son e-mail et reçu son score ; il choisit pseudo, prénom et nom, et garde ses points.
+ * Création du compte d'un invité (bouton « Je joue ») : pseudo, prénom, nom, mot de passe (et
+ * e-mail s'il ne l'a pas encore donné). Il garde son identifiant, donc ses pronostics et ses points.
  */
 export default async function CompleteSignupPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -14,9 +14,13 @@ export default async function CompleteSignupPage({ params }: { params: Promise<{
   const {
     data: { user },
   } = await getAuthUser();
-  if (!user || user.is_anonymous) redirect(`/${locale}/sign-in`);
-  const { data: profile } = await createClient().from("profiles").select("signup_pending").eq("id", user.id).maybeSingle();
-  if (!(profile as { signup_pending?: boolean } | null)?.signup_pending) redirect(`/${locale}`);
+  if (!user) redirect(`/${locale}/sign-in`);
+  // Invité anonyme (pas encore d'e-mail) : il le donne ici. Invité « e-mail seulement » : déjà connu.
+  const anonymous = Boolean(user.is_anonymous);
+  if (!anonymous) {
+    const { data: profile } = await createClient().from("profiles").select("signup_pending").eq("id", user.id).maybeSingle();
+    if (!(profile as { signup_pending?: boolean } | null)?.signup_pending) redirect(`/${locale}`);
+  }
 
   const t = await getTranslations("CompleteSignup");
   return (
@@ -24,9 +28,11 @@ export default async function CompleteSignupPage({ params }: { params: Promise<{
       <div className="flex flex-col items-center gap-3 text-center">
         <LogoMark className="h-12 w-12 text-ice" />
         <h1 className="font-display text-xl font-extrabold">{t("title")}</h1>
-        <p className="text-[13px] leading-relaxed text-text-dim">{t("intro", { email: user.email ?? "" })}</p>
+        <p className="text-[13px] leading-relaxed text-text-dim">
+          {anonymous ? t("introNew") : t("intro", { email: user.email ?? "" })}
+        </p>
       </div>
-      <CompleteSignupForm />
+      <CompleteSignupForm askEmail={anonymous} />
     </div>
   );
 }
