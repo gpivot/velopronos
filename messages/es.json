@@ -1243,5 +1243,19 @@
     "error_missingName": "Indica tu nombre y apellido.",
     "error_notPending": "Tu cuenta ya está creada.",
     "error_unknown": "Se ha producido un error, inténtalo de nuevo."
+  },
+  "Tutorial": {
+    "stepOf": "{step} / {total}",
+    "skip": "Saltar",
+    "previous": "Atrás",
+    "next": "Siguiente",
+    "start": "¡Vamos!",
+    "place": "{rank}.º",
+    "step1Title": "Elige tus 3 biatletas",
+    "step1Body": "Toca sus nombres en la lista de la carrera para añadirlos a tu pronóstico y luego confirma. Puedes cambiar de idea hasta la salida.",
+    "step2Title": "La cuota y el multiplicador",
+    "step2Body": "Cada biatleta tiene una cuota: cuanto más alta, más arriesgada es la apuesta… y más puntos da. Si termina en el Top 10, su cuota se multiplica según su puesto. Más allá del 10.º puesto, no suma nada.",
+    "step3Title": "El cálculo de tus puntos",
+    "step3Body": "Para cada uno de tus 3 biatletas: cuota × multiplicador de su puesto. Se suman y luego se añaden los bonus si tus 3 elecciones terminan juntas en el Top 10, el Top 5 o en el podio."
   }
 }

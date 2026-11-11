@@ -1243,5 +1243,19 @@
     "error_missingName": "Please enter your first and last name.",
     "error_notPending": "Your account has already been created.",
     "error_unknown": "Something went wrong, please try again."
+  },
+  "Tutorial": {
+    "stepOf": "{step} / {total}",
+    "skip": "Skip",
+    "previous": "Back",
+    "next": "Next",
+    "start": "Let's go!",
+    "place": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}",
+    "step1Title": "Pick your 3 biathletes",
+    "step1Body": "Tap their names in the race list to add them to your prediction, then confirm. You can change your mind until the start.",
+    "step2Title": "Odds and multiplier",
+    "step2Body": "Each biathlete has odds: the higher they are, the riskier the pick… and the more it pays. If they finish in the Top 10, their odds are multiplied according to their place. Beyond 10th place, they score nothing.",
+    "step3Title": "How your points are calculated",
+    "step3Body": "For each of your 3 biathletes: odds × the multiplier of their place. Add them up, then add the bonuses if all 3 picks finish in the Top 10, the Top 5 or on the podium."
   }
 }

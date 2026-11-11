@@ -1243,5 +1243,19 @@
     "error_missingName": "Indique ton prénom et ton nom.",
     "error_notPending": "Ton compte est déjà créé.",
     "error_unknown": "Une erreur est survenue, réessaie."
+  },
+  "Tutorial": {
+    "stepOf": "{step} / {total}",
+    "skip": "Passer",
+    "previous": "Retour",
+    "next": "Suivant",
+    "start": "C'est parti !",
+    "place": "{rank, selectordinal, one {#er} other {#e}}",
+    "step1Title": "Choisis tes 3 biathlètes",
+    "step1Body": "Clique sur leur nom dans la liste de la course pour les ajouter à ton pronostic, puis valide. Tu peux changer d'avis jusqu'au départ.",
+    "step2Title": "La cote et le multiplicateur",
+    "step2Body": "Chaque biathlète a une cote : plus elle est élevée, plus le pari est risqué… et plus il rapporte. S'il finit dans le Top 10, sa cote est multipliée selon sa place. Au-delà de la 10e place, il ne rapporte rien.",
+    "step3Title": "Le calcul de tes points",
+    "step3Body": "Pour chacun de tes 3 biathlètes : cote × multiplicateur de sa place. On additionne, puis on ajoute les bonus si tes 3 choix finissent ensemble dans le Top 10, le Top 5 ou sur le podium."
   }
 }
