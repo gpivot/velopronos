@@ -15,7 +15,7 @@ const INFO_PAGES = [/^\/jouer$/, /^\/sign-in$/, /^\/inscription$/, /^\/regles$/,
  * compte en attente d'inscription verrait le tableau de bord des joueurs).
  */
 function allowedPages(status: GuestStatus) {
-  return [...INFO_PAGES, /^\/courses\/[^/]+$/, ...(status === "anonymous" ? [/^\/$/] : [])];
+  return [...INFO_PAGES, /^\/courses\/[^/]+(\/attente)?$/, ...(status === "anonymous" ? [/^\/$/] : [])];
 }
 /** Liens qu'un invité peut suivre depuis une page : pas de navigation vers les autres onglets ni les autres courses. */
 function allowedLinks(status: GuestStatus) {
@@ -92,7 +92,9 @@ export function GuestNavGuard() {
         const url = new URL(anchor.href, window.location.href);
         if (url.origin === window.location.origin) {
           const path = stripLocale(url.pathname);
-          blocked = path !== current && !allowedLinks(status).some((re) => re.test(path));
+          // Sa course et sa page d'attente (après le pronostic validé par e-mail) restent liées.
+          const sameRace = path.replace(/\/attente$/, "") === current.replace(/\/attente$/, "");
+          blocked = !sameRace && !allowedLinks(status).some((re) => re.test(path));
         }
       }
       if (!blocked) return;

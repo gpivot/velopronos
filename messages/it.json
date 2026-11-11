@@ -1262,5 +1262,17 @@
     "step2Body": "Ogni biatleta ha una quota: più è alta, più la scelta è rischiosa… e più rende. Se arriva nella Top 10, la sua quota viene moltiplicata in base al piazzamento. Oltre il 10° posto non porta punti.",
     "step3Title": "Il calcolo dei tuoi punti",
     "step3Body": "Per ciascuno dei tuoi 3 biatleti: quota × moltiplicatore del suo piazzamento. Si sommano, poi si aggiungono i bonus se le tue 3 scelte arrivano tutte nella Top 10, nella Top 5 o sul podio."
+  },
+  "GuestWaiting": {
+    "title": "Il tuo pronostico è confermato!",
+    "subtitle": "Il tuo codice privato arriverà a {email}.",
+    "startsAt": "Partenza {date} alle {time}.",
+    "editable": "Puoi modificare il pronostico fino alla partenza della gara.",
+    "editButton": "Modifica il mio pronostico",
+    "codeTitle": "Il tuo codice privato",
+    "codeBody": "Appena i risultati saranno ufficiali, torna a inserire il tuo codice per scoprire il tuo punteggio.",
+    "codeSubmit": "Scopri il mio punteggio",
+    "verifying": "Verifica…",
+    "codeWrong": "Codice errato o scaduto. Usa l'ultimo codice ricevuto via e-mail."
   }
 }

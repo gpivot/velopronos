@@ -1262,5 +1262,17 @@
     "step2Body": "Cada biatleta tiene una cuota: cuanto más alta, más arriesgada es la apuesta… y más puntos da. Si termina en el Top 10, su cuota se multiplica según su puesto. Más allá del 10.º puesto, no suma nada.",
     "step3Title": "El cálculo de tus puntos",
     "step3Body": "Para cada uno de tus 3 biatletas: cuota × multiplicador de su puesto. Se suman y luego se añaden los bonus si tus 3 elecciones terminan juntas en el Top 10, el Top 5 o en el podio."
+  },
+  "GuestWaiting": {
+    "title": "¡Tu pronóstico está confirmado!",
+    "subtitle": "Tu código privado llegará a {email}.",
+    "startsAt": "Salida el {date} a las {time}.",
+    "editable": "Puedes modificar tu pronóstico hasta la salida de la carrera.",
+    "editButton": "Modificar mi pronóstico",
+    "codeTitle": "Tu código privado",
+    "codeBody": "En cuanto los resultados sean oficiales, vuelve a introducir tu código para descubrir tu puntuación.",
+    "codeSubmit": "Descubrir mi puntuación",
+    "verifying": "Comprobando…",
+    "codeWrong": "Código incorrecto o caducado. Usa el último código recibido por e-mail."
   }
 }

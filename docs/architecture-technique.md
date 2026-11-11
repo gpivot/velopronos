@@ -1220,7 +1220,12 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   (pseudo, prénom, nom et mot de passe, `completeGuestSignup`) ; ses points sont conservés.
   Depuis le 11/11/2026, la pop-up de navigation bloquée mène aussi à `/inscription`, y compris pour
   un invité anonyme (il y donne alors son e-mail en plus) : un seul formulaire, avec mot de passe,
-  qui garde l'identifiant du compte invité. Inscriptions jamais
+  qui garde l'identifiant du compte invité.
+  Après la validation du pronostic par e-mail, l'invité arrive sur une page d'attente
+  (`/courses/[raceId]/attente`) : heure de départ, ses choix, compte à rebours, bouton « Modifier
+  mon pronostic » (retour à la course) et saisie du code privé (« Dès l'officialisation des
+  résultats, reviens saisir ton code pour découvrir ton score »). Une fois la course partie, la page
+  renvoie vers la course. Inscriptions jamais
   terminées : supprimées après 60 jours sans pronostic. **Validé par Guillaume (10/11/2026)** : l'e-mail n'est pas
   vérifié au moment où il est donné (il l'est au retour par le code) ; le score n'est pas écrit
   dans l'e-mail (il se découvre dans l'appli) ; les invités en attente n'apparaissent pas dans les

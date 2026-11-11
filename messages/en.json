@@ -1262,5 +1262,17 @@
     "step2Body": "Each biathlete has odds: the higher they are, the riskier the pick… and the more it pays. If they finish in the Top 10, their odds are multiplied according to their place. Beyond 10th place, they score nothing.",
     "step3Title": "How your points are calculated",
     "step3Body": "For each of your 3 biathletes: odds × the multiplier of their place. Add them up, then add the bonuses if all 3 picks finish in the Top 10, the Top 5 or on the podium."
+  },
+  "GuestWaiting": {
+    "title": "Your prediction is confirmed!",
+    "subtitle": "Your private code will be sent to {email}.",
+    "startsAt": "Starts on {date} at {time}.",
+    "editable": "You can still change your prediction until the race starts.",
+    "editButton": "Change my prediction",
+    "codeTitle": "Your private code",
+    "codeBody": "As soon as the results are official, come back and enter your code to discover your score.",
+    "codeSubmit": "Discover my score",
+    "verifying": "Checking…",
+    "codeWrong": "Wrong or expired code. Use the latest code you received by e-mail."
   }
 }

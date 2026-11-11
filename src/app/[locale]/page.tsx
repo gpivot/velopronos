@@ -76,7 +76,8 @@ async function getHomeData(): Promise<HomeData> {
         .order("submitted_at", { ascending: false })
         .limit(1)
         .maybeSingle();
-      redirect({ href: last ? `/courses/${last.race_id}` : "/jouer", locale: await getLocale() });
+      // Page d'attente si la course n'est pas partie (elle renvoie sinon vers la course et son score).
+      redirect({ href: last ? `/courses/${last.race_id}/attente` : "/jouer", locale: await getLocale() });
     }
   }
 

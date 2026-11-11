@@ -1262,5 +1262,17 @@
     "step2Body": "Chaque biathlète a une cote : plus elle est élevée, plus le pari est risqué… et plus il rapporte. S'il finit dans le Top 10, sa cote est multipliée selon sa place. Au-delà de la 10e place, il ne rapporte rien.",
     "step3Title": "Le calcul de tes points",
     "step3Body": "Pour chacun de tes 3 biathlètes : cote × multiplicateur de sa place. On additionne, puis on ajoute les bonus si tes 3 choix finissent ensemble dans le Top 10, le Top 5 ou sur le podium."
+  },
+  "GuestWaiting": {
+    "title": "Ton pronostic est validé !",
+    "subtitle": "Ton code privé arrivera à {email}.",
+    "startsAt": "Départ le {date} à {time}.",
+    "editable": "Tes pronostics restent modifiables jusqu'au départ de la course.",
+    "editButton": "Modifier mon pronostic",
+    "codeTitle": "Ton code privé",
+    "codeBody": "Dès l'officialisation des résultats, reviens saisir ton code pour découvrir ton score.",
+    "codeSubmit": "Découvrir mon score",
+    "verifying": "Vérification…",
+    "codeWrong": "Code incorrect ou expiré. Utilise le dernier code reçu par e-mail."
   }
 }

@@ -118,10 +118,10 @@ export function PredictionForm({
     if (next !== "ca_farte") setCaFarteTarget(null);
   }
 
-  async function submit() {
+  async function submit(): Promise<boolean> {
     if (cardChoice === "ca_farte" && !caFarteTarget) {
       setError(t("caFarteTargetRequired"));
-      return;
+      return false;
     }
 
     setSaving(true);
@@ -135,7 +135,7 @@ export function PredictionForm({
     if (!user || user.is_anonymous) {
       setGuestDialog(true);
       setSaving(false);
-      return;
+      return false;
     }
 
     // Invité devenu joueur (e-mail rattaché) mais jeton de session encore « anonyme » : la base
@@ -185,6 +185,7 @@ export function PredictionForm({
       // La carte jouée devient « active » : l'encadré des cartes et le formulaire se mettent à jour.
       if ((cardChoice !== "none" && cardChoice !== activeCard) || lateJoker) router.refresh();
     }
+    return !failure;
   }
 
   // Ordre de départ : classés du sprint d'abord (1er en haut), puis les autres par cote.
@@ -290,8 +291,9 @@ export function PredictionForm({
           onDone={async (email) => {
             setGuestDialog(false);
             setWelcome(email);
-            await submit();
-            router.refresh();
+            // Pronostic enregistré : page d'attente (heure de départ, saisie du code après la course).
+            if (await submit()) router.push(`/courses/${raceId}/attente`);
+            else router.refresh();
           }}
         />
       )}
