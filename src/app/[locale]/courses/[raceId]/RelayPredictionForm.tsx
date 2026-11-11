@@ -51,8 +51,8 @@ export function RelayPredictionForm({
 
   const canUseX2 = x2Eligible && (initialBonusX2 || x2UsesRemaining > 0);
 
-  async function submit() {
-    if (!selected) return;
+  async function submit(): Promise<boolean> {
+    if (!selected) return false;
     setSaving(true);
     setError(null);
 
@@ -64,7 +64,7 @@ export function RelayPredictionForm({
     if (!user || user.is_anonymous) {
       setGuestDialog(true);
       setSaving(false);
-      return;
+      return false;
     }
 
     // Invité devenu joueur mais jeton encore « anonyme » : renouvellement avant d'écrire.
@@ -89,6 +89,7 @@ export function RelayPredictionForm({
     } else {
       setSavedState({ nation: selected, bonusX2 });
     }
+    return !error;
   }
 
   // Filtre : nom du pays ou code à 3 lettres (FRA, NOR…).
@@ -127,8 +128,9 @@ export function RelayPredictionForm({
           onDone={async (email) => {
             setGuestDialog(false);
             setWelcome(email);
-            await submit();
-            router.refresh();
+            // Pronostic enregistré : page d'attente (heure de départ, saisie du code après la course).
+            if (await submit()) router.push(`/courses/${raceId}/attente`);
+            else router.refresh();
           }}
         />
       )}
