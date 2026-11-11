@@ -1230,7 +1230,7 @@
   },
   "CompleteSignup": {
     "title": "Erstelle dein kostenloses Konto",
-    "intro": "Deine Punkte bleiben erhalten: Wähle deinen Spielernamen, um in den Ranglisten zu erscheinen. Konto: {email}",
+    "intro": "Deine Punkte bleiben erhalten. Wähle deinen Spielernamen für die Ranglisten und dein Passwort. Konto: {email}",
     "pseudo": "Spielername (in den Ranglisten sichtbar)",
     "firstName": "Vorname",
     "lastName": "Nachname",
@@ -1239,10 +1239,15 @@
     "submit": "Konto erstellen",
     "saving": "Wird erstellt…",
     "error_pseudoLength": "Dein Spielername muss 2 bis 20 Zeichen lang sein.",
-    "error_pseudoTaken": "Dieser Spielername ist schon vergeben, wähle einen anderen.",
     "error_missingName": "Gib deinen Vor- und Nachnamen ein.",
-    "error_notPending": "Dein Konto wurde bereits erstellt.",
-    "error_unknown": "Ein Fehler ist aufgetreten, versuche es noch einmal."
+    "error_unknown": "Ein Fehler ist aufgetreten, versuche es noch einmal.",
+    "introNew": "Dein Tipp bleibt erhalten. Wähle deinen Spielernamen für die Ranglisten und dein Passwort.",
+    "email": "E-Mail",
+    "password": "Passwort (mindestens 8 Zeichen)",
+    "error_passwordLength": "Dein Passwort muss mindestens 8 Zeichen lang sein.",
+    "error_invalidEmail": "Diese E-Mail-Adresse ist ungültig.",
+    "error_emailTaken": "Zu dieser E-Mail gibt es schon ein Konto: Melde dich über den Anmeldebildschirm an.",
+    "error_notGuest": "Dein Konto wurde bereits erstellt."
   },
   "Tutorial": {
     "stepOf": "{step} / {total}",

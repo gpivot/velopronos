@@ -1230,7 +1230,7 @@
   },
   "CompleteSignup": {
     "title": "Create your free account",
-    "intro": "Your score is kept: choose your username to appear in the standings. Account: {email}",
+    "intro": "Your score is kept. Choose your username to appear in the standings, and your password. Account: {email}",
     "pseudo": "Username (shown in the standings)",
     "firstName": "First name",
     "lastName": "Last name",
@@ -1239,10 +1239,15 @@
     "submit": "Create my account",
     "saving": "Creating…",
     "error_pseudoLength": "Your username must be 2 to 20 characters long.",
-    "error_pseudoTaken": "This username is already taken, choose another one.",
     "error_missingName": "Please enter your first and last name.",
-    "error_notPending": "Your account has already been created.",
-    "error_unknown": "Something went wrong, please try again."
+    "error_unknown": "Something went wrong, please try again.",
+    "introNew": "Your prediction is kept. Choose your username to appear in the standings, and your password.",
+    "email": "E-mail",
+    "password": "Password (at least 8 characters)",
+    "error_passwordLength": "Your password must be at least 8 characters long.",
+    "error_invalidEmail": "This e-mail address is not valid.",
+    "error_emailTaken": "This e-mail already has an account: sign in from the sign-in screen.",
+    "error_notGuest": "Your account has already been created."
   },
   "Tutorial": {
     "stepOf": "{step} / {total}",

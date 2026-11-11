@@ -1230,7 +1230,7 @@
   },
   "CompleteSignup": {
     "title": "Crea tu cuenta gratuita",
-    "intro": "Tu puntuación se conserva: elige tu apodo para aparecer en las clasificaciones. Cuenta: {email}",
+    "intro": "Tu puntuación se conserva. Elige tu apodo para aparecer en las clasificaciones y tu contraseña. Cuenta: {email}",
     "pseudo": "Apodo (visible en las clasificaciones)",
     "firstName": "Nombre",
     "lastName": "Apellido",
@@ -1239,10 +1239,15 @@
     "submit": "Crear mi cuenta",
     "saving": "Creando…",
     "error_pseudoLength": "Tu apodo debe tener entre 2 y 20 caracteres.",
-    "error_pseudoTaken": "Este apodo ya está cogido, elige otro.",
     "error_missingName": "Indica tu nombre y apellido.",
-    "error_notPending": "Tu cuenta ya está creada.",
-    "error_unknown": "Se ha producido un error, inténtalo de nuevo."
+    "error_unknown": "Se ha producido un error, inténtalo de nuevo.",
+    "introNew": "Tu pronóstico se conserva. Elige tu apodo para aparecer en las clasificaciones y tu contraseña.",
+    "email": "E-mail",
+    "password": "Contraseña (8 caracteres como mínimo)",
+    "error_passwordLength": "Tu contraseña debe tener al menos 8 caracteres.",
+    "error_invalidEmail": "Esta dirección de e-mail no es válida.",
+    "error_emailTaken": "Este e-mail ya tiene una cuenta: inicia sesión desde la pantalla de inicio de sesión.",
+    "error_notGuest": "Tu cuenta ya está creada."
   },
   "Tutorial": {
     "stepOf": "{step} / {total}",

@@ -1230,7 +1230,7 @@
   },
   "CompleteSignup": {
     "title": "Crea il tuo account gratuito",
-    "intro": "Il tuo punteggio è conservato: scegli il tuo pseudonimo per comparire nelle classifiche. Account: {email}",
+    "intro": "Il tuo punteggio è conservato. Scegli il tuo pseudonimo per comparire nelle classifiche e la tua password. Account: {email}",
     "pseudo": "Pseudonimo (visibile nelle classifiche)",
     "firstName": "Nome",
     "lastName": "Cognome",
@@ -1239,10 +1239,15 @@
     "submit": "Crea il mio account",
     "saving": "Creazione…",
     "error_pseudoLength": "Il pseudonimo deve avere tra 2 e 20 caratteri.",
-    "error_pseudoTaken": "Questo pseudonimo è già preso, scegline un altro.",
     "error_missingName": "Inserisci nome e cognome.",
-    "error_notPending": "Il tuo account è già stato creato.",
-    "error_unknown": "Si è verificato un errore, riprova."
+    "error_unknown": "Si è verificato un errore, riprova.",
+    "introNew": "Il tuo pronostico è conservato. Scegli il tuo pseudonimo per comparire nelle classifiche e la tua password.",
+    "email": "E-mail",
+    "password": "Password (almeno 8 caratteri)",
+    "error_passwordLength": "La password deve avere almeno 8 caratteri.",
+    "error_invalidEmail": "Questo indirizzo e-mail non è valido.",
+    "error_emailTaken": "Questa e-mail ha già un account: accedi dalla schermata di accesso.",
+    "error_notGuest": "Il tuo account è già stato creato."
   },
   "Tutorial": {
     "stepOf": "{step} / {total}",

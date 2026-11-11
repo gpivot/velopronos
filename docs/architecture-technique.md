@@ -1217,7 +1217,10 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   connexion (`/auth/confirm`, jeton `generateLink` magiclink) vers la course et le même code privé
   (à saisir dans Connexion > code > « J'ai déjà un code »). Sur la course : son score, puis
   « Crée ton compte gratuitement… » à la place du classement des joueurs, vers `/inscription`
-  (pseudo, prénom, nom, `completeGuestSignup`) ; ses points sont conservés. Inscriptions jamais
+  (pseudo, prénom, nom et mot de passe, `completeGuestSignup`) ; ses points sont conservés.
+  Depuis le 11/11/2026, la pop-up de navigation bloquée mène aussi à `/inscription`, y compris pour
+  un invité anonyme (il y donne alors son e-mail en plus) : un seul formulaire, avec mot de passe,
+  qui garde l'identifiant du compte invité. Inscriptions jamais
   terminées : supprimées après 60 jours sans pronostic. **Validé par Guillaume (10/11/2026)** : l'e-mail n'est pas
   vérifié au moment où il est donné (il l'est au retour par le code) ; le score n'est pas écrit
   dans l'e-mail (il se découvre dans l'appli) ; les invités en attente n'apparaissent pas dans les

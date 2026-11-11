@@ -4,13 +4,16 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { completeGuestSignup } from "@/lib/guestActions";
+import { createClient } from "@/lib/supabase/client";
 
-export function CompleteSignupForm() {
+export function CompleteSignupForm({ askEmail }: { askEmail: boolean }) {
   const t = useTranslations("CompleteSignup");
   const locale = useLocale();
   const [pseudo, setPseudo] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,13 +21,14 @@ export function CompleteSignupForm() {
     e.preventDefault();
     setBusy(true);
     setError(null);
-    const result = await completeGuestSignup({ pseudo, firstName, lastName }).catch(() => ({ ok: false as const, error: "unknown" as const }));
+    const result = await completeGuestSignup({ pseudo, firstName, lastName, password, email: askEmail ? email : undefined, locale }).catch(() => ({ ok: false as const, error: "unknown" as const }));
     if (!result.ok) {
       setBusy(false);
       setError(t(`error_${result.error}`));
       return;
     }
-    // Rechargement complet : toutes les pages redeviennent celles d'un joueur inscrit.
+    // Nouveau jeton (le compte n'est plus anonyme), puis rechargement complet : toutes les pages redeviennent celles d'un joueur inscrit.
+    await createClient().auth.refreshSession().catch(() => null);
     window.location.assign(`/${locale}`);
   }
 
@@ -36,6 +40,20 @@ export function CompleteSignupForm() {
         <input required placeholder={t("firstName")} value={firstName} onChange={(e) => setFirstName(e.target.value)} className={`${inputClass} min-w-0 flex-1`} />
         <input required placeholder={t("lastName")} value={lastName} onChange={(e) => setLastName(e.target.value)} className={`${inputClass} min-w-0 flex-1`} />
       </div>
+      {askEmail && (
+        <input required type="email" autoComplete="email" placeholder={t("email")} value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
+      )}
+      <input
+        required
+        type="password"
+        autoComplete="new-password"
+        minLength={8}
+        maxLength={72}
+        placeholder={t("password")}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className={inputClass}
+      />
       <p className="text-[11px] leading-relaxed text-text-dim">
         {t("privacy")}{" "}
         <Link href="/confidentialite" className="underline">
