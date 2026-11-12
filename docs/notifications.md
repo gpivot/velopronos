@@ -24,7 +24,7 @@ et l'en-tête de désabonnement en un clic exigé par Gmail et Yahoo
   l'adresse d'envoi (`notifications@biathlonpronos.fr`). Le domaine doit avoir SPF/DKIM, déjà
   en place pour Resend.
 - Invités anonymes : pas d'adresse, pas d'e-mail (et pas d'accès au profil).
-- Invités « e-mail seulement » (migration 0045, inscription pas terminée) : un seul e-mail par
+- Invités « e-mail seulement » (migration 0060 dans VéloPronos, inscription pas terminée) : un seul e-mail par
   course, « Ton score est prêt », envoyé à la saisie des résultats (`notifyGuestResults`), avec
   lien de connexion et code privé. Ni rappels, ni récap, ni nouvelles avant l'inscription.
   Réglage Supabase : Authentication > Providers > Email > « Email OTP Expiration » à 86400

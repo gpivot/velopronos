@@ -42,7 +42,7 @@ export async function submitResults(
     const pushNote = await notifyRaceResults(admin, raceId).catch(
       (error) => ` Notification non envoyée : ${error instanceof Error ? error.message : "erreur inconnue"}.`
     );
-    // Invités « e-mail seulement » : leur score les attend, e-mail avec code privé (migration 0045).
+    // Invités « e-mail seulement » : leur score les attend, e-mail avec code privé (migration 0060).
     const guestNote = await notifyGuestResults(admin, raceId).catch(
       (error) => ` E-mail des invités non envoyé : ${error instanceof Error ? error.message : "erreur inconnue"}.`
     );

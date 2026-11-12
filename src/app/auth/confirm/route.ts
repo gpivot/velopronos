@@ -3,7 +3,7 @@ import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * Lien de l'e-mail « Ton score est prêt » d'un invité (migration 0045) : connecte le joueur avec le
+ * Lien de l'e-mail « Ton score est prêt » d'un invité (migration 0060) : connecte le joueur avec le
  * jeton du lien, puis l'amène sur la page de la course (`next`). Déjà connecté sur ce navigateur :
  * on y va directement. Lien expiré : écran de connexion, où il peut saisir son code ou en
  * demander un nouveau.

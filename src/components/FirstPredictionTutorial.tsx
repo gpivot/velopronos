@@ -16,7 +16,7 @@ export interface TutorialStep {
 
 /**
  * Premier pronostic d'un invité (bouton « Je joue », demande de Guillaume du 11/11/2026) : 3
- * pop-ups à valider avant de choisir ses biathlètes (choisir 3 biathlètes, cote et multiplicateur,
+ * pop-ups à valider avant de choisir ses coureurs (choisir 3 coureurs, cote et multiplicateur,
  * calcul des points). Vu une fois par navigateur ; « Passer » le referme aussi.
  */
 export function FirstPredictionTutorial({ steps }: { steps: TutorialStep[] }) {

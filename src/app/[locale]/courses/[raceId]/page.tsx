@@ -313,7 +313,7 @@ export default async function RacePage({
   // Après la course : un joueur qui a pronostiqué mais n'est dans aucune ligue est invité à se
   // comparer aux autres et à rejoindre (ou créer) une ligue (parcours d'invité, 01/11/2026).
   let compareInvite = false;
-  // Invité « e-mail seulement » (migration 0045) : il voit son score, puis une invitation à créer
+  // Invité « e-mail seulement » (migration 0060) : il voit son score, puis une invitation à créer
   // son compte à la place du classement des joueurs.
   let signupPending = false;
   if (user && !user.is_anonymous) {
@@ -546,7 +546,7 @@ export default async function RacePage({
                 />
               )}
               {/* Premier pronostic d'un invité (« Je joue ») : 3 pop-ups pour apprendre à jouer. */}
-              {!isRelay && (!user || user.is_anonymous) && <FirstPredictionTutorial steps={await tutorialSteps()} />}
+              {!isRelay && !isTeamRace && (!user || user.is_anonymous) && <FirstPredictionTutorial steps={await tutorialSteps()} />}
             </>
           ))}
 

@@ -22,7 +22,7 @@ function allowedLinks(status: GuestStatus) {
   return [...INFO_PAGES, ...(status === "anonymous" ? [/^\/$/] : [])];
 }
 
-/** « anonymous » : session invitée ; « pending » : e-mail donné, inscription pas terminée (migration 0045). */
+/** « anonymous » : session invitée ; « pending » : e-mail donné, inscription pas terminée (migration 0060). */
 type GuestStatus = "none" | "anonymous" | "pending";
 
 /** Chemin sans le préfixe de langue (/fr/courses/12 → /courses/12). */
@@ -54,7 +54,7 @@ export function GuestNavGuard() {
     async function check(user: { id: string; is_anonymous?: boolean } | null | undefined) {
       if (!user) return setStatus("none");
       if (user.is_anonymous) return setStatus("anonymous");
-      // Colonne absente avant la migration 0045 : erreur ignorée, joueur normal.
+      // Colonne absente avant la migration 0060 : erreur ignorée, joueur normal.
       const { data } = await supabase.from("profiles").select("signup_pending").eq("id", user.id).maybeSingle();
       if (!cancelled) setStatus((data as { signup_pending?: boolean } | null)?.signup_pending ? "pending" : "none");
     }

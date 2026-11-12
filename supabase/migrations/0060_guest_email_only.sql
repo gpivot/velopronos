@@ -1,11 +1,12 @@
--- Biathlonpronos — parcours d'invité « e-mail seulement » (décision de Guillaume, 10/11/2026).
+-- VéloPronos — parcours d'invité « e-mail seulement », repris de Biathlonpronos (migration 0045
+-- là-bas, décision de Guillaume du 10/11/2026), renuméroté 0060 ici.
 -- L'invité (bouton « Je joue ») ne donne que son e-mail pour valider son pronostic. Son compte
 -- anonyme reçoit l'adresse (côté serveur) et devient un compte « en attente d'inscription » :
 -- pronostic enregistré et noté, mais joueur absent des classements, sans e-mails de rappel ni
 -- de récap. Après la course, il reçoit son score et un code privé par e-mail ; il crée ensuite
--- son compte (pseudo, prénom, nom) et garde ses points.
+-- son compte (pseudo, prénom, nom, mot de passe) et garde ses points.
 --
--- À exécuter après 0044.
+-- À exécuter après 0059.
 
 -- 1. Compte en attente d'inscription (false pour tous les joueurs existants).
 alter table public.profiles add column if not exists signup_pending boolean not null default false;
@@ -82,3 +83,30 @@ $$;
 
 revoke execute on function public.purge_anonymous_users(interval) from public, anon, authenticated;
 grant execute on function public.purge_anonymous_users(interval) to service_role;
+
+-- 5. Propre à VéloPronos : les tables ajoutées pour le vélo (maillots et porteur d'eau, équipe par
+--    Grand Tour, WE des Champions) refusent aussi toute écriture d'un invité anonyme, comme les
+--    tables de 0031.
+do $$
+declare
+  t text;
+  op text;
+begin
+  foreach t in array array['course_predictions', 'course_heart_teams', 'champion_predictions']
+  loop
+    foreach op in array array['insert', 'update', 'delete']
+    loop
+      execute format('drop policy if exists %I on public.%I', t || ': no guest ' || op, t);
+      if op = 'insert' then
+        execute format(
+          'create policy %I on public.%I as restrictive for insert to authenticated with check (not public.is_guest())',
+          t || ': no guest ' || op, t);
+      else
+        execute format(
+          'create policy %I on public.%I as restrictive for %s to authenticated using (not public.is_guest())',
+          t || ': no guest ' || op, t, op);
+      end if;
+    end loop;
+  end loop;
+end;
+$$;

@@ -234,7 +234,7 @@ export async function notifyRaceResults(admin: SupabaseClient, raceId: string, n
 }
 
 // ---------------------------------------------------------------------------------------------
-// Score d'un invité « e-mail seulement » (migration 0045)
+// Score d'un invité « e-mail seulement » (migration 0060)
 // ---------------------------------------------------------------------------------------------
 
 /**
@@ -248,7 +248,7 @@ export async function notifyGuestResults(admin: SupabaseClient, raceId: string, 
   if (!isEmailConfigured()) return "";
   const { data: race, error } = await admin
     .from("races")
-    .select("id, locks_at, format, sex, stages(location)")
+    .select("id, locks_at, format, stage_number, sex, stages(location)")
     .eq("id", raceId)
     .single();
   if (error || !race) return "";
