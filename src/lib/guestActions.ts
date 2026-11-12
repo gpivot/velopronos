@@ -4,7 +4,7 @@ import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { normalizeLocale } from "@/lib/notifications/texts";
 
 /**
- * Parcours d'invité « e-mail seulement » (décision de Guillaume, 10/11/2026, migration 0045).
+ * Parcours d'invité « e-mail seulement » (décision de Guillaume, 10/11/2026, migration 0060).
  *
  * 1. `registerGuestEmail` : l'invité (session anonyme Supabase) donne son e-mail pour valider son
  *    pronostic. L'adresse est rattachée à son compte côté serveur (sans code à saisir) : le compte

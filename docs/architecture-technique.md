@@ -1205,7 +1205,7 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   pop-up « Inscris-toi gratuitement en cliquant ici… », qui ouvre le formulaire d'inscription
   (`GuestSignupDialog` en mode « account ») ou renvoie vers la connexion. Une page interdite ouverte
   par son adresse affiche la même pop-up ; la fermer ramène à la course (`/jouer`).
-- **Parcours « e-mail seulement » (10/11/2026, migration 0045, remplace la création de compte à
+- **Parcours « e-mail seulement » (10/11/2026, migration 0045 dans Biathlonpronos, 0060 dans VéloPronos, remplace la création de compte à
   la validation)** : pour valider son pronostic, l'invité ne donne que son e-mail (« Dès la fin de
   la course, reçois ton code privé par e-mail pour découvrir ton score », `GuestEmailDialog`).
   L'adresse est rattachée côté serveur à son compte anonyme (`registerGuestEmail`, clé service,

@@ -132,7 +132,7 @@ export async function getRacesStandings(
     if (!courseId) return buildStandings([], members, null);
     const { data: bonusRows } = await supabase
       .from("score_ledger")
-      .select("user_id, points, profiles(pseudo)")
+      .select("user_id, points, profiles!inner(pseudo, signup_pending)").eq("profiles.signup_pending", false)
       .eq("stage_id", courseId)
       .not("bonus_kind", "is", null);
     return buildStandings(
@@ -158,7 +158,7 @@ export async function getRacesStandings(
     // Questions bonus des courses : leurs 20 pts comptent dans le classement de l'étape.
     getBonusQuestionLedger(supabase, raceIds),
     courseId
-      ? supabase.from("score_ledger").select("user_id, points, profiles(pseudo)").eq("stage_id", courseId).not("jersey", "is", null)
+      ? supabase.from("score_ledger").select("user_id, points, profiles!inner(pseudo, signup_pending)").eq("profiles.signup_pending", false).eq("stage_id", courseId).not("jersey", "is", null)
       : Promise.resolve({ data: [] as any[] }),
   ]);
   if (error) console.error("getRacesStandings:", error.message);

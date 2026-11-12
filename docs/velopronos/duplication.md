@@ -33,6 +33,8 @@ avec le nouveau schéma et les écrans vélo.
 
 ## À confirmer par Guillaume
 
+- **Parcours invité « Je joue »** (12/11/2026) : points à confirmer dans `parcours-invite.md`.
+
 - **Palette** : première proposition (sombre : fond marron foncé, accent jaune maillot, accent
   ocre ; clair : fond crème, accent marron, accent jaune foncé). À valider à l'écran.
 - **Noms de la carte Grillade dans les autres langues** : Barbecue (en), Grillfest (de),

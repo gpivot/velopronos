@@ -592,7 +592,7 @@
     "lateJokerHint": "¿Olvidaste esta etapa? Aún puedes pronosticarla hasta 1 h después de la salida, una vez por carrera. Tus puntos se dividirán entre 2.",
     "lateJokerBadge": "Comodín rezagado · puntos ÷ 2",
     "signupInviteTitle": "¿Y tu clasificación?",
-    "signupInviteBody": "Crea tu cuenta gratis para descubrir tu clasificación, pronosticar la próxima carrera y acceder a todas las funciones.",
+    "signupInviteBody": "Crea tu cuenta gratis para descubrir tu clasificación, pronosticar la próxima etapa y acceder a todas las funciones.",
     "signupInviteButton": "Crear mi cuenta gratis"
   },
   "PredictionForm": {
@@ -1041,21 +1041,21 @@
     "noRace": "Ninguna etapa está abierta a pronósticos por ahora.",
     "seeCalendar": "Ver el calendario",
     "lockedTitle": "Regístrate para ir más allá",
-    "lockedBody": "<link>Regístrate gratis haciendo clic aquí</link> para descubrir todas las facetas de Biathlonpronos: clasificaciones, ligas entre amigos, pronósticos de temporada, cartas bonus…",
+    "lockedBody": "<link>Regístrate gratis haciendo clic aquí</link> para descubrir todas las facetas de VéloPronos: clasificaciones, ligas entre amigos, pronósticos de temporada, cartas bonus…",
     "lockedSignUp": "Registrarme gratis",
     "lockedSignIn": "Ya tengo una cuenta",
     "lockedContinue": "Seguir con mi pronóstico",
-    "lockedBackToRace": "Volver a la carrera",
+    "lockedBackToRace": "Volver a la etapa",
     "accountTitle": "Crea tu cuenta gratuita",
     "accountIntro": "Sin contraseña: basta con un código recibido por e-mail. Después podrás navegar por toda la app.",
     "accountVerify": "Crear mi cuenta",
     "emailTitle": "Confirma tu pronóstico",
-    "emailIntro": "En cuanto termine la carrera, recibe tu código privado por e-mail para descubrir tu puntuación.",
+    "emailIntro": "En cuanto termine la etapa, recibe tu código privado por e-mail para descubrir tu puntuación.",
     "emailPrivacy": "Tu e-mail sigue siendo privado: solo sirve para enviarte tu puntuación.",
     "emailSubmit": "Confirmar mi pronóstico",
     "invalidEmail": "Esta dirección de e-mail no es válida.",
     "saveFailed": "No se ha podido confirmar tu pronóstico, inténtalo de nuevo en un momento.",
-    "welcomeEmailBody": "Tu pronóstico está confirmado. En cuanto termine la carrera, tu código privado llegará a {email} para descubrir tu puntuación."
+    "welcomeEmailBody": "Tu pronóstico está confirmado. En cuanto termine la etapa, tu código privado llegará a {email} para descubrir tu puntuación."
   },
   "BonusQuestions": {
     "sectionTitle": "Preguntas extra",
@@ -1107,7 +1107,7 @@
     "supportReplyPushTitle": "💬 VéloPronos te ha respondido",
     "guestResultsSubject": "🏁 {race} en {location}: tu puntuación está lista",
     "guestResultsTitle": "¡Tu puntuación está lista!",
-    "guestResultsBody": "La carrera {race} en {location} ha terminado. Descubre tu puntuación y el detalle de tus puntos.",
+    "guestResultsBody": "{race} en {location} ha terminado. Descubre tu puntuación y el detalle de tus puntos.",
     "guestResultsCodeLabel": "Tu código privado:",
     "guestResultsCodeHint": "En la app: pantalla de inicio de sesión, «Iniciar sesión con un código recibido por e-mail» y luego «Ya tengo un código».",
     "guestResultsButton": "Descubrir mi puntuación"
@@ -1256,18 +1256,18 @@
     "next": "Siguiente",
     "start": "¡Vamos!",
     "place": "{rank}.º",
-    "step1Title": "Elige tus 3 biatletas",
-    "step1Body": "Toca sus nombres en la lista de la carrera para añadirlos a tu pronóstico y luego confirma. Puedes cambiar de idea hasta la salida.",
+    "step1Title": "Elige tus 3 corredores",
+    "step1Body": "Toca sus nombres en la lista de la etapa para añadirlos a tu pronóstico y luego confirma. Puedes cambiar de idea hasta la salida.",
     "step2Title": "La cuota y el multiplicador",
-    "step2Body": "Cada biatleta tiene una cuota: cuanto más alta, más arriesgada es la apuesta… y más puntos da. Si termina en el Top 10, su cuota se multiplica según su puesto. Más allá del 10.º puesto, no suma nada.",
+    "step2Body": "Cada corredor tiene una cuota: cuanto más alta, más arriesgada es la apuesta… y más puntos da. Si termina en el Top 10, su cuota se multiplica según su puesto. Más allá del 10.º puesto, no suma nada.",
     "step3Title": "El cálculo de tus puntos",
-    "step3Body": "Para cada uno de tus 3 biatletas: cuota × multiplicador de su puesto. Se suman y luego se añaden los bonus si tus 3 elecciones terminan juntas en el Top 10, el Top 5 o en el podio."
+    "step3Body": "Para cada uno de tus 3 corredores: cuota × multiplicador de su puesto. Se suman y luego se añaden los bonus si tus 3 elecciones terminan juntas en el Top 10 (+20), el Top 5 (+50) o en el podio (+100). Y +200 por el pronóstico perfecto."
   },
   "GuestWaiting": {
     "title": "¡Tu pronóstico está confirmado!",
     "subtitle": "Tu código privado llegará a {email}.",
     "startsAt": "Salida el {date} a las {time}.",
-    "editable": "Puedes modificar tu pronóstico hasta la salida de la carrera.",
+    "editable": "Puedes modificar tu pronóstico hasta la salida de la etapa.",
     "editButton": "Modificar mi pronóstico",
     "codeTitle": "Tu código privado",
     "codeBody": "En cuanto los resultados sean oficiales, vuelve a introducir tu código para descubrir tu puntuación.",

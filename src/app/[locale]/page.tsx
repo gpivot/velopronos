@@ -64,7 +64,7 @@ async function getHomeData(): Promise<HomeData> {
   // Invité (session anonyme du bouton « Jouer ») : traité comme un visiteur, il voit la vitrine.
   const user = userResult.user && !userResult.user.is_anonymous ? userResult.user : null;
 
-  // Invité « e-mail seulement » revenu par son code (migration 0045) : pas de tableau de bord avant
+  // Invité « e-mail seulement » revenu par son code (migration 0060) : pas de tableau de bord avant
   // la fin de l'inscription, direction sa dernière course pronostiquée (score + invitation).
   if (user) {
     const { data: me } = await supabase.from("profiles").select("signup_pending").eq("id", user.id).maybeSingle();

@@ -592,7 +592,7 @@
     "lateJokerHint": "Forgot this stage? You can still predict it up to 1 hour after the start, once per race. Your points will be halved.",
     "lateJokerBadge": "Late joker · points ÷ 2",
     "signupInviteTitle": "What about your ranking?",
-    "signupInviteBody": "Create your free account to see your ranking, predict the next race and access every feature.",
+    "signupInviteBody": "Create your free account to see your ranking, predict the next stage and access every feature.",
     "signupInviteButton": "Create my free account"
   },
   "PredictionForm": {
@@ -1041,21 +1041,21 @@
     "noRace": "No stage is open for predictions right now.",
     "seeCalendar": "See the calendar",
     "lockedTitle": "Sign up to go further",
-    "lockedBody": "<link>Sign up for free by clicking here</link> to discover everything Biathlonpronos has to offer: standings, leagues with friends, season predictions, bonus cards…",
+    "lockedBody": "<link>Sign up for free by clicking here</link> to discover everything VéloPronos has to offer: standings, leagues with friends, season predictions, bonus cards…",
     "lockedSignUp": "Sign up for free",
     "lockedSignIn": "I already have an account",
     "lockedContinue": "Continue my prediction",
-    "lockedBackToRace": "Back to the race",
+    "lockedBackToRace": "Back to the stage",
     "accountTitle": "Create your free account",
     "accountIntro": "No password: a code sent by e-mail is all it takes. You'll then be able to explore the whole app.",
     "accountVerify": "Create my account",
     "emailTitle": "Confirm your prediction",
-    "emailIntro": "As soon as the race ends, get your private code by e-mail to discover your score.",
+    "emailIntro": "As soon as the stage ends, get your private code by e-mail to discover your score.",
     "emailPrivacy": "Your e-mail stays private: it is only used to send you your score.",
     "emailSubmit": "Confirm my prediction",
     "invalidEmail": "This e-mail address is not valid.",
     "saveFailed": "Your prediction could not be confirmed, please try again shortly.",
-    "welcomeEmailBody": "Your prediction is confirmed. As soon as the race ends, your private code will be sent to {email} so you can discover your score."
+    "welcomeEmailBody": "Your prediction is confirmed. As soon as the stage ends, your private code will be sent to {email} so you can discover your score."
   },
   "BonusQuestions": {
     "sectionTitle": "Bonus questions",
@@ -1107,7 +1107,7 @@
     "supportReplyPushTitle": "💬 VéloPronos replied to you",
     "guestResultsSubject": "🏁 {race} in {location}: your score is ready",
     "guestResultsTitle": "Your score is ready!",
-    "guestResultsBody": "The {race} in {location} is over. Discover your score and how your points were earned.",
+    "guestResultsBody": "{race} in {location} is over. Discover your score and how your points were earned.",
     "guestResultsCodeLabel": "Your private code:",
     "guestResultsCodeHint": "In the app: sign-in screen, “Sign in with a code sent by e-mail”, then “I already have a code”.",
     "guestResultsButton": "Discover my score"
@@ -1256,18 +1256,18 @@
     "next": "Next",
     "start": "Let's go!",
     "place": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}",
-    "step1Title": "Pick your 3 biathletes",
-    "step1Body": "Tap their names in the race list to add them to your prediction, then confirm. You can change your mind until the start.",
+    "step1Title": "Pick your 3 riders",
+    "step1Body": "Tap their names in the stage list to add them to your prediction, then confirm. You can change your mind until the start.",
     "step2Title": "Odds and multiplier",
-    "step2Body": "Each biathlete has odds: the higher they are, the riskier the pick… and the more it pays. If they finish in the Top 10, their odds are multiplied according to their place. Beyond 10th place, they score nothing.",
+    "step2Body": "Each rider has odds: the higher they are, the riskier the pick… and the more it pays. If they finish in the Top 10, their odds are multiplied according to their place. Beyond 10th place, they score nothing.",
     "step3Title": "How your points are calculated",
-    "step3Body": "For each of your 3 biathletes: odds × the multiplier of their place. Add them up, then add the bonuses if all 3 picks finish in the Top 10, the Top 5 or on the podium."
+    "step3Body": "For each of your 3 riders: odds × the multiplier of their place. Add them up, then add the bonuses if all 3 picks finish in the Top 10 (+20), the Top 5 (+50) or on the podium (+100). And +200 for the perfect prediction."
   },
   "GuestWaiting": {
     "title": "Your prediction is confirmed!",
     "subtitle": "Your private code will be sent to {email}.",
     "startsAt": "Starts on {date} at {time}.",
-    "editable": "You can still change your prediction until the race starts.",
+    "editable": "You can still change your prediction until the stage starts.",
     "editButton": "Change my prediction",
     "codeTitle": "Your private code",
     "codeBody": "As soon as the results are official, come back and enter your code to discover your score.",
