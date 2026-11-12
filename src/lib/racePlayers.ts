@@ -23,7 +23,7 @@ export function rankPlayers(rows: Omit<RacePlayerRow, "rank">[]): RacePlayerRow[
 
 export async function getRacePlayers(supabase: SupabaseClient, raceId: string): Promise<RacePlayerRow[]> {
   const [{ data, error }, bonusLedger] = await Promise.all([
-    supabase.from("score_ledger").select("user_id, points, profiles(pseudo)").eq("race_id", raceId),
+    supabase.from("score_ledger").select("user_id, points, profiles!inner(pseudo, signup_pending)").eq("profiles.signup_pending", false).eq("race_id", raceId),
     getBonusQuestionLedger(supabase, [raceId]),
   ]);
   if (error) console.error("getRacePlayers:", error.message);
@@ -75,7 +75,7 @@ export async function getOngoingBoard(
 ): Promise<OngoingBoardRow[]> {
   const [leaderboard, { data: predictions }] = await Promise.all([
     getLeaderboard(supabase, seasonId),
-    supabase.from("predictions").select("user_id, athlete_ids, nation_code, team_ids, profiles(pseudo)").eq("race_id", raceId),
+    supabase.from("predictions").select("user_id, athlete_ids, nation_code, team_ids, profiles!inner(pseudo, signup_pending)").eq("profiles.signup_pending", false).eq("race_id", raceId),
   ]);
   const rows = ((predictions ?? []) as any[]).filter((p) => (p.athlete_ids?.length ?? 0) > 0 || p.nation_code || (p.team_ids?.length ?? 0) > 0);
   const teamIds = Array.from(new Set(rows.flatMap((p) => p.team_ids ?? []))) as string[];

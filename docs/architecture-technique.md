@@ -1198,6 +1198,42 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   après la création du compte, un encart « Bienvenue » propose déjà de rejoindre une ligue.
 - Un invité est traité comme un visiteur ailleurs (accueil vitrine, Profil, Ligues, Globes, Ma
   saison, notifications).
+- **Navigation bloquée (10/11/2026)** : tant qu'il n'a pas de vrai compte, l'invité reste sur sa
+  course (`GuestNavGuard`, monté dans le layout). Les éléments marqués `data-guest-lock` (barre
+  basse, flèche retour, course précédente/suivante, rond du profil) sont grisés ; tout clic vers une
+  autre page (sauf accueil, `/jouer`, connexion, règlement, CGU, confidentialité, support) ouvre la
+  pop-up « Inscris-toi gratuitement en cliquant ici… », qui ouvre le formulaire d'inscription
+  (`GuestSignupDialog` en mode « account ») ou renvoie vers la connexion. Une page interdite ouverte
+  par son adresse affiche la même pop-up ; la fermer ramène à la course (`/jouer`).
+- **Parcours « e-mail seulement » (10/11/2026, migration 0045 dans Biathlonpronos, 0060 dans VéloPronos, remplace la création de compte à
+  la validation)** : pour valider son pronostic, l'invité ne donne que son e-mail (« Dès la fin de
+  la course, reçois ton code privé par e-mail pour découvrir ton score », `GuestEmailDialog`).
+  L'adresse est rattachée côté serveur à son compte anonyme (`registerGuestEmail`, clé service,
+  sans code) : le compte n'est plus anonyme et le pronostic s'enregistre, mais il reste « en
+  attente d'inscription » (`profiles.signup_pending`) : absent des classements (filtre dans
+  `leaderboard.ts`, `standings.ts`, `racePlayers.ts`, `bonusQuestions.ts`), sans rappels ni récap
+  par e-mail (`player_emails`), navigation bloquée sur sa course (`GuestNavGuard`). À la saisie
+  des résultats, `notifyGuestResults` lui envoie « Ton score est prêt » (Resend) avec un lien de
+  connexion (`/auth/confirm`, jeton `generateLink` magiclink) vers la course et le même code privé
+  (à saisir dans Connexion > code > « J'ai déjà un code »). Sur la course : son score, puis
+  « Crée ton compte gratuitement… » à la place du classement des joueurs, vers `/inscription`
+  (pseudo, prénom, nom et mot de passe, `completeGuestSignup`) ; ses points sont conservés.
+  Depuis le 11/11/2026, la pop-up de navigation bloquée mène aussi à `/inscription`, y compris pour
+  un invité anonyme (il y donne alors son e-mail en plus) : un seul formulaire, avec mot de passe,
+  qui garde l'identifiant du compte invité.
+  Après la validation du pronostic par e-mail, l'invité arrive sur une page d'attente
+  (`/courses/[raceId]/attente`) : heure de départ, ses choix, compte à rebours, bouton « Modifier
+  mon pronostic » (retour à la course) et saisie du code privé (« Dès l'officialisation des
+  résultats, reviens saisir ton code pour découvrir ton score »). Une fois la course partie, la page
+  renvoie vers la course. Inscriptions jamais
+  terminées : supprimées après 60 jours sans pronostic. **Validé par Guillaume (10/11/2026)** : l'e-mail n'est pas
+  vérifié au moment où il est donné (il l'est au retour par le code) ; le score n'est pas écrit
+  dans l'e-mail (il se découvre dans l'appli) ; les invités en attente n'apparaissent pas dans les
+  classements tant qu'ils n'ont pas de pseudo.
+- **Jeton périmé** : après la conversion, le jeton de session garde `is_anonymous` jusqu'à son
+  renouvellement, et la base refusait le pronostic (« pronostics fermés » en rouge). La session est
+  désormais renouvelée après le code, et avant chaque enregistrement si le jeton dit encore
+  « anonyme » (`lib/supabase/guestToken.ts`).
 - **Base (migration 0031)** : profil « Invité » créé pour un compte sans e-mail (`handle_new_user`) ;
   `is_guest()` ; règles RLS **restrictives** : un invité ne peut rien écrire (pronostics, globes,
   Pépites, équipe favorite, ligues, pseudo) tant que son compte n'est pas confirmé ; garde-fou de

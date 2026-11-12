@@ -23,6 +23,7 @@ export function BackButton({ fallback, label }: { fallback: string; label: strin
       type="button"
       onClick={goBack}
       aria-label={label}
+      data-guest-lock
       className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-card text-text-dim"
     >
       <ArrowLeftIcon className="h-4 w-4" />

@@ -10,6 +10,8 @@ import { getAdminProfile, getClock } from "@/lib/clock";
 import { isLateJokerWindowOpen } from "@/lib/velo/lateJoker";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { PredictionForm, type AthleteWithOdds } from "./PredictionForm";
+import { FirstPredictionTutorial } from "@/components/FirstPredictionTutorial";
+import { tutorialSteps } from "./tutorialSteps";
 import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm";
 import { TeamPredictionForm, type TeamWithOdds } from "./TeamPredictionForm";
 import { GrilladeButton } from "./GrilladeButton";
@@ -311,7 +313,14 @@ export default async function RacePage({
   // Après la course : un joueur qui a pronostiqué mais n'est dans aucune ligue est invité à se
   // comparer aux autres et à rejoindre (ou créer) une ligue (parcours d'invité, 01/11/2026).
   let compareInvite = false;
-  if (displayStatus === "finished" && user && !user.is_anonymous && raceResult?.prediction) {
+  // Invité « e-mail seulement » (migration 0060) : il voit son score, puis une invitation à créer
+  // son compte à la place du classement des joueurs.
+  let signupPending = false;
+  if (user && !user.is_anonymous) {
+    const { data: me } = await supabase.from("profiles").select("signup_pending").eq("id", user.id).maybeSingle();
+    signupPending = Boolean((me as { signup_pending?: boolean } | null)?.signup_pending);
+  }
+  if (displayStatus === "finished" && user && !user.is_anonymous && !signupPending && raceResult?.prediction) {
     const { count } = await supabase.from("league_memberships").select("league_id", { count: "exact", head: true }).eq("user_id", user.id);
     compareInvite = (count ?? 0) === 0;
   }
@@ -536,6 +545,8 @@ export default async function RacePage({
                   startGaps={startGaps}
                 />
               )}
+              {/* Premier pronostic d'un invité (« Je joue ») : 3 pop-ups pour apprendre à jouer. */}
+              {!isRelay && !isTeamRace && (!user || user.is_anonymous) && <FirstPredictionTutorial steps={await tutorialSteps()} />}
             </>
           ))}
 
@@ -756,7 +767,15 @@ export default async function RacePage({
               )}
             </div>
 
-            {players.length > 0 && (
+            {signupPending ? (
+              <div className="flex flex-col gap-3 rounded-2xl border border-ice/40 bg-ice-soft p-4">
+                <div className="font-display text-sm font-bold text-ice">🏆 {t("signupInviteTitle")}</div>
+                <p className="text-[13px] leading-relaxed text-frost">{t("signupInviteBody")}</p>
+                <Link href="/inscription" className="rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-on-ice">
+                  {t("signupInviteButton")}
+                </Link>
+              </div>
+            ) : players.length > 0 && (
               <div className="flex flex-col gap-2">
                 <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("playersTitle")}</div>
                 {players.length > 10 ? (
@@ -823,8 +842,9 @@ function RaceNavLink({ raceId, label, direction }: { raceId: string | null; labe
     );
   if (!raceId) return <span className={`${className} text-text-dim opacity-40`}>{content}</span>;
   return (
-    <Link href={`/courses/${raceId}`} className={`${className} text-ice`}>
+    <Link href={`/courses/${raceId}`} className={`${className} text-ice`} data-guest-lock>
       {content}
     </Link>
   );
 }
+

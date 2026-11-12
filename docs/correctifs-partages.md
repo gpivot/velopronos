@@ -50,3 +50,4 @@ classements) dans un paquet partagé. Pas avant le lancement de VéloPronos.
 | Date | Correctif | Fait dans | Reporté dans | Commit(s) |
 |---|---|---|---|---|
 | 04/11/2026 | Duplication : VéloPronos part de Biathlonpronos `e527158` | Biathlonpronos | VéloPronos | — |
+| 12/11/2026 | Parcours invité « Je joue » (e-mail seulement, page d'attente, 3 pop-ups, inscription, navigation bloquée) ; migration 0045 de Biathlonpronos renumérotée 0060 | Biathlonpronos | VéloPronos | `bea927a`, `1408470`, `242e701`, `ee9c2dd`, `a9dfbe6`, `920d5fb` |

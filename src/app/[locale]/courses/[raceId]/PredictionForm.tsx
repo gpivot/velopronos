@@ -5,12 +5,13 @@ import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/navigation";
 import { CheckIcon } from "@/components/icons";
-import { GuestSignupDialog, GuestWelcome } from "@/components/GuestSignupDialog";
+import { GuestEmailDialog, GuestWelcome } from "@/components/GuestSignupDialog";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { fullAthleteName, shortAthleteName } from "@/lib/athleteName";
 import { filterBySearch } from "@/lib/searchFilter";
 import { SearchField } from "@/components/SearchField";
+import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 
 export type AthleteWithOdds = {
   athlete_id: string;
@@ -80,7 +81,7 @@ export function PredictionForm({
   const [error, setError] = useState<string | null>(null);
   // Parcours d'invité : création du compte à la validation du premier pronostic.
   const [guestDialog, setGuestDialog] = useState(false);
-  const [welcome, setWelcome] = useState(false);
+  const [welcome, setWelcome] = useState<string | null>(null);
   // Dernier pronostic enregistré, pour signaler une modification pas encore validée.
   const [savedState, setSavedState] = useState(() => ({
     key: [...initialSelection].sort().join(","),
@@ -117,10 +118,10 @@ export function PredictionForm({
     if (next !== "ca_farte") setCaFarteTarget(null);
   }
 
-  async function submit() {
+  async function submit(): Promise<boolean> {
     if (cardChoice === "ca_farte" && !caFarteTarget) {
       setError(t("caFarteTargetRequired"));
-      return;
+      return false;
     }
 
     setSaving(true);
@@ -134,8 +135,12 @@ export function PredictionForm({
     if (!user || user.is_anonymous) {
       setGuestDialog(true);
       setSaving(false);
-      return;
+      return false;
     }
+
+    // Invité devenu joueur (e-mail rattaché) mais jeton de session encore « anonyme » : la base
+    // refuserait le pronostic (« pronostics fermés »). On renouvelle d'abord le jeton.
+    if (await hasStaleGuestToken(supabase)) await supabase.auth.refreshSession();
 
     const { error: predictionError } = await supabase.from("predictions").upsert(
       {
@@ -180,6 +185,7 @@ export function PredictionForm({
       // La carte jouée devient « active » : l'encadré des cartes et le formulaire se mettent à jour.
       if ((cardChoice !== "none" && cardChoice !== activeCard) || lateJoker) router.refresh();
     }
+    return !failure;
   }
 
   // Ordre de départ : classés du sprint d'abord (1er en haut), puis les autres par cote.
@@ -278,15 +284,16 @@ export function PredictionForm({
         error={error}
       />
 
-      {welcome && validated && <GuestWelcome />}
+      {welcome && validated && <GuestWelcome email={welcome} />}
       {guestDialog && (
-        <GuestSignupDialog
+        <GuestEmailDialog
           onClose={() => setGuestDialog(false)}
-          onDone={async () => {
+          onDone={async (email) => {
             setGuestDialog(false);
-            setWelcome(true);
-            await submit();
-            router.refresh();
+            setWelcome(email);
+            // Pronostic enregistré : page d'attente (heure de départ, saisie du code après la course).
+            if (await submit()) router.push(`/courses/${raceId}/attente`);
+            else router.refresh();
           }}
         />
       )}
