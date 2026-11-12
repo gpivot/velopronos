@@ -1261,7 +1261,7 @@
     "step2Title": "Quote und Multiplikator",
     "step2Body": "Jeder Fahrer hat eine Quote: Je höher sie ist, desto riskanter der Tipp… und desto mehr bringt er. Landet er in den Top 10, wird seine Quote je nach Platz multipliziert. Ab Platz 11 gibt es keine Punkte.",
     "step3Title": "So werden deine Punkte berechnet",
-    "step3Body": "Für jeden deiner 3 Fahrer: Quote × Multiplikator seines Platzes. Alles wird addiert, dazu kommen Boni, wenn alle 3 in den Top 10 (+20), den Top 5 (+50) oder auf dem Podium (+100) landen. Und +200 für den perfekten Tipp."
+    "step3Body": "Für jeden deiner 3 Fahrer: Quote × Multiplikator seines Platzes. Alles wird addiert, dazu kommen Boni, wenn alle 3 in den Top 10 (+20), den Top 5 (+50) oder auf dem Podium (+100) landen, beim perfekten Tipp +200 statt des Podiumsbonus."
   },
   "GuestWaiting": {
     "title": "Dein Tipp ist bestätigt!",

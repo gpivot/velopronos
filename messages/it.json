@@ -1261,7 +1261,7 @@
     "step2Title": "La quota e il moltiplicatore",
     "step2Body": "Ogni corridore ha una quota: più è alta, più la scelta è rischiosa… e più rende. Se arriva nella Top 10, la sua quota viene moltiplicata in base al piazzamento. Oltre il 10° posto non porta punti.",
     "step3Title": "Il calcolo dei tuoi punti",
-    "step3Body": "Per ciascuno dei tuoi 3 corridori: quota × moltiplicatore del suo piazzamento. Si sommano, poi si aggiungono i bonus se le tue 3 scelte arrivano tutte nella Top 10 (+20), nella Top 5 (+50) o sul podio (+100). E +200 per il pronostico perfetto."
+    "step3Body": "Per ciascuno dei tuoi 3 corridori: quota × moltiplicatore del suo piazzamento. Si sommano, poi si aggiungono i bonus se le tue 3 scelte arrivano tutte nella Top 10 (+20), nella Top 5 (+50) o sul podio (+100), +200 al posto del podio per il pronostico perfetto."
   },
   "GuestWaiting": {
     "title": "Il tuo pronostico è confermato!",

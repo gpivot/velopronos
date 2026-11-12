@@ -1261,7 +1261,7 @@
     "step2Title": "Odds and multiplier",
     "step2Body": "Each rider has odds: the higher they are, the riskier the pick… and the more it pays. If they finish in the Top 10, their odds are multiplied according to their place. Beyond 10th place, they score nothing.",
     "step3Title": "How your points are calculated",
-    "step3Body": "For each of your 3 riders: odds × the multiplier of their place. Add them up, then add the bonuses if all 3 picks finish in the Top 10 (+20), the Top 5 (+50) or on the podium (+100). And +200 for the perfect prediction."
+    "step3Body": "For each of your 3 riders: odds × the multiplier of their place. Add them up, then add the bonuses if all 3 picks finish in the Top 10 (+20), the Top 5 (+50) or on the podium (+100), +200 instead of the podium bonus for the perfect prediction."
   },
   "GuestWaiting": {
     "title": "Your prediction is confirmed!",

@@ -33,7 +33,7 @@ invités) et `docs/notifications.md`, hérités de Biathlonpronos.
   Biathlonpronos devient VéloPronos.
 - **Pop-ups 2 et 3** : barème de VéloPronos (`trajectoire-et-regles.md` §3) : cote × 25, 18, 13,
   10, 7, 5, 4, 3, 2, 1 du 1er au 10e, rien au-delà ; bonus si les 3 choix finissent dans le Top 10
-  (+20), le Top 5 (+50) ou sur le podium (+100), et +200 pour le prono parfait. Le tableau des
+  (+20), le Top 5 (+50) ou sur le podium (+100), et +200 pour le prono parfait, à la place du podium. Le tableau des
   multiplicateurs est lu dans `RANK_MULTIPLIERS` (moteur de points) : il suivra le barème s'il change.
 - **Classements** : en plus des filtres de Biathlonpronos, les points de maillots et du WE des
   Champions d'un joueur en attente d'inscription sont exclus du classement de la course
@@ -43,17 +43,17 @@ invités) et `docs/notifications.md`, hérités de Biathlonpronos.
 - **E-mail « Ton score est prêt »** : le nom de l'étape suit le format des rappels (« Étape 3 ·
   Montagne à Paris-Nice »).
 
-## À confirmer par Guillaume
+## Validé par Guillaume (12/11/2026)
 
-- **Pop-up 3** : on cite +200 pour le prono parfait (comme l'accueil vitrine). S'il **remplace**
-  le bonus Top 3/5/10 en vélo (question encore ouverte dans `trajectoire-et-regles.md`), le texte
-  reste juste. Les malus des étapes spéciales (Crise de foie, Crevaison) ne sont pas mentionnés,
-  pour garder la pop-up courte.
-- **CLM par équipes** : les 3 pop-ups ne s'affichent pas sur ces étapes (elles parlent de
-  coureurs, pas d'équipes). Elles s'afficheront à la première étape « normale ».
+- **Périmètre** : seul le parcours invité change ; rien d'autre dans le fonctionnement de l'app.
+  Les seules retouches hors des pages invité sont des filtres qui excluent les joueurs en attente
+  d'inscription (classements, e-mails automatiques) et le lien « J'ai déjà un code » de l'écran de
+  connexion, tous deux demandés par le document.
+- **Prono parfait** : il vaut +200, **à la place** du bonus podium (+100). La pop-up 3 le dit
+  ainsi. Le moteur de points n'a pas été touché.
+- **CLM par équipes** : pas de pop-ups sur ces étapes.
 - **Objet de l'e-mail** : « 🏁 Étape 3 · Montagne à Paris-Nice : ton score est prêt », sur le
-  modèle des rappels. Pour une classique, le nom de l'étape est son type (ex. « Classique à
-  Milan-San Remo »). Une autre tournure est possible.
+  modèle des rappels.
 
 ## Réglages à faire dans le projet Supabase de VéloPronos
 

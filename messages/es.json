@@ -1261,7 +1261,7 @@
     "step2Title": "La cuota y el multiplicador",
     "step2Body": "Cada corredor tiene una cuota: cuanto más alta, más arriesgada es la apuesta… y más puntos da. Si termina en el Top 10, su cuota se multiplica según su puesto. Más allá del 10.º puesto, no suma nada.",
     "step3Title": "El cálculo de tus puntos",
-    "step3Body": "Para cada uno de tus 3 corredores: cuota × multiplicador de su puesto. Se suman y luego se añaden los bonus si tus 3 elecciones terminan juntas en el Top 10 (+20), el Top 5 (+50) o en el podio (+100). Y +200 por el pronóstico perfecto."
+    "step3Body": "Para cada uno de tus 3 corredores: cuota × multiplicador de su puesto. Se suman y luego se añaden los bonus si tus 3 elecciones terminan juntas en el Top 10 (+20), el Top 5 (+50) o en el podio (+100), +200 en lugar del podio por el pronóstico perfecto."
   },
   "GuestWaiting": {
     "title": "¡Tu pronóstico está confirmado!",
