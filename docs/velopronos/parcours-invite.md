@@ -64,3 +64,7 @@ invités) et `docs/notifications.md`, hérités de Biathlonpronos.
 4. Envoi d'e-mails par Resend configuré (`RESEND_API_KEY` et adresse d'expédition VéloPronos) :
    sans lui, l'e-mail « Ton score est prêt » ne part pas (l'admin n'a pas d'erreur, l'envoi est
    simplement ignoré).
+5. Vercel : `NEXT_PUBLIC_SITE_URL` = `https://velopronos.vercel.app` tant que `velopronos.fr` pointe
+   vers base44, sinon le bouton « Découvrir mon score » de l'e-mail ouvre l'ancienne app.
+   L'expéditeur par défaut est `VéloPronos <notifications@velopronos.fr>` (domaine à vérifier
+   dans Resend, enregistrements DNS sans effet sur le site).
