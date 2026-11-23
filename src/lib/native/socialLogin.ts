@@ -10,13 +10,12 @@ import { nativePlatform } from "./firebaseMessaging";
  * Identifiants OAuth Google (publics, ils ne donnent accès à rien) : le client « Application Web »
  * utilisé par Supabase, et un client « iOS » créé pour l'identifiant iOS de l'appli, dans la console
  * Google Cloud du projet Firebase VéloPronos. Vides = bouton masqué.
- * VéloPronos (09/11/2026) : vidés en attendant le projet Firebase / Google Cloud VéloPronos (ceux de
- * Biathlonpronos ne marchent pas ici). Voir docs/velopronos/publication-stores.md, étape 6.
+ * VéloPronos (23/11/2026) : identifiants du projet Firebase / Google Cloud « velopronos ».
  * Le client iOS doit aussi figurer, à l'envers, dans mobile/ios/App/App/Info.plist (URL scheme),
  * sinon le SDK Google fait planter l'appli.
  */
-export const GOOGLE_WEB_CLIENT_ID = "";
-export const GOOGLE_IOS_CLIENT_ID = "";
+export const GOOGLE_WEB_CLIENT_ID = "565969385868-hqsgeljuqaepq22u1o0n92v0d1tin8vo.apps.googleusercontent.com";
+export const GOOGLE_IOS_CLIENT_ID = "565969385868-olnldcm14q0qloeeh3c4lbo1dn74q3n2.apps.googleusercontent.com";
 
 interface SocialLoginPlugin {
   initialize(options: {

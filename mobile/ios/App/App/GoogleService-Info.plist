@@ -2,18 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>565969385868-olnldcm14q0qloeeh3c4lbo1dn74q3n2.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.565969385868-olnldcm14q0qloeeh3c4lbo1dn74q3n2</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBKjAxd9G6q7UD2OevH3z1s01dqcojCZ4A</string>
+	<string>AIzaSyARTVD1gKxn4Bxu04FOCj-CXpCSitWwTnQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>226990944454</string>
+	<string>565969385868</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>fr.biathlonpronos.app</string>
+	<string>com.base6a1f0e7a3cd8ee2103802f51.app</string>
 	<key>PROJECT_ID</key>
-	<string>biathlonpronos-6eae5</string>
+	<string>velopronos</string>
 	<key>STORAGE_BUCKET</key>
-	<string>biathlonpronos-6eae5.firebasestorage.app</string>
+	<string>velopronos.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:226990944454:ios:669d334cf39094eea7e7c7</string>
+	<string>1:565969385868:ios:62f514c52de4a7ab277ea9</string>
 </dict>
 </plist>

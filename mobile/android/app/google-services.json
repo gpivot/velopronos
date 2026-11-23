@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "226990944454",
-    "project_id": "biathlonpronos-6eae5",
-    "storage_bucket": "biathlonpronos-6eae5.firebasestorage.app"
+    "project_number": "565969385868",
+    "project_id": "velopronos",
+    "storage_bucket": "velopronos.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:226990944454:android:709f19415240890fa7e7c7",
+        "mobilesdk_app_id": "1:565969385868:android:4db550891d92b27d277ea9",
         "android_client_info": {
-          "package_name": "fr.biathlonpronos.app"
+          "package_name": "fr.velopronos.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "565969385868-hqsgeljuqaepq22u1o0n92v0d1tin8vo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBuiEP595Zm89fR109MynKsVqYL0RJwpsU"
+          "current_key": "AIzaSyDD-CsswCDv9kyvsx9hNpfmaNyar92nrd4"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "565969385868-hqsgeljuqaepq22u1o0n92v0d1tin8vo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
