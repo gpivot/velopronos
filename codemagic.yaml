@@ -7,7 +7,8 @@
 #
 # À régler une fois dans Codemagic (Team settings / Code signing identities) :
 #   - Android : la clé de signature (keystore) nommée « VeloPronos » ;
-#   - iOS : la clé API App Store Connect nommée « VeloPronos » (Integrations), puis un
+#   - iOS : la clé API App Store Connect de l'équipe, nommée « Biathlonpronos » dans Codemagic (Integrations ;
+#     même équipe Apple, elle vaut pour VéloPronos), puis un
 #     certificat de distribution iOS généré par Codemagic.
 
 workflows:
@@ -52,7 +53,7 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
     integrations:
-      app_store_connect: VeloPronos
+      app_store_connect: Biathlonpronos
     environment:
       ios_signing:
         distribution_type: app_store

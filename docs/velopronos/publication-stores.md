@@ -85,8 +85,9 @@ par la conversation (les clés privées vont directement dans Codemagic ou Verce
    Garder le fichier et ses mots de passe en lieu sûr (gestionnaire de mots de passe). Avec la
    signature par Google Play, une clé perdue se remplace, mais c'est une démarche.
    Noter son SHA-1 📩 : `keytool -list -v -keystore velopronos.keystore -alias velopronos`.
-3. Team settings > Integrations > **Developer Portal** (App Store Connect) : ajouter la clé de
-   l'étape 2.4 sous le nom **VeloPronos** (Issuer ID, Key ID, fichier .p8).
+3. Team settings > Integrations > **Developer Portal** (App Store Connect) : `codemagic.yaml` utilise
+   la clé d'équipe **Biathlonpronos** déjà présente (Key ID `99YP48MYV2`, même équipe Apple,
+   décision du 23/11/2026 : la clé « Velopronos » de Codemagic était refusée par Apple).
 4. Code signing identities > **iOS certificates** > Generate certificate (Apple Distribution),
    puis **iOS provisioning profiles** > Fetch profiles > profil « App Store » pour
    `com.base6a1f0e7a3cd8ee2103802f51.app` (le créer chez Apple s'il n'existe pas : Profiles > +
