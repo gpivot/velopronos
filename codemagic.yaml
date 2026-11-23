@@ -37,7 +37,7 @@ workflows:
       - name: Construire l'appli (AAB signé)
         script: |
           cd mobile/android
-          ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=2.0.$BUILD_NUMBER
+          ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=3.0.$BUILD_NUMBER
     artifacts:
       - mobile/android/app/build/outputs/bundle/release/*.aab
     # Envoi automatique sur Google Play : à activer après le tout premier envoi, que Google

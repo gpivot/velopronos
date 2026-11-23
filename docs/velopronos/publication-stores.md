@@ -10,7 +10,7 @@ Cloud Messaging, builds sur Codemagic (`codemagic.yaml`).
 | --- | --- | --- |
 | Identifiant Android | `fr.velopronos.app` (nouvelle fiche, compte organisation) | `mobile/android/app/build.gradle`, `capacitor.config.ts` |
 | Identifiant iOS | `com.base6a1f0e7a3cd8ee2103802f51.app` (appli VéloPronos déjà sur l'App Store) | `project.pbxproj` |
-| Version | iOS 2.0 (build = numéro Codemagic) ; Android 2.0.<build> | `codemagic.yaml` |
+| Version | iOS 3.0 (build = numéro Codemagic ; base44 avait publié 2.124641.4, Apple exige plus haut) ; Android 3.0.<build> | `codemagic.yaml` |
 | Icône et écran de démarrage | Logo VéloPronos (roue blanche, traits de vitesse blanc et jaune `#EEC748`, fond `#1B160D`) ; écran de démarrage avec « VéloPronos » en Poppins ExtraBold | sources `mobile/assets/`, regénérés par `npm run assets` dans `mobile/` |
 | Petite icône des notifications Android | la roue et ses traits, en blanc | `res/drawable/ic_stat_notify.xml` |
 | Écran hors ligne | bouton « Réessayer » vers `www.velopronos.fr` | `mobile/www/` |
@@ -123,7 +123,7 @@ Dans console.cloud.google.com, projet du Firebase VéloPronos :
 - **Domaine** : fait le 23/11/2026, `www.velopronos.fr` pointe sur Vercel.
 - **Fiches** : textes courts et longs, captures d'écran (iPhone 6,9 pouces et téléphone Android),
   icône 512 × 512 et bannière 1024 × 500 pour Google Play, URL de support et de confidentialité.
-- **Apple** : nouvelle version 2.0 de la fiche existante ; noter dans « Notes pour la relecture »
+- **Apple** : nouvelle version 3.0 de la fiche existante ; noter dans « Notes pour la relecture »
   un compte de test et le fait que c'est une refonte complète.
 
 ## À confirmer par Guillaume
