@@ -39,7 +39,7 @@ avec le nouveau schéma et les écrans vélo.
   Parrillada (es), Grigliata (it). Les autres langues sont-elles utiles pour VéloPronos ?
 - **Identifiants d'application** (décidés par Guillaume le 04/11/2026) :
   - **iOS** : `com.base6a1f0e7a3cd8ee2103802f51.app`, celui de l'appli VéloPronos déjà publiée sur
-    l'App Store (compte de Guillaume, version 1.0 base44). Version passée à **2.0** pour la nouvelle
+    l'App Store (compte de Guillaume, dernière version base44 : 2.124641.4). Version passée à **3.0** pour la nouvelle
     formule (`MARKETING_VERSION`).
   - **Android** : `fr.velopronos.app`, nouvelle fiche sur le compte organisation (l'ancienne n'a
     jamais été publiée).
