@@ -119,9 +119,7 @@ Dans console.cloud.google.com, projet du Firebase VéloPronos :
 
 ### 7. Avant la soumission aux stores
 
-- **Domaine** : l'appli ouvre `www.velopronos.fr`, qui pointe encore vers base44. Basculer le
-  domaine sur Vercel avant toute version publique. Pour un build de test avant la bascule,
-  décommenter `VELOPRONOS_URL` dans `codemagic.yaml`.
+- **Domaine** : fait le 23/11/2026, `www.velopronos.fr` pointe sur Vercel.
 - **Fiches** : textes courts et longs, captures d'écran (iPhone 6,9 pouces et téléphone Android),
   icône 512 × 512 et bannière 1024 × 500 pour Google Play, URL de support et de confidentialité.
 - **Apple** : nouvelle version 2.0 de la fiche existante ; noter dans « Notes pour la relecture »
@@ -133,11 +131,9 @@ Dans console.cloud.google.com, projet du Firebase VéloPronos :
   source vectoriel). Il remplace la cible du biathlon dans l'appli et sur le site (`LogoMark`,
   `src/components/icons.tsx`). « Pronos » passe en jaune sur la page d'accueil, comme le logo.
   Si un fichier source (SVG ou PNG 1024 × 1024) existe, le fournir pour vérifier les proportions.
-- **Compte Apple** : l'appli `com.base6a1f0e7a3cd8ee2103802f51.app` est-elle bien dans l'équipe
-  Apple Developer de Guillaume (et pas dans celle de base44) ? Sinon, demander son transfert
-  (App Store Connect > Applis > Transfert) ou créer un nouvel identifiant.
-- **Même compte Apple que Biathlonpronos ?** Si oui, la clé APNs et la clé API Codemagic se
-  réutilisent.
+- **Compte Apple** (confirmé le 23/11/2026) : l'appli `com.base6a1f0e7a3cd8ee2103802f51.app` est
+  dans l'équipe Apple de Guillaume (XTFJLJRTB9), la même que Biathlonpronos : la clé APNs et la clé
+  API Codemagic se réutilisent.
 - **Public cible** sur Google Play (13 ans et plus proposé).
 - **Connexion Google dans l'appli** au lancement, ou plus tard (code e-mail et Apple suffisent).
 - `docs/notifications.md` cite encore les domaines Biathlonpronos (fichier commun aux deux apps,

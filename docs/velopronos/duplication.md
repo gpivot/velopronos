@@ -47,12 +47,13 @@ avec le nouveau schéma et les écrans vélo.
     Java, couleur des notifications), `mobile/ios` (project.pbxproj, Info.plist), `codemagic.yaml`
     (signatures et intégration nommées « VeloPronos » dans Codemagic).
   - **Pas à pas stores et notifications** (09/11/2026) : `publication-stores.md`.
-  - **Reste à faire** : un projet Firebase VéloPronos avec les deux applis, puis remplacer
-    `mobile/android/app/google-services.json` et `mobile/ios/App/App/GoogleService-Info.plist`
-    (ceux de Biathlonpronos sont encore en place : le build Android échouera tant qu'ils ne sont
-    pas remplacés) ; les identifiants Google OAuth de `src/lib/native/socialLogin.ts` et
-    d'`Info.plist` sont encore ceux de Biathlonpronos.
-- **Domaine** : `velopronos.fr` pointe encore vers l'app base44. Bascule à prévoir.
+  - **Fait (23/11/2026)** : projet Firebase `velopronos` (Android `fr.velopronos.app`, iOS
+    `com.base6a1f0e7a3cd8ee2103802f51.app`) ; `google-services.json`, `GoogleService-Info.plist`,
+    identifiants Google OAuth de `src/lib/native/socialLogin.ts` et URL scheme d'`Info.plist`
+    remplacés.
+- **Domaine** (23/11/2026) : `velopronos.fr` et `www.velopronos.fr` pointent sur Vercel (DNS chez IONOS) ;
+  Supabase Site URL `https://www.velopronos.fr`. Connexion Google et Apple activées sur le site
+  (Services ID Apple `fr.velopronos.web`, secret Apple à renouveler avant fin mai 2027).
 - **E-mails de connexion** (04/11/2026) : Supabase ne laisse modifier les modèles « Magic Link » et
   « Change Email Address » qu'avec un SMTP personnalisé (par exemple Resend, comme Biathlonpronos),
   donc avec une adresse d'expédition sur le domaine VéloPronos. En attendant, les e-mails envoient
