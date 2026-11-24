@@ -116,16 +116,32 @@ export async function getLeagueMembers(
 }
 
 /**
- * Tous les joueurs inscrits (hors invités pas encore inscrits, comme le classement) : le classement
- * général de la saison les montre tous, à 0 point tant qu'ils n'ont rien marqué, même avant la
- * 1re course (pour donner envie de rejoindre le jeu).
+ * Tous les joueurs inscrits : le classement général de la saison les montre tous, à 0 point tant
+ * qu'ils n'ont rien marqué, même avant la 1re course (pour donner envie de rejoindre le jeu).
+ * Exclus : les invités anonymes du bouton « Jouer » (profil « Invité », compte Supabase anonyme,
+ * reconnu seulement via la clé service) et les invités « e-mail seulement » (`signup_pending`).
+ * `admin` : client clé service_role (côté serveur uniquement).
  */
-export async function getRegisteredPlayers(supabase: SupabaseClient): Promise<{ userId: string; pseudo: string }[]> {
+export async function getRegisteredPlayers(
+  supabase: SupabaseClient,
+  admin: SupabaseClient
+): Promise<{ userId: string; pseudo: string }[]> {
   try {
+    const anonymousIds = new Set<string>();
+    for (let page = 1; ; page++) {
+      const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+      if (error) throw new Error(error.message);
+      const users = data?.users ?? [];
+      for (const u of users) if (u.is_anonymous) anonymousIds.add(u.id);
+      if (users.length < 1000) break;
+    }
     const rows = await fetchAll<any>((from, to) =>
-      supabase.from("profiles").select("id, pseudo").eq("signup_pending", false).order("id").range(from, to)
+      // select("*") : la colonne signup_pending n'existe qu'après la migration 0060 (parcours invité).
+      supabase.from("profiles").select("*").order("id").range(from, to)
     );
-    return rows.map((p) => ({ userId: p.id as string, pseudo: (p.pseudo as string | null) ?? "?" }));
+    return rows
+      .filter((p) => !anonymousIds.has(p.id) && p.signup_pending !== true)
+      .map((p) => ({ userId: p.id as string, pseudo: (p.pseudo as string | null) ?? "?" }));
   } catch (error) {
     console.error("getRegisteredPlayers:", (error as Error).message);
     return [];

@@ -813,7 +813,8 @@ l'URL (`?portee=ligue&ligue=…&periode=etapes&etape=…&course=…`) pour qu'un
   (première par ordre alphabétique par défaut). Les membres sans point y figurent à 0. Sans ligue,
   un encadré renvoie vers l'onglet Ligues.
 - **Tous les inscrits en Général + Saison** (24/11/2026). Le classement général de la saison liste
-  tous les joueurs inscrits (hors invités pas encore inscrits, `signup_pending`), à 0 point tant
+  tous les joueurs inscrits (hors invités anonymes du bouton « Jouer », lus via la clé service, et
+  invités « e-mail seulement », `signup_pending`), à 0 point tant
   qu'ils n'ont rien marqué, même avant la 1re course : ça donne envie de rejoindre. Ex æquo à 0
   classés par pseudo. L'encadré « Mon classement » (et l'accueil) garde « – » tant qu'on n'a pas
   de point. La vue « Par étapes » est inchangée (seuls ceux qui ont des points ou un prono).

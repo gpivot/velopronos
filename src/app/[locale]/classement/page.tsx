@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { raceTitle } from "@/lib/raceLabel";
-import { createClient, getAuthUser } from "@/lib/supabase/server";
+import { createAdminClient, createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Link } from "@/i18n/navigation";
 import { HeaderActions } from "@/components/HeaderActions";
@@ -119,7 +119,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
         getCurrentStreaks(supabase, season.id, now),
         ongoingStage ? getRacesStandings(supabase, ongoingStage.races, null, false, ongoingStage.id) : Promise.resolve([]),
         // Classement général : tous les inscrits y figurent, à 0 point tant qu'ils n'ont rien marqué.
-        members ? Promise.resolve([]) : getRegisteredPlayers(supabase),
+        members ? Promise.resolve([]) : getRegisteredPlayers(supabase, createAdminClient()),
       ]);
       streaks = currentStreaks;
       ongoingStageLeaders = new Set(ongoingRows.filter((r) => r.rank === 1 && r.points > 0).map((r) => r.userId));
