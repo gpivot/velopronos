@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { rankPlayers } from "./racePlayers";
+import { fetchAll } from "./admin/fetchAll";
 import { shortAthleteName } from "./athleteName";
 import { getBonusQuestionLedger } from "./bonusQuestions";
 import { getRaceDisplayStatus, type RaceDisplayStatus } from "./raceStatus";
@@ -112,6 +113,23 @@ export async function getLeagueMembers(
 ): Promise<{ userId: string; pseudo: string }[]> {
   const { data } = await supabase.from("league_memberships").select("user_id, profiles(pseudo)").eq("league_id", leagueId);
   return ((data ?? []) as any[]).map((m) => ({ userId: m.user_id, pseudo: m.profiles?.pseudo ?? "?" }));
+}
+
+/**
+ * Tous les joueurs inscrits (hors invités pas encore inscrits, comme le classement) : le classement
+ * général de la saison les montre tous, à 0 point tant qu'ils n'ont rien marqué, même avant la
+ * 1re course (pour donner envie de rejoindre le jeu).
+ */
+export async function getRegisteredPlayers(supabase: SupabaseClient): Promise<{ userId: string; pseudo: string }[]> {
+  try {
+    const rows = await fetchAll<any>((from, to) =>
+      supabase.from("profiles").select("id, pseudo").eq("signup_pending", false).order("id").range(from, to)
+    );
+    return rows.map((p) => ({ userId: p.id as string, pseudo: (p.pseudo as string | null) ?? "?" }));
+  } catch (error) {
+    console.error("getRegisteredPlayers:", (error as Error).message);
+    return [];
+  }
 }
 
 /**

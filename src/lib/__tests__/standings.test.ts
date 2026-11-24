@@ -21,6 +21,17 @@ describe("buildStandings", () => {
     expect(rows[0].picks).toBeNull();
   });
 
+  it("garde les inscrits sans point à 0, ex æquo en dernier", () => {
+    const rows = buildStandings([...entries, { userId: "d", pseudo: "David", points: 0 }, { userId: "a", pseudo: "Anna", points: 0 }, { userId: "e", pseudo: "Emma", points: 0 }], null, null);
+    expect(rows.map((r) => [r.userId, r.points, r.rank])).toEqual([
+      ["a", 70.3, 1],
+      ["c", 70, 2],
+      ["b", 30, 3],
+      ["d", 0, 4],
+      ["e", 0, 4],
+    ]);
+  });
+
   it("restreint aux membres d'une ligue, membres sans point à 0", () => {
     const rows = buildStandings(entries, [
       { userId: "b", pseudo: "Bruno" },

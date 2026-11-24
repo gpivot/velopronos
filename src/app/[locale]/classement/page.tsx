@@ -16,6 +16,7 @@ import {
   buildStandings,
   getLeagueMembers,
   getRacesStandings,
+  getRegisteredPlayers,
   getStandingsStages,
   isStageOngoing,
   pickDefaultStandingsStageId,
@@ -114,13 +115,15 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
       // Dossard rouge sur le classement Saison : le(s) leader(s) de l'étape en cours.
       // Une étape hors classement (×0) ne donne pas de dossard rouge.
       const ongoingStage = stages.find((s) => s.countsInStandings !== false && isStageOngoing(s));
-      const [currentStreaks, ongoingRows] = await Promise.all([
+      const [currentStreaks, ongoingRows, registered] = await Promise.all([
         getCurrentStreaks(supabase, season.id, now),
         ongoingStage ? getRacesStandings(supabase, ongoingStage.races, null, false, ongoingStage.id) : Promise.resolve([]),
+        // Classement général : tous les inscrits y figurent, à 0 point tant qu'ils n'ont rien marqué.
+        members ? Promise.resolve([]) : getRegisteredPlayers(supabase),
       ]);
       streaks = currentStreaks;
       ongoingStageLeaders = new Set(ongoingRows.filter((r) => r.rank === 1 && r.points > 0).map((r) => r.userId));
-      rows = buildStandings(leaderboard, members, null);
+      rows = buildStandings([...leaderboard, ...registered.map((p) => ({ ...p, points: 0 }))], members, null);
     } else if (stage) {
       // Pronostics affichés (une ligne sous le pseudo) seulement pour une course choisie et déjà partie ;
       // sur l'étape entière, ils restent dans le pop-up du joueur pour garder des lignes compactes.
