@@ -8,6 +8,7 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { Poppins } from "next/font/google";
+import Script from "next/script";
 import { SimulatedClockBanner } from "@/components/SimulatedClockBanner";
 import { routing, type Locale } from "@/i18n/routing";
 import "../globals.css";
@@ -69,6 +70,9 @@ export default async function LocaleLayout({
           <LocaleSync />
           {children}
         </NextIntlClientProvider>
+        {/* Mesure d'audience Vercel Web Analytics (24/11/2026) : sans cookie, à activer dans le tableau de bord
+            Vercel (onglet Analytics). Script servi par Vercel lui-même, il suit aussi les changements de page. */}
+        {process.env.NODE_ENV === "production" && <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />}
       </body>
     </html>
   );

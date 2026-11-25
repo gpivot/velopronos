@@ -728,7 +728,7 @@
   "Privacy": {
     "title": "Datenschutzerklärung",
     "back": "Start",
-    "updated": "Zuletzt aktualisiert: Oktober 2026",
+    "updated": "Zuletzt aktualisiert: November 2026",
     "sections": [
       {
         "title": "1. Einleitung",
@@ -767,7 +767,8 @@
         "title": "4. Weitergabe von Daten",
         "paragraphs": [
           "Ihre personenbezogenen Daten werden niemals an Dritte verkauft oder vermietet.",
-          "Einige Daten können von unseren technischen Dienstleistern (Hosting, Datenbank, Authentifizierung) ausschließlich zum Betrieb des Dienstes verarbeitet werden."
+          "Einige Daten können von unseren technischen Dienstleistern (Hosting, Datenbank, Authentifizierung) ausschließlich zum Betrieb des Dienstes verarbeitet werden.",
+          "Wir messen die Besucherzahlen der Website anonym mit Vercel Web Analytics: ohne Cookies und ohne persönliche Kennung, es werden nur zusammengefasste Besuchsstatistiken gespeichert."
         ]
       },
       {

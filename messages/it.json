@@ -728,7 +728,7 @@
   "Privacy": {
     "title": "Informativa sulla privacy",
     "back": "Home",
-    "updated": "Ultimo aggiornamento: ottobre 2026",
+    "updated": "Ultimo aggiornamento: novembre 2026",
     "sections": [
       {
         "title": "1. Introduzione",
@@ -767,7 +767,8 @@
         "title": "4. Condivisione dei dati",
         "paragraphs": [
           "I Suoi dati personali non vengono mai venduti né ceduti in locazione a terzi.",
-          "Alcuni dati possono essere trattati dai nostri fornitori tecnici (hosting, database, autenticazione) esclusivamente per il funzionamento del servizio."
+          "Alcuni dati possono essere trattati dai nostri fornitori tecnici (hosting, database, autenticazione) esclusivamente per il funzionamento del servizio.",
+          "Misuriamo il traffico del sito in modo anonimo con Vercel Web Analytics: senza cookie né identificativo personale, vengono conservate solo statistiche aggregate delle visite."
         ]
       },
       {

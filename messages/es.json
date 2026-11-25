@@ -728,7 +728,7 @@
   "Privacy": {
     "title": "Política de privacidad",
     "back": "Inicio",
-    "updated": "Última actualización: octubre de 2026",
+    "updated": "Última actualización: noviembre de 2026",
     "sections": [
       {
         "title": "1. Introducción",
@@ -767,7 +767,8 @@
         "title": "4. Cesión de datos",
         "paragraphs": [
           "Sus datos personales nunca se venden ni se alquilan a terceros.",
-          "Algunos datos pueden ser tratados por nuestros proveedores técnicos (alojamiento, base de datos, autenticación) estrictamente para el funcionamiento del servicio."
+          "Algunos datos pueden ser tratados por nuestros proveedores técnicos (alojamiento, base de datos, autenticación) estrictamente para el funcionamiento del servicio.",
+          "Medimos la audiencia del sitio de forma anónima con Vercel Web Analytics: sin cookies ni identificador personal, solo se conservan estadísticas globales de visitas."
         ]
       },
       {

@@ -728,7 +728,7 @@
   "Privacy": {
     "title": "Privacy policy",
     "back": "Home",
-    "updated": "Last updated: October 2026",
+    "updated": "Last updated: November 2026",
     "sections": [
       {
         "title": "1. Introduction",
@@ -767,7 +767,8 @@
         "title": "4. Data sharing",
         "paragraphs": [
           "Your personal data is never sold or rented to third parties.",
-          "Some data may be processed by our technical providers (hosting, database, authentication) strictly to run the service."
+          "Some data may be processed by our technical providers (hosting, database, authentication) strictly to run the service.",
+          "We measure site traffic anonymously with Vercel Web Analytics: no cookies and no personal identifier, only aggregated visit statistics are kept."
         ]
       },
       {

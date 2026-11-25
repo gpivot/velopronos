@@ -728,7 +728,7 @@
   "Privacy": {
     "title": "Politique de confidentialité",
     "back": "Accueil",
-    "updated": "Dernière mise à jour : Octobre 2026",
+    "updated": "Dernière mise à jour : Novembre 2026",
     "sections": [
       {
         "title": "1. Introduction",
@@ -767,7 +767,8 @@
         "title": "4. Partage des données",
         "paragraphs": [
           "Vos données personnelles ne sont ni vendues ni louées à des tiers.",
-          "Certaines données peuvent être traitées par nos prestataires techniques (hébergement, base de données, authentification) dans le strict cadre du fonctionnement du service."
+          "Certaines données peuvent être traitées par nos prestataires techniques (hébergement, base de données, authentification) dans le strict cadre du fonctionnement du service.",
+          "Nous mesurons l'audience du site de façon anonyme avec Vercel Web Analytics : sans cookie ni identifiant personnel, seules des statistiques globales de visites sont conservées."
         ]
       },
       {
