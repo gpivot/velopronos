@@ -4,7 +4,7 @@
 `docs/velopronos/passation-projet.md`, puis `docs/velopronos/trajectoire-et-regles.md` (section
 1 bis), puis `docs/velopronos/duplication.md` (ce qui a été changé à la copie et ce qui reste à
 confirmer), et `docs/velopronos/schema-velo.md` (tables héritées avec un sens vélo : `stages` =
-courses, `races` = étapes ; migrations 0044-0045, imports CSV). Correctifs communs aux deux apps : `docs/correctifs-partages.md`.
+courses, `races` = étapes ; migrations 0044-0045, imports CSV). Correctifs communs aux deux apps : `docs/correctifs-partages.md`. Parcours invité « Je joue » (repris de Biathlonpronos le 12/11/2026, migration 0060) : `docs/velopronos/parcours-invite.md`.
 Règles : ne jamais copier la liste des joueurs dans le dépôt ; consigner les interprétations
 « à confirmer » dans la documentation ; ne pousser sur GitHub que sur demande. Toujours donner le
 SQL de chaque migration directement dans la conversation, prêt à coller (demande du 05/11/2026).

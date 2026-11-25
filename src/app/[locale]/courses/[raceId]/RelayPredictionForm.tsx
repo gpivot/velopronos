@@ -5,11 +5,13 @@ import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/navigation";
 import { CheckIcon } from "@/components/icons";
-import { GuestSignupDialog, GuestWelcome } from "@/components/GuestSignupDialog";
+import { GuestEmailDialog, GuestWelcome } from "@/components/GuestSignupDialog";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { filterBySearch } from "@/lib/searchFilter";
+import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
+import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 
 export type NationWithOdds = {
   nation_code: string;
@@ -41,7 +43,7 @@ export function RelayPredictionForm({
   const [error, setError] = useState<string | null>(null);
   // Parcours d'invité : création du compte à la validation du premier pronostic.
   const [guestDialog, setGuestDialog] = useState(false);
-  const [welcome, setWelcome] = useState(false);
+  const [welcome, setWelcome] = useState<string | null>(null);
   // Dernier pronostic enregistré, pour signaler une modification pas encore validée.
   const [savedState, setSavedState] = useState({ nation: initialSelection, bonusX2: initialBonusX2 });
   const supabase = createClient();
@@ -50,8 +52,8 @@ export function RelayPredictionForm({
 
   const canUseX2 = x2Eligible && (initialBonusX2 || x2UsesRemaining > 0);
 
-  async function submit() {
-    if (!selected) return;
+  async function submit(): Promise<boolean> {
+    if (!selected) return false;
     setSaving(true);
     setError(null);
 
@@ -63,8 +65,11 @@ export function RelayPredictionForm({
     if (!user || user.is_anonymous) {
       setGuestDialog(true);
       setSaving(false);
-      return;
+      return false;
     }
+
+    // Invité devenu joueur mais jeton encore « anonyme » : renouvellement avant d'écrire.
+    if (await hasStaleGuestToken(supabase)) await supabase.auth.refreshSession();
 
     const { error } = await supabase.from("predictions").upsert(
       {
@@ -85,6 +90,7 @@ export function RelayPredictionForm({
     } else {
       setSavedState({ nation: selected, bonusX2 });
     }
+    return !error;
   }
 
   // Filtre : nom du pays ou code à 3 lettres (FRA, NOR…).
@@ -116,15 +122,16 @@ export function RelayPredictionForm({
         error={error}
       />
 
-      {welcome && validated && <GuestWelcome />}
+      {welcome && validated && <GuestWelcome email={welcome} />}
       {guestDialog && (
-        <GuestSignupDialog
+        <GuestEmailDialog
           onClose={() => setGuestDialog(false)}
-          onDone={async () => {
+          onDone={async (email) => {
             setGuestDialog(false);
-            setWelcome(true);
-            await submit();
-            router.refresh();
+            setWelcome(email);
+            // Pronostic enregistré : page d'attente (heure de départ, saisie du code après la course).
+            if (await submit()) router.push(`/courses/${raceId}/attente`);
+            else router.refresh();
           }}
         />
       )}
@@ -154,6 +161,7 @@ export function RelayPredictionForm({
                 isSelected ? "border-ice bg-ice-soft" : "border-border bg-card"
               }`}
             >
+              <span className="w-6 flex-shrink-0 text-center text-xl leading-none">{nationFlagEmoji(n.nation_code)}</span>
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">{n.name}</span>
                 <span className="text-[11px] text-text-dim">{n.nation_code}</span>

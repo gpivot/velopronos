@@ -2,8 +2,9 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { isPredictionOpen } from "@/lib/predictionWindow";
 import { sendPush } from "@/lib/push/send";
 import { readServiceAccount } from "@/lib/push/fcm";
-import { escapeHtml, isEmailConfigured, renderEmail, sendEmails, siteUrl, unsubscribeUrl, type OutgoingEmail } from "./email";
+import { escapeHtml, isEmailConfigured, renderEmail, sendEmails, siteUrl, SITE_URL, unsubscribeUrl, type OutgoingEmail } from "./email";
 import {
+  DEFAULT_PREFERENCES,
   ensureUnsubscribeTokens,
   loadPlayerEmails,
   loadPlayerSettings,
@@ -230,6 +231,91 @@ export async function notifyRaceResults(admin: SupabaseClient, raceId: string, n
   );
   await recordSends(admin, report.userIds.map((userId) => ({ kind: "results", ref: raceId, user_id: userId, channel: "push" as const })));
   return report.sent > 0 ? ` Résultats notifiés sur ${report.sent} téléphone(s).` : "";
+}
+
+// ---------------------------------------------------------------------------------------------
+// Score d'un invité « e-mail seulement » (migration 0060)
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * Après la saisie des résultats : chaque invité qui a validé son pronostic avec son seul e-mail
+ * (inscription pas terminée) reçoit « Ton score est prêt », avec un lien qui le connecte et
+ * l'amène sur la course, et le même code privé à saisir dans l'appli. Le score n'est pas dans
+ * l'e-mail : il le découvre sur la page de la course, avec l'invitation à créer son compte.
+ * Une seule fois par course et par joueur.
+ */
+export async function notifyGuestResults(admin: SupabaseClient, raceId: string, now = new Date()): Promise<string> {
+  if (!isEmailConfigured()) return "";
+  const { data: race, error } = await admin
+    .from("races")
+    .select("id, locks_at, format, stage_number, sex, stages(location)")
+    .eq("id", raceId)
+    .single();
+  if (error || !race) return "";
+  if (!areResultsFresh(race.locks_at, now)) return "";
+  const location = (race.stages as unknown as { location: string }).location;
+
+  const { data: rows, error: predError } = await admin
+    .from("predictions")
+    .select("user_id, profiles!inner(signup_pending)")
+    .eq("race_id", raceId)
+    .eq("profiles.signup_pending", true);
+  if (predError) throw new Error(predError.message);
+  const sent = await alreadySent(admin, "guest_results", [raceId], "email");
+  const userIds = [...new Set((rows ?? []).map((row) => row.user_id as string))].filter((id) => !sent.has(`${raceId}:${id}`));
+  if (userIds.length === 0) return "";
+
+  const settings = await loadPlayerSettings(admin, userIds);
+  await ensureUnsubscribeTokens(admin, settings, userIds);
+
+  const outgoing: { userId: string; email: OutgoingEmail }[] = [];
+  for (const userId of userIds) {
+    const { data: userData } = await admin.auth.admin.getUserById(userId);
+    const user = userData?.user;
+    if (!user?.email) continue;
+    const texts = notificationTexts(String(user.user_metadata?.locale ?? "fr"));
+    const coursePath = `/${texts.locale}/courses/${raceId}`;
+    // Lien de connexion et code privé (le même jeton) : pas d'e-mail envoyé par Supabase ici.
+    const { data: link, error: linkError } = await admin.auth.admin.generateLink({ type: "magiclink", email: user.email });
+    if (linkError || !link?.properties) {
+      console.error("notifyGuestResults (lien):", linkError?.message);
+      continue;
+    }
+    const buttonUrl = `${SITE_URL}/auth/confirm?token_hash=${encodeURIComponent(link.properties.hashed_token)}&type=magiclink&next=${encodeURIComponent(coursePath)}`;
+    const code = link.properties.email_otp;
+    const raceLabel = raceName(texts, race);
+    const { html, text } = renderEmail({
+      title: texts.t("guestResultsTitle"),
+      bodyHtml:
+        `<p style="margin:0 0 12px">${escapeHtml(texts.t("guestResultsBody", { race: raceLabel, location }))}</p>` +
+        `<p style="margin:0 0 6px">${escapeHtml(texts.t("guestResultsCodeLabel"))}</p>` +
+        `<div style="text-align:center;margin:0 0 8px"><span style="display:inline-block;background:#0A0F1C;border-radius:12px;padding:10px 18px;font-size:26px;font-weight:bold;letter-spacing:6px;color:#F2C94C">${escapeHtml(code)}</span></div>` +
+        `<p style="margin:0;font-size:13px;color:#90A3C4">${escapeHtml(texts.t("guestResultsCodeHint"))}</p>`,
+      bodyText: `${texts.t("guestResultsBody", { race: raceLabel, location })}\n\n${texts.t("guestResultsCodeLabel")} ${code}\n${texts.t("guestResultsCodeHint")}`,
+      button: { label: texts.t("guestResultsButton"), url: buttonUrl },
+      ...emailFrame(texts, settings.get(userId) ?? { prefs: DEFAULT_PREFERENCES, unsubscribeToken: null }, "results"),
+    });
+    outgoing.push({
+      userId,
+      email: {
+        to: user.email,
+        subject: texts.t("guestResultsSubject", { race: raceLabel, location }),
+        html,
+        text,
+        unsubscribeUrl: unsubscribeUrl(settings.get(userId)?.unsubscribeToken ?? "", "results", texts.locale),
+      },
+    });
+  }
+  if (outgoing.length === 0) return "";
+
+  const report = await sendEmails(outgoing.map((o) => o.email));
+  await recordSends(
+    admin,
+    outgoing
+      .filter((o) => report.delivered.has(o.email.to))
+      .map((o) => ({ kind: "guest_results", ref: raceId, user_id: o.userId, channel: "email" as const }))
+  );
+  return report.sent > 0 ? ` Score envoyé par e-mail à ${report.sent} invité(s).` : "";
 }
 
 // ---------------------------------------------------------------------------------------------

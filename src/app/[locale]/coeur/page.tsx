@@ -22,7 +22,7 @@ export default async function HeartPage() {
 
   const [{ data: teams }, { data: nations }, { data: favorite }] = season
     ? await Promise.all([
-        supabase.from("teams").select("id, name").eq("season_id", season.id).order("name"),
+        supabase.from("teams").select("id, name, nation_code").eq("season_id", season.id).order("name"),
         supabase.from("nations").select("code, name").order("name"),
         playerId
           ? supabase.from("favorite_teams").select("team_id, nation_code").eq("user_id", playerId).eq("season_id", season.id).maybeSingle()
@@ -30,7 +30,11 @@ export default async function HeartPage() {
       ])
     : [{ data: [] as any[] }, { data: [] as any[] }, { data: null as any }];
 
-  const teamOptions = ((teams ?? []) as any[]).map((x) => ({ value: x.id as string, label: x.name as string }));
+  // Drapeau du pays de l'équipe devant son nom, comme dans le choix des coureurs d'une étape.
+  const teamOptions = ((teams ?? []) as any[]).map((x) => ({
+    value: x.id as string,
+    label: x.nation_code ? `${nationFlagEmoji(x.nation_code)} ${x.name}` : (x.name as string),
+  }));
   const nationOptions = ((nations ?? []) as any[]).map((n) => ({ value: n.code as string, label: `${nationFlagEmoji(n.code)} ${n.name}` }));
 
   return (

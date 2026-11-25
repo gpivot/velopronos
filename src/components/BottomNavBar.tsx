@@ -22,6 +22,7 @@ export function BottomNavBar({ labels, isAdmin, active }: { labels: NavLabels; i
           <Link
             key={href}
             href={href}
+            data-guest-lock
             className={`flex flex-col items-center gap-1 font-display text-[10px] font-semibold ${
               isActive ? "text-ice" : "text-text-dim"
             }`}

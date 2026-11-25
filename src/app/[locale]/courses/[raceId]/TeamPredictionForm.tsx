@@ -5,9 +5,11 @@ import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/navigation";
 import { CheckIcon } from "@/components/icons";
-import { GuestSignupDialog, GuestWelcome } from "@/components/GuestSignupDialog";
+import { GuestEmailDialog, GuestWelcome } from "@/components/GuestSignupDialog";
+import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 import { PredictionSummary } from "./PredictionSummary";
 import { filterBySearch } from "@/lib/searchFilter";
+import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
 
 export type TeamWithOdds = {
@@ -46,7 +48,7 @@ export function TeamPredictionForm({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [guestDialog, setGuestDialog] = useState(false);
-  const [welcome, setWelcome] = useState(false);
+  const [welcome, setWelcome] = useState<string | null>(null);
   const [savedState, setSavedState] = useState({ teams: initialSelection.join(","), bonusX2: initialBonusX2 });
   const supabase = createClient();
   const router = useRouter();
@@ -54,8 +56,8 @@ export function TeamPredictionForm({
 
   const canUseX2 = x2Eligible && (initialBonusX2 || x2UsesRemaining > 0);
 
-  async function submit() {
-    if (selected.length !== TEAM_PICKS) return;
+  async function submit(): Promise<boolean> {
+    if (selected.length !== TEAM_PICKS) return false;
     setSaving(true);
     setError(null);
     const {
@@ -64,8 +66,10 @@ export function TeamPredictionForm({
     if (!user || user.is_anonymous) {
       setGuestDialog(true);
       setSaving(false);
-      return;
+      return false;
     }
+    // Invité qui vient de rattacher son e-mail : jeton encore « anonyme », on le renouvelle.
+    if (await hasStaleGuestToken(supabase)) await supabase.auth.refreshSession();
     const { error } = await supabase.from("predictions").upsert(
       { user_id: user.id, race_id: raceId, team_ids: selected, athlete_ids: null, nation_code: null, bonus_x2_used: bonusX2, ...(lateJoker ? { late_joker: true } : {}) },
       { onConflict: "user_id,race_id" }
@@ -74,10 +78,11 @@ export function TeamPredictionForm({
     if (error) {
       console.error(error);
       setError(t(error.code === "42501" ? "lockedError" : "saveError"));
-    } else {
-      setSavedState({ teams: selected.join(","), bonusX2 });
-      if (lateJoker) router.refresh();
+      return false;
     }
+    setSavedState({ teams: selected.join(","), bonusX2 });
+    if (lateJoker) router.refresh();
+    return true;
   }
 
   function toggle(teamId: string) {
@@ -111,15 +116,16 @@ export function TeamPredictionForm({
         error={error}
       />
 
-      {welcome && validated && <GuestWelcome />}
+      {welcome && validated && <GuestWelcome email={welcome} />}
       {guestDialog && (
-        <GuestSignupDialog
+        <GuestEmailDialog
           onClose={() => setGuestDialog(false)}
-          onDone={async () => {
+          onDone={async (email) => {
             setGuestDialog(false);
-            setWelcome(true);
-            await submit();
-            router.refresh();
+            setWelcome(email);
+            // Pronostic enregistré : page d'attente (heure de départ, saisie du code après l'étape).
+            if (await submit()) router.push(`/courses/${raceId}/attente`);
+            else router.refresh();
           }}
         />
       )}
@@ -141,6 +147,7 @@ export function TeamPredictionForm({
                 isSelected ? "border-ice bg-ice-soft" : "border-border bg-card"
               }`}
             >
+              <span className="w-6 flex-shrink-0 text-center text-xl leading-none">{team.nation_code ? nationFlagEmoji(team.nation_code) : ""}</span>
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">{team.name}</span>
                 <span className="text-[11px] text-text-dim">{team.code}</span>
