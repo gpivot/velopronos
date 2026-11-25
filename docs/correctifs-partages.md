@@ -50,3 +50,4 @@ classements) dans un paquet partagé. Pas avant le lancement de VéloPronos.
 | Date | Correctif | Fait dans | Reporté dans | Commit(s) |
 |---|---|---|---|---|
 | 04/11/2026 | Duplication : VéloPronos part de Biathlonpronos `e527158` | Biathlonpronos | VéloPronos | — |
+| 25/11/2026 | Classement avec tous les inscrits, flamme de série, accueil rechargé, stats admin + Vercel Analytics, liens RS, invité e-mail déjà utilisé ; invitation aux choix de saison (adaptée) | Biathlonpronos | VéloPronos | `77de71f` `d0c5b27` `6803712` `fe5bb99` `562eb3a` `aada6bb` `fe95aab` `dadddce` `2f090ea` `2328bfb` (`c7f96c1` adapté) |

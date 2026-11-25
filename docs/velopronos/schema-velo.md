@@ -488,3 +488,38 @@ Spécification de Guillaume du 05/11/2026 : événement bonus autonome, hors du 
   `/admin/champions/<course>` (championnats, limites, vainqueurs, coureurs, barème, clôture),
   bouton « 🏆 WE des Champions » dans la liste des courses. Textes dans l'espace `Champions` des
   5 langues, noms de pays traduits par le navigateur (`Intl.DisplayNames`).
+
+## Améliorations reprises de Biathlonpronos (25/11/2026)
+
+Demande de Guillaume du 25/11/2026 (points 3 à 9 ; les boutons d'accueil et les drapeaux sont
+traités à part). Aucune migration.
+
+- **Classement général** (`getRegisteredPlayers`, `src/lib/standings.ts`) : tous les inscrits y
+  figurent dès leur inscription, à 0 point, même avant la 1re course. Ex æquo à 0 classés par
+  pseudo. « Comptes de test » masqués : les invités anonymes du bouton « Jouer » (lus via la clé
+  service) et, une fois la migration 0060 passée, les invités « e-mail seulement »
+  (`signup_pending`). *À confirmer* : il n'existe pas d'autre notion de « compte de test » (ex. le
+  compte de démonstration fourni à Apple/Google) ; s'il faut en masquer, il faudra un marqueur.
+- **Flamme de série** (classement Saison) : la série est celle de la course par étapes en cours
+  (0051). Pas de flamme tant que le joueur n'a marqué de points sur aucune étape comptée de cette
+  course ; flamme en noir et blanc quand la série retombe à 0.
+- **Accueil à jour** : `staleTimes.dynamic = 0` (`next.config.mjs`), chaque visite recharge la page.
+- **Admin Joueurs** : compteurs « inscrits (comptés au classement) » + « invités e-mail seulement »
+  + « invités anonymes, non comptés » ; connexions sur 24 h / 7 j / 30 j (`last_sign_in_at`, hors
+  invités : ce n'est pas un nombre de visites) ; graphique des pronostiqueurs par étape fermée,
+  groupées par course (invités anonymes exclus, courses « Autre (×0) » en barres pâles).
+- **Vercel Web Analytics** : script `/_vercel/insights/script.js` dans `src/app/[locale]/layout.tsx`,
+  mention dans la politique de confidentialité. Ne compte rien tant que l'onglet Analytics n'est
+  pas activé dans le projet Vercel.
+- **Choix de saison sur l'accueil** (`HeartChoicesInvite`) : l'équivalent vélo des pronostics de
+  saison est la paire équipe de cœur + nation favorite (`/coeur`). Invitation « Mes choix de
+  saison » (x / 2, bouton) tant que les deux ne sont pas faits, avec « à faire avant la première
+  course officielle : {nom}, le {date} » (1re étape d'une course qui compte au classement : en
+  2027, les Strade Bianche) tant qu'elle n'est pas partie. *À confirmer* : les choix restent
+  possibles après (règle 0052, choix définitifs mais à tout moment), donc l'invitation reste
+  affichée sans date ; rien n'est fermé côté base au départ des Strade Bianche.
+- **Réseaux sociaux** (`SocialLinks`) : instagram.com/velopronos et facebook.com/velopronos sur
+  l'accueil visiteur (sous les badges des stores et en pied de page) et en pied de page du tableau
+  de bord.
+- **Invité avec un e-mail déjà inscrit** : dépend du parcours invité (PR « Parcours invité »,
+  migration 0060), donc dans une PR séparée.
