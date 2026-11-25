@@ -28,21 +28,50 @@ export function GuestEmailDialog({ onDone, onClose }: { onDone: (email: string) 
     setError(null);
     setEmailTaken(false);
 
-    // Visiteur arrivé directement sur une course : la session invitée est créée maintenant.
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) {
+    // Session invitée valide ? getUser() interroge Supabase : un jeton resté dans le navigateur
+    // alors que le compte invité a été supprimé (purge des invités après 7 jours, ou depuis
+    // /admin) n'est plus accepté par le serveur. On repart alors d'une session invitée neuve.
+    async function ensureGuestSession(forceNew: boolean): Promise<"ok" | "member" | "unavailable"> {
+      if (!forceNew) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user && !user.is_anonymous) return "member";
+        if (user) return "ok";
+      }
+      await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
       const { error: anonError } = await supabase.auth.signInAnonymously();
       if (anonError) {
-        setBusy(false);
-        setError(t("guestUnavailable"));
-        return;
+        console.error("signInAnonymously:", anonError.message);
+        return "unavailable";
       }
+      return "ok";
     }
 
-    const result = await registerGuestEmail(email.trim(), locale).catch(() => ({ ok: false as const, error: "unknown" as const }));
+    const fail = (key: string) => {
+      setBusy(false);
+      setError(t(key));
+    };
+
+    const status = await ensureGuestSession(false);
+    if (status === "unavailable") return fail("guestUnavailable");
+    if (status === "member") {
+      // Déjà connecté avec un vrai compte : rien à rattacher, le pronostic s'enregistre directement.
+      setBusy(false);
+      onDone(email.trim());
+      return;
+    }
+
+    const register = () =>
+      registerGuestEmail(email.trim(), locale).catch(() => ({ ok: false as const, error: "unknown" as const }));
+    let result = await register();
+    if (!result.ok && result.error === "notGuest") {
+      // Le serveur ne reconnaît pas la session (jeton périmé) : nouvelle session invitée, un essai.
+      if ((await ensureGuestSession(true)) === "unavailable") return fail("guestUnavailable");
+      result = await register();
+    }
     if (!result.ok) {
+      console.error("registerGuestEmail:", result.error);
       setBusy(false);
       setEmailTaken(result.error === "emailTaken");
       setError(t(result.error === "emailTaken" ? "emailTaken" : result.error === "invalidEmail" ? "invalidEmail" : "saveFailed"));
