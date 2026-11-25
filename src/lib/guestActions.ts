@@ -16,6 +16,25 @@ import { normalizeLocale } from "@/lib/notifications/texts";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * L'adresse appartient-elle déjà à un autre compte ? Supabase ne renvoie pas toujours l'erreur
+ * « email_exists » quand le serveur rattache une adresse déjà prise : il peut répondre par une
+ * erreur de base générique (index unique sur auth.users.email). On vérifie alors directement.
+ */
+async function emailBelongsToOtherUser(admin: ReturnType<typeof createAdminClient>, email: string, userId: string) {
+  for (let page = 1; page <= 50; page++) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+    if (error || !data) return false;
+    if (data.users.some((u) => u.id !== userId && (u.email ?? "").toLowerCase() === email)) return true;
+    if (data.users.length < 1000) return false;
+  }
+  return false;
+}
+
+function looksLikeEmailTaken(error: { code?: string; message: string }) {
+  return error.code === "email_exists" || /already|registered|exists|duplicate|unique/i.test(error.message);
+}
+
 export type RegisterGuestEmailResult = { ok: true } | { ok: false; error: "emailTaken" | "invalidEmail" | "notGuest" | "unknown" };
 
 export async function registerGuestEmail(rawEmail: string, locale: string): Promise<RegisterGuestEmailResult> {
@@ -36,8 +55,8 @@ export async function registerGuestEmail(rawEmail: string, locale: string): Prom
     user_metadata: { ...(user.user_metadata ?? {}), locale: normalizeLocale(locale) },
   });
   if (error) {
-    if (error.code === "email_exists" || /already|registered|exists/i.test(error.message)) return { ok: false, error: "emailTaken" };
-    console.error("registerGuestEmail:", error.message);
+    if (looksLikeEmailTaken(error) || (await emailBelongsToOtherUser(admin, email, user.id))) return { ok: false, error: "emailTaken" };
+    console.error("registerGuestEmail:", error.code, error.message);
     return { ok: false, error: "unknown" };
   }
   const { error: profileError } = await admin.from("profiles").update({ signup_pending: true }).eq("id", user.id);
@@ -101,7 +120,8 @@ export async function completeGuestSignup(input: {
     },
   });
   if (authError) {
-    if (authError.code === "email_exists" || /already|registered|exists/i.test(authError.message)) return { ok: false, error: "emailTaken" };
+    if (looksLikeEmailTaken(authError) || (email && (await emailBelongsToOtherUser(admin, email, user.id))))
+      return { ok: false, error: "emailTaken" };
     if (authError.code === "weak_password") return { ok: false, error: "passwordLength" };
     console.error("completeGuestSignup:", authError.message);
     return { ok: false, error: "unknown" };
