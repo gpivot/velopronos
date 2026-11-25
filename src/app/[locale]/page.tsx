@@ -5,7 +5,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
 import { HeaderActions } from "@/components/HeaderActions";
 import { SocialLinks } from "@/components/SocialLinks";
-import { ChevronRightIcon, LogoMark } from "@/components/icons";
+import { LogoMark } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
@@ -19,6 +19,8 @@ import { getRaceResult } from "@/lib/lastResult";
 import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { NextRaceCard, type NextRace } from "@/components/NextRaceCard";
 import { StreakCard } from "@/components/StreakCard";
+import { HeartChoicesInvite } from "@/components/HeartChoicesInvite";
+import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { getCurrentStreak } from "@/lib/streakCounter";
 import { getPlayerCards, type PlayerCards } from "@/lib/bonusCards";
 import { getFavoriteTeamStats, type FavoriteTeamStats } from "@/lib/favoriteTeamStats";
@@ -46,10 +48,12 @@ interface HomeData {
   favoriteTeamStats: FavoriteTeamStats | null;
   lastResults: LastResult[];
   streak: number | null;
-  /** Avant la 1re course de la saison : nombre de pronostics de saison faits (6 globes + 2 Pépites), null ensuite. */
-  seasonPicksBeforeStart: number | null;
-  /** Pas encore d'équipe favorite et carte Équipe pas active : invitation à la choisir. */
-  canChooseFavoriteTeam: boolean;
+  /**
+   * Choix de saison VéloPronos (équipe de cœur + nation favorite, /coeur) : invitation tant qu'ils ne
+   * sont pas faits tous les deux (null sinon), avec le départ de la 1re course officielle de la saison
+   * tant qu'elle n'est pas partie (2027 : Strade Bianche).
+   */
+  heartChoices: { chosen: number; firstRace: { name: string; locksAt: string } | null } | null;
   cards: PlayerCards | null;
 }
 
@@ -66,11 +70,11 @@ async function getHomeData(): Promise<HomeData> {
   const user = userResult.user && !userResult.user.is_anonymous ? userResult.user : null;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, seasonPicksBeforeStart: null, canChooseFavoriteTeam: false, cards: null };
+    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, heartChoices: null, cards: null };
   }
 
   const weekStage = user ? await getWeekStage(supabase, season.id, user.id, now) : null;
-  const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult, badges, { count: startedRaces }] = await Promise.all([
+  const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult, badges, { data: firstOfficialRace }] = await Promise.all([
     supabase
       .from("races")
       .select("id, format, stage_number, sex, locks_at, stages!inner(location, country_code, season_id, starts_on)")
@@ -83,7 +87,7 @@ async function getHomeData(): Promise<HomeData> {
     user
       ? supabase
           .from("favorite_teams")
-          .select("nation_code, sex, nations(name)")
+          .select("nation_code, team_id, sex, nations(name)")
           .eq("user_id", user.id)
           .eq("season_id", season.id)
           .maybeSingle()
@@ -98,23 +102,36 @@ async function getHomeData(): Promise<HomeData> {
         )
       : Promise.resolve([]),
     getPlayerBadges(supabase, season.id),
-    // La saison a commencé dès qu'une course est partie : la « Série en cours » remplace alors l'invitation aux pronostics de saison.
+    // 1re course officielle de la saison (hors courses « Autre (×0) ») : date limite conseillée des choix de cœur.
     supabase
       .from("races")
-      .select("id, stages!inner(season_id)", { count: "exact", head: true })
+      .select("locks_at, stages!inner(name, season_id, counts_in_standings)")
       .eq("stages.season_id", season.id)
-      .lte("locks_at", now.toISOString()),
+      .eq("stages.counts_in_standings", true)
+      .order("locks_at", { ascending: true })
+      .limit(1)
+      .maybeSingle(),
   ]);
   const weekResults = Object.fromEntries(weekResult.filter((r): r is LastResult => r != null).map((r) => [r.raceId, r]));
   const nextRace = weekStage ? null : ((upcomingRaces ?? []) as any[])[0] ?? null;
   // VéloPronos : la ligne peut ne porter que l'équipe de cœur (0052) ; l'encadré suit la nation favorite.
-  const favoriteRow = favoriteTeamResult.data as HomeData["favoriteTeam"] | { nation_code: null } | null;
+  const favoriteRow = favoriteTeamResult.data as (HomeData["favoriteTeam"] & { team_id: string | null }) | { nation_code: null; team_id: string | null } | null;
   const favoriteTeam = favoriteRow?.nation_code ? (favoriteRow as HomeData["favoriteTeam"]) : null;
+  const heartChosen = (favoriteRow?.nation_code ? 1 : 0) + (favoriteRow?.team_id ? 1 : 0);
+  const firstRace = firstOfficialRace as { locks_at: string; stages: { name: string | null } } | null;
+  const heartChoices: HomeData["heartChoices"] =
+    user && heartChosen < 2
+      ? {
+          chosen: heartChosen,
+          firstRace:
+            firstRace && new Date(firstRace.locks_at) > now
+              ? { name: firstRace.stages?.name ?? "", locksAt: firstRace.locks_at }
+              : null,
+        }
+      : null;
 
   // Lectures indépendantes les unes des autres : lancées en même temps plutôt qu'à la suite.
-  const [seasonPicksBeforeStart, { data: nextStage }, canChooseFavoriteTeam, favoriteTeamStats, predicted] = await Promise.all([
-    // VéloPronos : plus de pronostics de saison (globes, Pépite) à saisir avant le départ.
-    Promise.resolve(null as number | null),
+  const [{ data: nextStage }, favoriteTeamStats, predicted] = await Promise.all([
     supabase
       .from("stages")
       .select("id, name, kind, category, coefficient, location, country_code, starts_on, ends_on")
@@ -123,7 +140,6 @@ async function getHomeData(): Promise<HomeData> {
       .order("starts_on", { ascending: true })
       .limit(1)
       .maybeSingle(),
-    Promise.resolve(!!user && !favoriteTeam),
     favoriteTeam
       ? getFavoriteTeamStats(supabase, season.id, { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex })
       : Promise.resolve(null),
@@ -157,15 +173,14 @@ async function getHomeData(): Promise<HomeData> {
     nextStage: nextStage as NextStage | null,
     lastResults,
     streak,
-    seasonPicksBeforeStart,
-    canChooseFavoriteTeam,
+    heartChoices,
     cards,
   };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, seasonPicksBeforeStart, canChooseFavoriteTeam, cards }, liveInvites] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, heartChoices, cards }, liveInvites] = await Promise.all([
     getTranslations("Home"),
     getTranslations("Sex"),
     getHomeData(),
@@ -208,18 +223,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               {t("seasonBadge", { label: season!.label })}
             </div>
 
-            {canChooseFavoriteTeam && (
-              <Link
-                href="/coeur"
-                className="flex items-center gap-3 rounded-xl border border-ice/40 bg-ice-soft px-3 py-2.5"
-              >
-                <span className="text-lg">❤️</span>
-                <span className="flex flex-1 flex-col">
-                  <span className="font-display text-[13px] font-bold text-ice">{t("favoriteTeamInvite")}</span>
-                  <span className="text-[11px] text-text-dim">{t("favoriteTeamInviteHint")}</span>
-                </span>
-                <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-ice" />
-              </Link>
+            {heartChoices && (
+              <HeartChoicesInvite
+                chosen={heartChoices.chosen}
+                firstRace={
+                  heartChoices.firstRace
+                    ? {
+                        name: heartChoices.firstRace.name,
+                        date: new Intl.DateTimeFormat(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "long" }).format(
+                          new Date(heartChoices.firstRace.locksAt)
+                        ),
+                      }
+                    : null
+                }
+              />
             )}
 
             {favoriteTeam && (
