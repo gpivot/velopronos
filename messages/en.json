@@ -1201,5 +1201,10 @@
     "back": "Back",
     "link": "My Champions Weekend predictions",
     "link_hint": "1 rider per country, no odds"
+  },
+  "Social": {
+    "title": "Follow us",
+    "instagram": "VéloPronos on Instagram (new tab)",
+    "facebook": "VéloPronos on Facebook (new tab)"
   }
 }

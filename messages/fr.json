@@ -1201,5 +1201,10 @@
     "back": "Retour",
     "link": "Mes pronostics du WE des Champions",
     "link_hint": "1 coureur par pays, sans cote"
+  },
+  "Social": {
+    "title": "Suivez-nous",
+    "instagram": "VéloPronos sur Instagram (nouvel onglet)",
+    "facebook": "VéloPronos sur Facebook (nouvel onglet)"
   }
 }

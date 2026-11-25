@@ -1201,5 +1201,10 @@
     "back": "Indietro",
     "link": "I miei pronostici del Weekend dei Campioni",
     "link_hint": "1 corridore per paese, senza quote"
+  },
+  "Social": {
+    "title": "Seguici",
+    "instagram": "VéloPronos su Instagram (nuova scheda)",
+    "facebook": "VéloPronos su Facebook (nuova scheda)"
   }
 }

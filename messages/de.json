@@ -1201,5 +1201,10 @@
     "back": "Zurück",
     "link": "Meine Tipps fürs Meister-Wochenende",
     "link_hint": "1 Fahrer pro Land, ohne Quoten"
+  },
+  "Social": {
+    "title": "Folgt uns",
+    "instagram": "VéloPronos auf Instagram (neuer Tab)",
+    "facebook": "VéloPronos auf Facebook (neuer Tab)"
   }
 }

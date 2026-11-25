@@ -1201,5 +1201,10 @@
     "back": "Volver",
     "link": "Mis pronósticos del fin de semana de Campeones",
     "link_hint": "1 corredor por país, sin cuotas"
+  },
+  "Social": {
+    "title": "Síguenos",
+    "instagram": "VéloPronos en Instagram (nueva pestaña)",
+    "facebook": "VéloPronos en Facebook (nueva pestaña)"
   }
 }

@@ -4,6 +4,7 @@ import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
 import { HeaderActions } from "@/components/HeaderActions";
+import { SocialLinks } from "@/components/SocialLinks";
 import { ChevronRightIcon, LogoMark } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
@@ -348,6 +349,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </Link>
           </div>
         )}
+
+        {/* Pied de page : comptes Instagram / Facebook du jeu. */}
+        <footer className="mt-4 border-t border-border pt-5">
+          <SocialLinks withTitle />
+        </footer>
       </div>
 
       <BottomNav active="/" />

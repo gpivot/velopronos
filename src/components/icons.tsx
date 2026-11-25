@@ -259,3 +259,27 @@ export function SearchIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+// Réseaux sociaux (liens « Suivez-nous ») : monochromes, ils prennent la couleur du texte (thème clair/sombre).
+export function InstagramIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function FacebookOutlineIcon({ className }: IconProps) {
+  // Même dessin que FacebookIcon, mais d'une seule couleur : le « f » est découpé dans le rond.
+  return (
+    <svg viewBox="0 0 24 24" className={className}>
+      <mask id="fb-mono-f">
+        <rect width="24" height="24" fill="#fff" />
+        <path fill="#000" d="M16.67 15.47 17.2 12h-3.33V9.75c0-.95.47-1.88 1.95-1.88h1.51V4.92s-1.37-.23-2.68-.23c-2.74 0-4.53 1.66-4.53 4.66V12H7.08v3.47h3.04V24a12.1 12.1 0 0 0 3.75 0v-8.53h2.8Z" />
+      </mask>
+      <circle cx="12" cy="12" r="12" fill="currentColor" mask="url(#fb-mono-f)" />
+    </svg>
+  );
+}
