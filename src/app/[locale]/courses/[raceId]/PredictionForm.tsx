@@ -10,6 +10,7 @@ import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { fullAthleteName, shortAthleteName } from "@/lib/athleteName";
 import { filterBySearch } from "@/lib/searchFilter";
+import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
 import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 
@@ -356,6 +357,7 @@ export function PredictionForm({
                   {startOrder[a.athlete_id] ?? "–"}
                 </div>
               )}
+              <span className="w-6 flex-shrink-0 text-center text-xl leading-none">{nationFlagEmoji(a.nation_code)}</span>
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">
                   {fullAthleteName(a)}

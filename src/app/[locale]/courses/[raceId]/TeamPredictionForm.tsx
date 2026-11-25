@@ -9,6 +9,7 @@ import { GuestEmailDialog, GuestWelcome } from "@/components/GuestSignupDialog";
 import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 import { PredictionSummary } from "./PredictionSummary";
 import { filterBySearch } from "@/lib/searchFilter";
+import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
 
 export type TeamWithOdds = {
@@ -146,6 +147,7 @@ export function TeamPredictionForm({
                 isSelected ? "border-ice bg-ice-soft" : "border-border bg-card"
               }`}
             >
+              <span className="w-6 flex-shrink-0 text-center text-xl leading-none">{team.nation_code ? nationFlagEmoji(team.nation_code) : ""}</span>
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">{team.name}</span>
                 <span className="text-[11px] text-text-dim">{team.code}</span>

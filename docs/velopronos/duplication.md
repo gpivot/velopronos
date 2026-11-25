@@ -62,6 +62,14 @@ avec le nouveau schéma et les écrans vélo.
   un lien et pas le code à 6 chiffres : à régler avant le lancement.
 - **Dépôt public** : `gpivot/velopronos` a été créé public (comme Biathlonpronos). Aucune donnée de
   joueur n'y est ; le passer en privé reste possible à tout moment.
+- **Accueil et drapeaux** (25/11/2026, repris de Biathlonpronos) : boutons « Je teste le jeu → »
+  (parcours invité) et « Je crée mon compte » (`/sign-in?mode=signup`). Badge Google Play lié à
+  `fr.velopronos.app` (la fiche doit être publiée pour que le lien marche) ; badge App Store lié à
+  la fiche existante `id6782912480` (même fiche après le nouveau build) ; adresses dans
+  `src/components/landing/Landing.tsx`. Drapeau devant chaque coureur du choix d'une étape, chaque
+  nation (épreuve par nation) et chaque équipe du CLM par équipes qui a un pays. À confirmer :
+  VéloPronos n'a pas de pronos de saison par coureur (pas de globes) ; les maillots des Grands Tours
+  avaient déjà le drapeau, et on l'a ajouté devant les équipes du choix de cœur.
 
 ## Mise en route d'un nouveau projet Supabase
 

@@ -9,6 +9,7 @@ import { GuestEmailDialog, GuestWelcome } from "@/components/GuestSignupDialog";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { filterBySearch } from "@/lib/searchFilter";
+import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
 import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 
@@ -160,6 +161,7 @@ export function RelayPredictionForm({
                 isSelected ? "border-ice bg-ice-soft" : "border-border bg-card"
               }`}
             >
+              <span className="w-6 flex-shrink-0 text-center text-xl leading-none">{nationFlagEmoji(n.nation_code)}</span>
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">{n.name}</span>
                 <span className="text-[11px] text-text-dim">{n.nation_code}</span>

@@ -46,6 +46,8 @@ export default function SignInPage() {
     const query = new URLSearchParams(window.location.search);
     const detail = query.get("oauth_error");
     if (detail) setOauthError(oauthErrorMessage(detail));
+    // Bouton « Je crée mon compte » de la page d'accueil : on ouvre directement l'inscription.
+    if (query.get("mode") === "signup") setMode("sign-up");
     if (query.get("code") === "1") {
       setMode("code");
       setCodeSent(true);
