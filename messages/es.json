@@ -84,7 +84,11 @@
     "lastResultExtra_fusee": "Carta Cohete",
     "lastResultExtra_gachette": "Carta Gatillo",
     "lastResultExtra_combatif": "Más combativo del día",
-    "lastResultExtra_lateJoker": "Comodín rezagado (÷ 2)"
+    "lastResultExtra_lateJoker": "Comodín rezagado (÷ 2)",
+    "pseudoChooseTitle": "¡Elige tu nombre de campeón!",
+    "pseudoChooseHint": "Por ahora te llamas «{pseudo}». Es el nombre que ven los demás jugadores en la clasificación.",
+    "pseudoPlaceholder": "Tu apodo",
+    "pseudoHello": "¡Hola, {pseudo}!"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de ciclismo.",

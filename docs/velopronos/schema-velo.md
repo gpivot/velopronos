@@ -523,3 +523,19 @@ traités à part). Aucune migration.
   de bord.
 - **Invité avec un e-mail déjà inscrit** : dépend du parcours invité (PR « Parcours invité »,
   migration 0060), donc dans une PR séparée.
+
+## Améliorations reprises de Biathlonpronos (26/11/2026)
+
+Demande de Guillaume du 26/11/2026 (11 points). Les points 1 à 7, 10 et 11 étaient déjà faits le
+25/11 (voir ci-dessus et `duplication.md`). Ajoutés ce jour, sans migration :
+
+- **Tri « Derniers arrivés »** (admin Joueurs, `?tri=recents`) : date d'inscription décroissante,
+  date et heure d'inscription (heure de Paris) sous chaque joueur. Date = création du compte
+  Supabase Auth, sinon du profil. *À confirmer* : les joueurs repris de base44 portent la date de
+  leur import, pas leur date d'inscription d'origine.
+- **Pseudo sur l'accueil** (`DashboardPseudo`) : « Salut {pseudo} ! » + petit crayon pour le
+  changer sur place. Pseudo jamais choisi : encart « Choisis ton nom de champion ! » avec le champ.
+  *À confirmer* : pas de colonne « pseudo choisi » en base ; est « automatique » un pseudo égal au
+  début de l'e-mail (avant « @ », ce que la base donne à toute inscription par e-mail, Google ou
+  Apple) ou « Invité » (`isAutoPseudo`, `src/lib/autoPseudo.ts`). Les inscrits par e-mail qui n'ont
+  pas changé leur pseudo voient donc aussi l'encart.

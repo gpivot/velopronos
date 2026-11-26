@@ -26,6 +26,8 @@ import { getPlayerCards, type PlayerCards } from "@/lib/bonusCards";
 import { getFavoriteTeamStats, type FavoriteTeamStats } from "@/lib/favoriteTeamStats";
 import { fetchLiveQuestionInvites } from "@/lib/bonusQuestionActions";
 import { LiveQuestionInviteCard } from "@/components/LiveQuestionInvite";
+import { DashboardPseudo } from "@/components/DashboardPseudo";
+import { isAutoPseudo } from "@/lib/autoPseudo";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +57,12 @@ interface HomeData {
    */
   heartChoices: { chosen: number; firstRace: { name: string; locksAt: string } | null } | null;
   cards: PlayerCards | null;
+  /**
+   * Pseudo du joueur en haut du tableau de bord. `auto` : jamais choisi (pseudo donné à la création
+   * du compte, partie de l'e-mail avant « @ », ex. connexion Apple ou Google) → encart « Choisis ton
+   * nom de champion ! ».
+   */
+  me: { pseudo: string; auto: boolean } | null;
 }
 
 async function getHomeData(): Promise<HomeData> {
@@ -71,9 +79,12 @@ async function getHomeData(): Promise<HomeData> {
 
   // Invité « e-mail seulement » revenu par son code (migration 0060) : pas de tableau de bord avant
   // la fin de l'inscription, direction sa dernière course pronostiquée (score + invitation).
+  let me: HomeData["me"] = null;
   if (user) {
-    const { data: me } = await supabase.from("profiles").select("signup_pending").eq("id", user.id).maybeSingle();
-    if ((me as { signup_pending?: boolean } | null)?.signup_pending) {
+    const { data: profile } = await supabase.from("profiles").select("pseudo, signup_pending").eq("id", user.id).maybeSingle();
+    const pseudo = (profile as { pseudo?: string } | null)?.pseudo ?? "";
+    me = { pseudo, auto: isAutoPseudo(pseudo, user.email) };
+    if ((profile as { signup_pending?: boolean } | null)?.signup_pending) {
       const { data: last } = await supabase
         .from("predictions")
         .select("race_id")
@@ -87,7 +98,7 @@ async function getHomeData(): Promise<HomeData> {
   }
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, heartChoices: null, cards: null };
+    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, heartChoices: null, cards: null, me };
   }
 
   const weekStage = user ? await getWeekStage(supabase, season.id, user.id, now) : null;
@@ -192,12 +203,13 @@ async function getHomeData(): Promise<HomeData> {
     streak,
     heartChoices,
     cards,
+    me,
   };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, heartChoices, cards }, liveInvites] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, heartChoices, cards, me }, liveInvites] = await Promise.all([
     getTranslations("Home"),
     getTranslations("Sex"),
     getHomeData(),
@@ -229,6 +241,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
           <HeaderActions />
         </div>
+
+        {me && <DashboardPseudo userId={userId} initialPseudo={me.pseudo} auto={me.auto} />}
 
         {liveInvites.map((invite) => (
           <LiveQuestionInviteCard key={invite.id} invite={invite} />

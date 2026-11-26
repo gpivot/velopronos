@@ -84,7 +84,11 @@
     "lastResultExtra_fusee": "Carta Razzo",
     "lastResultExtra_gachette": "Carta Grilletto",
     "lastResultExtra_combatif": "Più combattivo del giorno",
-    "lastResultExtra_lateJoker": "Jolly ritardatario (÷ 2)"
+    "lastResultExtra_lateJoker": "Jolly ritardatario (÷ 2)",
+    "pseudoChooseTitle": "Scegli il tuo nome da campione!",
+    "pseudoChooseHint": "Per ora ti chiami «{pseudo}». È il nome che gli altri giocatori vedono in classifica.",
+    "pseudoPlaceholder": "Il tuo nickname",
+    "pseudoHello": "Ciao {pseudo}!"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di ciclismo.",

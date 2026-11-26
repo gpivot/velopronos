@@ -84,7 +84,11 @@
     "lastResultExtra_fusee": "Carte Fusée",
     "lastResultExtra_gachette": "Carte Gâchette",
     "lastResultExtra_combatif": "Combatif du jour",
-    "lastResultExtra_lateJoker": "Joker retardataire (÷ 2)"
+    "lastResultExtra_lateJoker": "Joker retardataire (÷ 2)",
+    "pseudoChooseTitle": "Choisis ton nom de champion !",
+    "pseudoChooseHint": "Pour l'instant, tu t'appelles « {pseudo} ». C'est le nom que les autres joueurs voient au classement.",
+    "pseudoPlaceholder": "Ton pseudo",
+    "pseudoHello": "Salut {pseudo} !"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses cyclistes.",

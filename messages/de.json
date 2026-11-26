@@ -84,7 +84,11 @@
     "lastResultExtra_fusee": "Karte Rakete",
     "lastResultExtra_gachette": "Karte Abzug",
     "lastResultExtra_combatif": "Kämpferischster Fahrer des Tages",
-    "lastResultExtra_lateJoker": "Nachzügler-Joker (÷ 2)"
+    "lastResultExtra_lateJoker": "Nachzügler-Joker (÷ 2)",
+    "pseudoChooseTitle": "Wähle deinen Champion-Namen!",
+    "pseudoChooseHint": "Im Moment heißt du „{pseudo}“. Diesen Namen sehen die anderen Spieler in der Rangliste.",
+    "pseudoPlaceholder": "Dein Spielername",
+    "pseudoHello": "Hallo {pseudo}!"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Radrennen.",
