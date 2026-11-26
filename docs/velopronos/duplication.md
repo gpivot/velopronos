@@ -70,6 +70,16 @@ avec le nouveau schéma et les écrans vélo.
   nation (épreuve par nation) et chaque équipe du CLM par équipes qui a un pays. À confirmer :
   VéloPronos n'a pas de pronos de saison par coureur (pas de globes) ; les maillots des Grands Tours
   avaient déjà le drapeau, et on l'a ajouté devant les équipes du choix de cœur.
+- **% de joueurs par coureur** (26/11/2026, repris de Biathlonpronos) : barre en dégradé en fond de
+  chaque ligne du choix des coureurs (et des équipes du CLM par équipes), proportionnelle au % de
+  pronostics qui contiennent ce coureur ; phrase « 62 % ont déjà choisi ce coureur » au survol ou
+  au toucher, aucun chiffre visible. Couleur d'accent de VéloPronos (`ice` : jaune vif en sombre,
+  marron en clair), pas le bleu clair de Biathlonpronos, pour la distinguer de l'or des points.
+  Après le départ, la barre reste sur « Mon pronostic » (étape en cours) et sur les résultats.
+  Calcul à chaque affichage (`src/lib/pickShares.ts`, client admin, seuls les % sortent du
+  serveur), sans migration. À confirmer : le « départ » et le seuil de 20 pronostics s'entendent
+  **par étape** (une ligne de `races`), puisqu'on pronostique étape par étape ; un pronostic posé
+  avec le joker retardataire compte comme les autres, et le 4e choix compte comme un choix.
 
 ## Mise en route d'un nouveau projet Supabase
 

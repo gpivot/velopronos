@@ -1,7 +1,9 @@
 import { fullAthleteName } from "@/lib/athleteName";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { createClient, getAuthUser } from "@/lib/supabase/server";
+import { createAdminClient, createClient, getAuthUser } from "@/lib/supabase/server";
+import { getPickShares, shouldShowPickShares } from "@/lib/pickShares";
+import { PickShareBar } from "@/components/PickShareBar";
 import { BottomNav } from "@/components/BottomNav";
 import { ChevronLeftIcon, ChevronRightIcon, ClockIcon } from "@/components/icons";
 import { Link } from "@/i18n/navigation";
@@ -265,7 +267,7 @@ export default async function RacePage({
 
   // Poursuite / mass start : seuls les qualifiés prennent le départ, dans l'ordre de la liste.
   // Lectures indépendantes les unes des autres : lancées en même temps plutôt qu'à la suite.
-  const [startList, raceResult, players, ongoingBoard, bonusQuestions, { data: seasonRaces }] = await Promise.all([
+  const [startList, raceResult, players, ongoingBoard, bonusQuestions, { data: seasonRaces }, pickShares, tPick] = await Promise.all([
     displayStatus === "upcoming" ? getStartList(supabase, race) : Promise.resolve({ status: "open" as const }),
     // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
     displayStatus === "finished" ? getRaceResult(supabase, race.id, user?.id ?? null) : Promise.resolve(null),
@@ -279,7 +281,16 @@ export default async function RacePage({
       .select("id, locks_at, stages!inner(season_id)")
       .eq("stages.season_id", stage.season_id)
       .order("locks_at", { ascending: true }),
+    // % de joueurs ayant choisi chaque coureur : tous les pronostics de l'étape, lus avec le client
+    // admin (les pronostics des autres ne sont pas lisibles avant le départ). Seuls les % sortent.
+    getPickShares(createAdminClient(), race.id).catch(() => null),
+    getTranslations("PredictionForm"),
   ]);
+  // Barre masquée avant le départ tant qu'il y a moins de 20 pronostics sur l'étape.
+  const visiblePickShares = pickShares && shouldShowPickShares(pickShares.total, displayStatus) ? pickShares.percents : null;
+  const pickShareKey = isTeamRace ? "pickShareTeam" : isRelay ? "pickShareNation" : "pickShareAthlete";
+  const shareOf = (key: string | null | undefined) =>
+    visiblePickShares && key ? { percent: visiblePickShares[key] ?? 0, label: tPick(pickShareKey, { percent: visiblePickShares[key] ?? 0 }) } : null;
   const startOrder: Record<string, number> = startList.status === "known" ? startList.order : {};
   const startGaps: Record<string, number> = startList.status === "known" ? startList.gaps : {};
   const startListPending = startList.status === "pending";
@@ -508,6 +519,7 @@ export default async function RacePage({
               {isTeamRace ? (
                 <TeamPredictionForm
                   raceId={race.id}
+                  pickShares={visiblePickShares}
                   teams={teamsWithOdds}
                   initialSelection={initialTeamSelection}
                   initialBonusX2={initialBonusX2}
@@ -517,6 +529,7 @@ export default async function RacePage({
               ) : isRelay ? (
                 <RelayPredictionForm
                   raceId={race.id}
+                  pickShares={visiblePickShares}
                   format={race.format}
                   nations={nationsWithOdds}
                   initialSelection={initialNationSelection}
@@ -527,6 +540,7 @@ export default async function RacePage({
               ) : (
                 <PredictionForm
                   raceId={race.id}
+                  pickShares={visiblePickShares}
                   format={race.format}
                   athletes={selectableAthletes}
                   initialSelection={initialAthleteSelection}
@@ -564,6 +578,7 @@ export default async function RacePage({
                 {isTeamRace ? (
                   <TeamPredictionForm
                     raceId={race.id}
+                    pickShares={visiblePickShares}
                     teams={teamsWithOdds}
                     initialSelection={initialTeamSelection}
                     initialBonusX2={false}
@@ -574,6 +589,7 @@ export default async function RacePage({
                 ) : (
                   <PredictionForm
                     raceId={race.id}
+                    pickShares={visiblePickShares}
                     format={race.format}
                     athletes={athletesWithOdds}
                     initialSelection={initialAthleteSelection}
@@ -607,7 +623,8 @@ export default async function RacePage({
                   {initialTeamSelection.map((teamId) => {
                     const team = teamsWithOdds.find((x) => x.team_id === teamId);
                     return (
-                      <div key={teamId} className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+                      <div key={teamId} className="group relative isolate flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+                        <ShareBar share={shareOf(teamId)} />
                         <div className="flex-1 text-sm font-semibold">{team?.name ?? teamId}</div>
                         {team && <div className="font-display text-sm font-bold text-ice">×{team.value}</div>}
                       </div>
@@ -615,11 +632,11 @@ export default async function RacePage({
                   })}
                 </div>
               ) : isRelay ? (
-                <NationPickRow nation={nationsWithOdds.find((n) => n.nation_code === initialNationSelection)} />
+                <NationPickRow nation={nationsWithOdds.find((n) => n.nation_code === initialNationSelection)} share={shareOf(initialNationSelection)} />
               ) : (
                 <div className="flex flex-col gap-2">
                   {initialAthleteSelection.map((athleteId) => (
-                    <AthletePickRow key={athleteId} athlete={athletesWithOdds.find((a) => a.athlete_id === athleteId)} />
+                    <AthletePickRow key={athleteId} athlete={athletesWithOdds.find((a) => a.athlete_id === athleteId)} share={shareOf(athleteId)} />
                   ))}
                 </div>
               )}
@@ -757,11 +774,11 @@ export default async function RacePage({
                   {results.length > resultsTopCount ? (
                     <ShowMore
                       label={t("showFullRanking")}
-                      collapsed={results.filter((r) => r.rank <= resultsTopCount || r.mine).map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)}
-                      expanded={results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)}
+                      collapsed={results.filter((r) => r.rank <= resultsTopCount || r.mine).map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} share={shareOf(row.pickKey)} />)}
+                      expanded={results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} share={shareOf(row.pickKey)} />)}
                     />
                   ) : (
-                    results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)
+                    results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} share={shareOf(row.pickKey)} />)
                   )}
                 </div>
               )}
@@ -800,10 +817,17 @@ export default async function RacePage({
   );
 }
 
-function AthletePickRow({ athlete }: { athlete: AthleteWithOdds | undefined }) {
+type Share = { percent: number; label: string } | null;
+
+function ShareBar({ share }: { share: Share }) {
+  return share ? <PickShareBar percent={share.percent} label={share.label} /> : null;
+}
+
+function AthletePickRow({ athlete, share }: { athlete: AthleteWithOdds | undefined; share: Share }) {
   if (!athlete) return null;
   return (
-    <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+    <div className="group relative isolate flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+      <ShareBar share={share} />
       <div className="text-base">{nationFlagEmoji(athlete.nation_code)}</div>
       <div className="flex-1 text-sm font-semibold">
         {fullAthleteName(athlete)}
@@ -813,10 +837,11 @@ function AthletePickRow({ athlete }: { athlete: AthleteWithOdds | undefined }) {
   );
 }
 
-function NationPickRow({ nation }: { nation: NationWithOdds | undefined }) {
+function NationPickRow({ nation, share }: { nation: NationWithOdds | undefined; share: Share }) {
   if (!nation) return null;
   return (
-    <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+    <div className="group relative isolate flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+      <ShareBar share={share} />
       <div className="text-base">{nationFlagEmoji(nation.nation_code)}</div>
       <div className="flex-1 text-sm font-semibold">{nation.name}</div>
       <div className="font-display text-sm font-bold text-ice">×{nation.value}</div>

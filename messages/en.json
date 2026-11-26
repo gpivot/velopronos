@@ -668,7 +668,10 @@
     "grilled": "burned",
     "cardGrilladeAction": "Use Barbecue (un-burn my riders)",
     "chooseTeams": "Pick {count} teams",
-    "searchTeam": "Search a team"
+    "searchTeam": "Search a team",
+    "pickShareAthlete": "{percent}% have picked this rider",
+    "pickShareTeam": "{percent}% have picked this team",
+    "pickShareNation": "{percent}% have picked this nation"
   },
   "SignIn": {
     "prompt": "Sign in to continue",

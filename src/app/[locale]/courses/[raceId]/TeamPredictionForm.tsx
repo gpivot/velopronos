@@ -11,6 +11,7 @@ import { PredictionSummary } from "./PredictionSummary";
 import { filterBySearch } from "@/lib/searchFilter";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
+import { PickShareBar } from "@/components/PickShareBar";
 
 export type TeamWithOdds = {
   team_id: string;
@@ -32,6 +33,7 @@ export function TeamPredictionForm({
   x2Eligible,
   x2UsesRemaining,
   lateJoker = false,
+  pickShares = null,
 }: {
   raceId: string;
   teams: TeamWithOdds[];
@@ -41,6 +43,8 @@ export function TeamPredictionForm({
   x2UsesRemaining: number;
   /** Pronostic posé avec le joker retardataire (étape partie, points ÷ 2). */
   lateJoker?: boolean;
+  /** % de joueurs ayant choisi chaque équipe (null : barre masquée, moins de 20 pronostics). */
+  pickShares?: Record<string, number> | null;
 }) {
   const [selected, setSelected] = useState<string[]>(initialSelection);
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
@@ -143,10 +147,13 @@ export function TeamPredictionForm({
             <button
               key={team.team_id}
               onClick={() => toggle(team.team_id)}
-              className={`flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
+              className={`group relative isolate flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
                 isSelected ? "border-ice bg-ice-soft" : "border-border bg-card"
               }`}
             >
+              {pickShares && (
+                <PickShareBar percent={pickShares[team.team_id] ?? 0} label={t("pickShareTeam", { percent: pickShares[team.team_id] ?? 0 })} />
+              )}
               <span className="w-6 flex-shrink-0 text-center text-xl leading-none">{team.nation_code ? nationFlagEmoji(team.nation_code) : ""}</span>
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">{team.name}</span>

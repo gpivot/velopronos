@@ -13,6 +13,7 @@ import { filterBySearch } from "@/lib/searchFilter";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
 import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
+import { PickShareBar } from "@/components/PickShareBar";
 
 export type AthleteWithOdds = {
   athlete_id: string;
@@ -42,6 +43,7 @@ export function PredictionForm({
   startOrder = {},
   startGaps = {},
   lateJoker = false,
+  pickShares = null,
 }: {
   raceId: string;
   format: string;
@@ -69,6 +71,8 @@ export function PredictionForm({
   startGaps?: Record<string, number>;
   /** VéloPronos : pronostic posé avec le joker retardataire (étape partie, points ÷ 2). */
   lateJoker?: boolean;
+  /** % de joueurs ayant choisi chaque coureur (null : barre masquée, moins de 20 pronostics). */
+  pickShares?: Record<string, number> | null;
 }) {
   const [selected, setSelected] = useState<string[]>(initialSelection);
   const [cardChoice, setCardChoice] = useState<CardChoice>(activeCard ?? "none");
@@ -342,7 +346,7 @@ export function PredictionForm({
               key={a.athlete_id}
               onClick={() => toggle(a.athlete_id)}
               disabled={isGrilled && !isSelected}
-              className={`flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
+              className={`group relative isolate flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
                 isGrilled && !isSelected
                   ? "border-border bg-card opacity-40"
                   : isCaFarteTarget
@@ -352,6 +356,9 @@ export function PredictionForm({
                     : "border-border bg-card"
               }`}
             >
+              {pickShares && (
+                <PickShareBar percent={pickShares[a.athlete_id] ?? 0} label={t("pickShareAthlete", { percent: pickShares[a.athlete_id] ?? 0 })} />
+              )}
               {sortBy === "start" && (
                 <div className="w-6 flex-shrink-0 text-center font-display text-xs font-bold text-text-dim">
                   {startOrder[a.athlete_id] ?? "–"}

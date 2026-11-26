@@ -668,7 +668,10 @@
     "grilled": "bruciato",
     "cardGrilladeAction": "Usa Grigliata (sblocca i miei ciclisti bruciati)",
     "chooseTeams": "Scegli {count} squadre",
-    "searchTeam": "Cerca una squadra"
+    "searchTeam": "Cerca una squadra",
+    "pickShareAthlete": "Il {percent}% ha già scelto questo corridore",
+    "pickShareTeam": "Il {percent}% ha già scelto questa squadra",
+    "pickShareNation": "Il {percent}% ha già scelto questa nazione"
   },
   "SignIn": {
     "prompt": "Accedi per continuare",

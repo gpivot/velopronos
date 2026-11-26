@@ -48,6 +48,8 @@ export interface LastResultPick {
 /** Une ligne du classement de la course, avec les points du barème (cote × rang). */
 export interface RaceResultRow {
   rank: number;
+  /** Coureur, équipe (CLM par équipes) ou nation de la ligne : clé du % de joueurs qui l'ont choisi. */
+  pickKey?: string | null;
   name: string;
   nationCode: string;
   /** null : aucun point au barème (hors Top 10, ou Top 5 pour un relais). */
@@ -349,6 +351,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   const predictedKeys = new Set<string>(prediction?.nation_code ? [prediction.nation_code] : prediction?.athlete_ids ?? []);
   const scoredRows = resultRows.map((r) => ({
     rank: r.rank,
+    pickKey: (r.athlete_id ?? r.nation_code ?? null) as string | null,
     name: rowName(r),
     nationCode: rowNation(r),
     points: computeResultRowPoints({

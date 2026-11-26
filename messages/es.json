@@ -668,7 +668,10 @@
     "grilled": "quemado",
     "cardGrilladeAction": "Usar Parrillada (desquemar mis ciclistas)",
     "chooseTeams": "Elige {count} equipos",
-    "searchTeam": "Buscar un equipo"
+    "searchTeam": "Buscar un equipo",
+    "pickShareAthlete": "El {percent} % ya ha elegido a este ciclista",
+    "pickShareTeam": "El {percent} % ya ha elegido a este equipo",
+    "pickShareNation": "El {percent} % ya ha elegido a esta nación"
   },
   "SignIn": {
     "prompt": "Inicia sesión para continuar",

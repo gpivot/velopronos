@@ -668,7 +668,10 @@
     "grilled": "gesperrt",
     "cardGrilladeAction": "Grillfest einsetzen (Sperre meiner Fahrer aufheben)",
     "chooseTeams": "Wähle {count} Teams",
-    "searchTeam": "Team suchen"
+    "searchTeam": "Team suchen",
+    "pickShareAthlete": "{percent} % haben diesen Fahrer gewählt",
+    "pickShareTeam": "{percent} % haben dieses Team gewählt",
+    "pickShareNation": "{percent} % haben diese Nation gewählt"
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",

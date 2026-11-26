@@ -5,15 +5,17 @@ import type { RaceResultRow } from "@/lib/lastResult";
 import type { OngoingBoardRow, RacePlayerRow } from "@/lib/racePlayers";
 import { ShootingDots } from "@/components/ShootingDots";
 import { PlayerRaceButton } from "./PlayerRaceButton";
+import { PickShareBar } from "@/components/PickShareBar";
 
 /** Ligne du classement de la course : étoile et contour doré pour le trio du Prono parfait. */
-export function ResultRow({ row }: { row: RaceResultRow }) {
+export function ResultRow({ row, share }: { row: RaceResultRow; share?: { percent: number; label: string } | null }) {
   return (
     <div
-      className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3 ${
+      className={`group relative isolate flex items-center gap-3.5 rounded-2xl border px-4 py-3 ${
         row.perfect ? "border-gold" : row.mine ? "border-ice/60" : "border-border"
       } ${row.mine ? "bg-ice-soft" : "bg-card"}`}
     >
+      {share && <PickShareBar percent={share.percent} label={share.label} />}
       <div
         className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-display text-xs font-bold ${
           row.rank === 1 ? "bg-gold-soft text-gold" : "bg-ice-soft text-ice"

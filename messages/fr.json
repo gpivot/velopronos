@@ -668,7 +668,10 @@
     "grilled": "grillé",
     "cardGrilladeAction": "Utiliser Grillade (dégriller mes coureurs)",
     "chooseTeams": "Choisis {count} équipes",
-    "searchTeam": "Chercher une équipe"
+    "searchTeam": "Chercher une équipe",
+    "pickShareAthlete": "{percent} % ont déjà choisi ce coureur",
+    "pickShareTeam": "{percent} % ont déjà choisi cette équipe",
+    "pickShareNation": "{percent} % ont déjà choisi cette nation"
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",
