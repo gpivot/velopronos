@@ -168,7 +168,8 @@ export async function getPlayerRaceDetails(userId: string, raceIds: string[]): P
         points: p.points != null && doubled && !p.caFarte && !p.nationalDay ? p.points * 2 : p.points,
       })),
       extras,
-      pepite: result.pepite,
+      // Porteur d'eau doublé par le ×2 : ici aussi ses points doublés, puisqu'il n'y a pas de pastille ×2.
+      pepite: result.pepite?.doubled ? { ...result.pepite, points: result.pepite.points * 2 } : result.pepite,
     };
   }
   return details;

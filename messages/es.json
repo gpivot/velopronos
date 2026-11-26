@@ -294,7 +294,7 @@
     "combatifFinal": "Supercombativo: +{points} pts",
     "combatifDaily": "+{points} pts cada día que sea el más combativo",
     "porteurTitle": "El gregario",
-    "porteurBody": "En cada gran vuelta, elige en secreto un outsider. Se juega oculto en todas las etapas: en su primer Top 10, los puntos que gana se suman a tu puntuación de la etapa, aunque no hayas pronosticado ese día. Entonces se revela (💧) y ya no da más puntos. Antes de su revelación, no puedes incluirlo en tus pronósticos de etapa.",
+    "porteurBody": "En cada gran vuelta, elige en secreto un outsider. Se juega oculto en todas las etapas: en su primer Top 10, los puntos que gana se suman a tu puntuación de la etapa, aunque no hayas pronosticado ese día. Entonces se revela (💧) y ya no da más puntos. Antes de su revelación, no puedes incluirlo en tus pronósticos de etapa. Si usaste tu bonus ×2 en esa etapa, sus puntos también se duplican.",
     "porteurOdds": "Todas sus cuotas ≥ {odds}",
     "heartTitle": "Equipo y nación favoritos",
     "heartBody": "Elígelos una vez por temporada: sigues sus victorias en tu inicio. La nación favorita cuenta doble en la Fiesta nacional, el equipo favorito alimenta la carta Equipo. En cada gran vuelta, también puedes elegir otro equipo solo para esa gran vuelta.",
