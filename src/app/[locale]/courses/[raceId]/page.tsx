@@ -359,7 +359,7 @@ export default async function RacePage({
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
       <div className="flex flex-1 flex-col gap-5 overflow-auto px-5 pb-3 pt-5">
         <div className="flex items-center gap-3">
-          <BackButton fallback="/courses" label={t("backToCalendar")} />
+          <BackButton href="/courses" label={t("backToCalendar")} />
           {/* Le nom de la course est dans l'encadré ci-dessous ; au milieu, navigation entre les courses. */}
           <div className="flex flex-1 justify-center gap-2">
             <RaceNavLink raceId={previousRaceId} label={t("previousRace")} direction="previous" />
