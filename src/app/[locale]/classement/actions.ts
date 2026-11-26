@@ -151,15 +151,22 @@ export async function getPlayerRaceDetails(userId: string, raceIds: string[]): P
   for (const result of results) {
     if (!result?.prediction && !result?.pepite) continue;
     const prediction = result.prediction;
+    // Bonus ×2 (ou course ×2) : déjà signalé sur la ligne de l'étape, donc chaque coureur montre ses
+    // points doublés et il n'y a pas de pastille « Bonus ×2 » (Guillaume, 26/11/2026). Le Boost ×3 ne se
+    // cumule pas avec le ×2 : ses points restent tels quels.
+    const doubled = !!prediction?.multiplier;
     const extras: PlayerRaceDetail["extras"] = [
       ...(prediction?.extras ?? []).map((e) => ({ labelKey: `lastResultExtra_${e.kind}`, points: e.points })),
-      ...(prediction?.multiplier
-        ? [{ labelKey: prediction.multiplier.kind === "bonusX2" ? "playerExtraBonusX2" : "playerExtraCoefficient", points: prediction.multiplier.gain }]
-        : []),
       ...(prediction?.bonusQuestionPoints ? [{ labelKey: "playerExtraBonusQuestions", points: prediction.bonusQuestionPoints }] : []),
     ];
     details[result.raceId] = {
-      picks: (prediction?.picks ?? []).map((p) => ({ key: p.key, rank: p.rank, name: p.name, nationCode: p.nationCode, points: p.points })),
+      picks: (prediction?.picks ?? []).map((p) => ({
+        key: p.key,
+        rank: p.rank,
+        name: p.name,
+        nationCode: p.nationCode,
+        points: p.points != null && doubled && !p.caFarte && !p.nationalDay ? p.points * 2 : p.points,
+      })),
       extras,
       pepite: result.pepite,
     };
