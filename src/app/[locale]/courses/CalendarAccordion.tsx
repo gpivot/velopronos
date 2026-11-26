@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ChevronDownIcon } from "@/components/icons";
@@ -82,6 +82,9 @@ export function CalendarAccordion({
   scrollToStageId = null,
   locale,
   readOnly = false,
+  renderRaceDetail,
+  onRaceOpen,
+  openRaceIds,
 }: {
   stages: CalendarStage[];
   defaultOpenStageId: string | null;
@@ -90,6 +93,15 @@ export function CalendarAccordion({
   locale: string;
   /** Saison d'un autre joueur (pop-up du Classement) : pas de « À jouer ». */
   readOnly?: boolean;
+  /**
+   * Fiche d'un joueur (Classement) : chaque étape terminée et notée devient un accordéon fermé qui
+   * n'affiche que son total ; dépliée, ce détail (points par coureur, porteur d'eau, bonus) et un lien
+   * « Voir l'étape ». onRaceOpen : appelé à la première ouverture (chargement du détail).
+   */
+  renderRaceDetail?: (raceId: string) => ReactNode;
+  onRaceOpen?: (raceId: string) => void;
+  /** Étapes dépliées d'office (classement filtré sur une seule étape). */
+  openRaceIds?: string[];
 }) {
   const [openStageId, setOpenStageId] = useState<string | null>(defaultOpenStageId);
   const t = useTranslations("Courses");
@@ -311,11 +323,8 @@ export function CalendarAccordion({
                     const raceDay = parisDayOf(race.locks_at);
                     const previousDay = raceIndex > 0 ? parisDayOf(stage.races[raceIndex - 1].locks_at) : "";
                     const restBefore = (stage.restDays ?? []).filter((d) => d < raceDay && d > previousDay).sort();
-                    const link = (
-                      <Link
-                        href={`/courses/${race.id}`}
-                        className="flex items-center gap-3 rounded-xl border border-border bg-bg px-3.5 py-3"
-                      >
+                    const expandable = !!renderRaceDetail && race.displayStatus === "finished" && race.points != null;
+                    const left = (
                         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                           <div className="flex items-center gap-2 text-sm font-semibold">
                             <span
@@ -336,7 +345,7 @@ export function CalendarAccordion({
                             {" · "}
                             {new Date(race.locks_at).toLocaleTimeString(locale, { timeZone: DISPLAY_TIME_ZONE, hour: "2-digit", minute: "2-digit" })}
                           </div>
-                          {race.names && <div className="truncate text-xs text-frost">{race.names}</div>}
+                          {race.names && !expandable && <div className="truncate text-xs text-frost">{race.names}</div>}
                           {race.predicted && race.displayStatus === "upcoming" && <PredictedBadge label={tRace("predicted")} />}
                           {race.bonusX2 && (
                             <div className="w-fit rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold uppercase text-gold">
@@ -361,6 +370,22 @@ export function CalendarAccordion({
                             </span>
                           )}
                         </div>
+                    );
+                    const link = expandable ? (
+                      <ExpandableRaceRow
+                        raceId={race.id}
+                        header={left}
+                        points={race.points!}
+                        defaultOpen={openRaceIds?.includes(race.id) ?? false}
+                        onOpen={onRaceOpen}
+                        detail={renderRaceDetail!(race.id)}
+                      />
+                    ) : (
+                      <Link
+                        href={`/courses/${race.id}`}
+                        className="flex items-center gap-3 rounded-xl border border-border bg-bg px-3.5 py-3"
+                      >
+                        {left}
                         <div className="flex flex-shrink-0 flex-col items-end gap-1">
                           <div
                             className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${STATUS_STYLES[race.displayStatus]}`}
@@ -404,7 +429,7 @@ export function CalendarAccordion({
                           <span>{SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"}</span>
                           {t(bonus ? "specialBonusBanner" : "specialRaceBanner", { name: tFormat(`specialRule_${race.special_rule}`) })}
                         </div>
-                        <div className="[&>a]:rounded-none [&>a]:border-0">{link}</div>
+                        <div className="[&>*]:rounded-none [&>*]:border-0">{link}</div>
                       </div>
                       </Fragment>
                     );
@@ -415,6 +440,59 @@ export function CalendarAccordion({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/**
+ * Fiche d'un joueur : étape terminée en accordéon (fermée, seulement son total), pour que la liste
+ * reste lisible sur un Grand Tour (Guillaume, 26/11/2026, repris de Biathlonpronos).
+ */
+function ExpandableRaceRow({
+  raceId,
+  header,
+  points,
+  defaultOpen,
+  onOpen,
+  detail,
+}: {
+  raceId: string;
+  header: ReactNode;
+  points: number;
+  defaultOpen: boolean;
+  onOpen?: (raceId: string) => void;
+  detail: ReactNode;
+}) {
+  const tHome = useTranslations("Home");
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="flex flex-col gap-2.5 rounded-xl border border-border bg-bg px-3.5 py-3">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => {
+          if (!open) onOpen?.(raceId);
+          setOpen(!open);
+        }}
+        className="flex w-full items-center gap-3 text-left"
+      >
+        {header}
+        <div className="flex flex-shrink-0 items-center gap-1.5">
+          <div className="whitespace-nowrap font-display text-lg font-extrabold text-gold">
+            {points > 0 ? "+" : ""}
+            {Math.round(points * 10) / 10} pts
+          </div>
+          <ChevronDownIcon className={`h-4 w-4 text-text-dim transition-transform ${open ? "rotate-180" : ""}`} />
+        </div>
+      </button>
+      {open && (
+        <>
+          {detail}
+          <Link href={`/courses/${raceId}`} className="self-center font-display text-[12px] font-bold text-ice">
+            {tHome("lastResultSeeRace")} ›
+          </Link>
+        </>
+      )}
     </div>
   );
 }

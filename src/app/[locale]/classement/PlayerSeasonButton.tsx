@@ -1,14 +1,20 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { CloseIcon } from "@/components/icons";
 import { StreakCard } from "@/components/StreakCard";
 import { BonusCardsList } from "@/components/BonusCardsList";
 import { PlayerBadgesRow } from "@/components/PlayerBadgesRow";
-import { nationFlagEmoji } from "@/lib/nationFlags";
 import { CalendarAccordion } from "../courses/CalendarAccordion";
-import { getPlayerSeason, type PlayerSeason } from "./actions";
+import { getPlayerRaceDetails, getPlayerSeason, type PlayerRaceDetail, type PlayerSeason } from "./actions";
+import { PlayerRaceBars } from "./PlayerRaceBars";
+import { PlayerChoicesAccordion } from "./PlayerChoicesAccordion";
+
+/** Étapes détaillées par paquets (chacune demande plusieurs lectures ; l'action en accepte 25). */
+const DETAIL_BATCH = 25;
+/** Étape sans détail à montrer (rien de lisible) : on arrête d'afficher « Chargement… ». */
+const EMPTY_DETAIL: PlayerRaceDetail = { picks: [], extras: [], pepite: null };
 
 /** Classement « Par étapes » : le pop-up se limite à cette étape (demande de Guillaume, 04/11/2026). */
 export interface PlayerStageScope {
@@ -17,8 +23,10 @@ export interface PlayerStageScope {
   points: number;
   /** En tête de l'étape : dossard rouge. */
   leader: boolean;
-  /** Classement d'une seule course de l'étape (rang et points de cette course). */
+  /** Classement d'une seule étape de la course (rang et points de cette étape). */
   singleRace: boolean;
+  /** Cette étape (classement d'une seule étape) : la fiche ne montre qu'elle. */
+  raceId?: string | null;
 }
 
 /**
@@ -40,12 +48,34 @@ export function PlayerSeasonButton({
 }) {
   const t = useTranslations("Classement");
   const tHome = useTranslations("Home");
-  const tSex = useTranslations("Sex");
   const tCards = useTranslations("BonusCards");
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<PlayerSeason | null>(null);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
+  // Détail des étapes terminées (points par coureur, porteur d'eau) : absent tant que pas chargé.
+  const [details, setDetails] = useState<Record<string, PlayerRaceDetail | null>>({});
+  const requestedRef = useRef<Set<string>>(new Set());
+
+  // Courses hors classement (×0, ex. course de test) : sans intérêt dans la fiche d'un joueur.
+  const rankedStages = data?.stages.filter((s) => s.counts_in_standings !== false) ?? [];
+
+  const loadDetails = async (ids: string[]) => {
+    const raceIds = ids.filter((id) => !requestedRef.current.has(id));
+    if (raceIds.length === 0) return;
+    raceIds.forEach((id) => requestedRef.current.add(id));
+    setDetails((prev) => ({ ...prev, ...Object.fromEntries(raceIds.map((id) => [id, prev[id] ?? null])) }));
+    try {
+      const batches = Array.from({ length: Math.ceil(raceIds.length / DETAIL_BATCH) }, (_, i) =>
+        raceIds.slice(i * DETAIL_BATCH, (i + 1) * DETAIL_BATCH)
+      );
+      const loaded = await Promise.all(batches.map((batch) => getPlayerRaceDetails(userId, batch)));
+      setDetails((prev) => Object.assign({ ...prev }, Object.fromEntries(raceIds.map((id) => [id, EMPTY_DETAIL])), ...loaded));
+    } catch {
+      // Sans détail, l'étape garde son total.
+      setDetails((prev) => ({ ...prev, ...Object.fromEntries(raceIds.map((id) => [id, EMPTY_DETAIL])) }));
+    }
+  };
 
   const show = async () => {
     setOpen(true);
@@ -55,10 +85,14 @@ export function PlayerSeasonButton({
       const result = await getPlayerSeason(userId);
       setData(result);
       setState(result ? "idle" : "error");
+      // Classement d'une seule étape : son détail tout de suite (ailleurs, à l'ouverture de chaque étape).
+      if (result && stage?.raceId) void loadDetails([stage.raceId]);
     } catch {
       setState("error");
     }
   };
+
+  const raceDetail = (raceId: string) => <RaceDetail detail={details[raceId]} loaded={raceId in details} />;
 
   return (
     <>
@@ -98,7 +132,8 @@ export function PlayerSeasonButton({
               </button>
             </div>
 
-            <div className="flex flex-col gap-3 overflow-y-auto">
+            {/* [&>*]:shrink-0 : sans ça, les encadrés « overflow-hidden » (accordéons) s'écrasent à 0 px quand la liste déborde. */}
+            <div className="flex flex-col gap-3 overflow-y-auto [&>*]:shrink-0">
               {state === "loading" && <div className="py-6 text-center text-[13px] text-text-dim">{t("playerLoading")}</div>}
               {state === "error" && <div className="py-6 text-center text-[13px] text-text-dim">{t("playerError")}</div>}
               {data && stage && (
@@ -115,10 +150,16 @@ export function PlayerSeasonButton({
                   </div>
                   <div className="text-[11px] text-text-dim">{t("playerHiddenHint")}</div>
                   <CalendarAccordion
-                    stages={data.stages.filter((s) => s.id === stage.stageId)}
+                    // Filtre sur une course : ses étapes seulement ; sur une étape : elle seule, dépliée.
+                    stages={data.stages
+                      .filter((s) => s.id === stage.stageId)
+                      .map((s) => (stage.raceId ? { ...s, races: s.races.filter((r) => r.id === stage.raceId) } : s))}
                     defaultOpenStageId={stage.stageId}
                     locale={locale}
                     readOnly
+                    renderRaceDetail={raceDetail}
+                    onRaceOpen={(raceId) => void loadDetails([raceId])}
+                    openRaceIds={stage.raceId ? [stage.raceId] : []}
                   />
                 </>
               )}
@@ -135,19 +176,6 @@ export function PlayerSeasonButton({
                         <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
                       </div>
                     </div>
-                    {/* Porteur d'eau révélé : son nom en haut du pop-up (invisible tant qu'il ne l'est pas). */}
-                    {data.pepites
-                      ?.filter((p) => p.revealed && p.name)
-                      .map((p) => (
-                        <div key={p.stageId} className="flex items-center gap-2 border-t border-border pt-2.5 text-[13px] text-text-dim">
-                          <span className="text-base">💧</span>
-                          {t("playerPepiteRevealed", { course: p.courseName })}
-                          <span className="font-semibold text-ice">
-                            {p.nationCode && `${nationFlagEmoji(p.nationCode)} `}
-                            {p.name}
-                          </span>
-                        </div>
-                      ))}
                     {data.cards && data.cards.cards.length > 0 && (
                       <div className="flex flex-col gap-1.5 border-t border-border pt-2.5">
                         <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">
@@ -156,19 +184,19 @@ export function PlayerSeasonButton({
                         <BonusCardsList cards={data.cards.cards} compact />
                       </div>
                     )}
-                    {data.favoriteTeam && (
-                      <div className="flex items-center gap-2 text-[13px] text-text-dim">
-                        <span className="text-base">{nationFlagEmoji(data.favoriteTeam.nationCode)}</span>
-                        {t("playerFavoriteTeam")}
-                        <span className="font-semibold text-frost">
-                          {data.favoriteTeam.name} {tSex(data.favoriteTeam.sex)}
-                        </span>
-                      </div>
-                    )}
                   </div>
+                  <PlayerChoicesAccordion choices={data.choices} pepites={data.pepites ?? []} />
                   {data.streak != null && <StreakCard current={data.streak} />}
                   <div className="text-[11px] text-text-dim">{t("playerHiddenHint")}</div>
-                  <CalendarAccordion stages={data.stages} defaultOpenStageId={data.defaultOpenStageId} locale={locale} readOnly />
+                  {/* Classement Saison : toutes les courses de la saison, dans l'ordre du calendrier (Guillaume, 26/11/2026). */}
+                  <CalendarAccordion
+                    stages={rankedStages}
+                    defaultOpenStageId={data.defaultOpenStageId}
+                    locale={locale}
+                    readOnly
+                    renderRaceDetail={raceDetail}
+                    onRaceOpen={(raceId) => void loadDetails([raceId])}
+                  />
                 </>
               )}
             </div>
@@ -177,4 +205,11 @@ export function PlayerSeasonButton({
       )}
     </>
   );
+}
+
+function RaceDetail({ detail, loaded }: { detail: PlayerRaceDetail | null | undefined; loaded: boolean }) {
+  const t = useTranslations("Classement");
+  if (detail) return <PlayerRaceBars detail={detail} />;
+  if (loaded && detail === null) return <div className="text-[11px] text-text-dim">{t("playerLoading")}</div>;
+  return null;
 }

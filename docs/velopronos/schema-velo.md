@@ -539,3 +539,34 @@ Demande de Guillaume du 26/11/2026 (11 points). Les points 1 à 7, 10 et 11 éta
   début de l'e-mail (avant « @ », ce que la base donne à toute inscription par e-mail, Google ou
   Apple) ou « Invité » (`isAutoPseudo`, `src/lib/autoPseudo.ts`). Les inscrits par e-mail qui n'ont
   pas changé leur pseudo voient donc aussi l'encart.
+
+## Fiche joueur du Classement, reprise de Biathlonpronos (26/11/2026)
+
+Demande de Guillaume du 26/11/2026 : améliorations faites le même jour sur Biathlonpronos, adaptées
+au vélo. Correspondances : une « course » du biathlon = une **étape** ici, une « étape » du biathlon
+(filtre « par étape » du Classement) = une **course** ici.
+
+- **Flèche retour de la page d'une étape** : ramène toujours à la racine de Ma saison (`/courses`,
+  dans la langue en cours), plus à la page précédente (`BackButton` devient un simple lien).
+- **Fiche joueur (pop-up du Classement)** : les courses hors classement (×0) sont masquées et jamais
+  ouvertes par défaut. En classement Saison, toutes les courses dans l'ordre du calendrier (le
+  filtre de Ma saison reste en haut) ; filtre sur une course : ses étapes seulement ; sur une étape :
+  elle seule, dépliée.
+- **Détail des points** : chaque étape terminée et notée est un accordéon fermé qui n'affiche que son
+  total ; dépliée, ses 3 coureurs (ou 3 équipes sur un CLM par équipes) les uns sous les autres avec
+  leur place, une barre et leurs points, les bonus en pastilles dessous, le porteur d'eau révélé en
+  turquoise sur l'étape où il a marqué, et un lien « Voir l'étape ». Détail chargé à l'ouverture
+  (`getPlayerRaceDetails`, `PlayerRaceBars`).
+- **« Ses choix »** (accordéon, à la place des pronostics de saison du biathlon, qui n'existent plus en
+  vélo) : équipe de cœur et nation favorite, puis par course ses **maillots** et l'équipe choisie pour
+  un Grand Tour, et son **porteur d'eau une fois révélé** (un porteur non révélé n'est jamais envoyé au
+  navigateur, et la base ne le donne pas : 0018). Anti-copie : les maillots d'un autre joueur
+  n'apparaissent qu'au départ de la 1re étape de la course, quand il ne peut plus les changer (filtre
+  dans `getPlayerSeason` et policy de 0045). *À confirmer* : l'équipe de cœur et la nation favorite
+  restent visibles dès qu'elles sont choisies (choix définitifs, lisibles par tous depuis 0019), alors
+  qu'un retardataire pourrait s'en inspirer ; l'équipe d'un Grand Tour aussi (0054, lisible par tous).
+  Aucune migration.
+- **Pop-up d'un joueur sur la page d'une étape** : encadré « Son porteur d'eau est révélé ! » sous ses
+  3 coureurs, pour expliquer le total (montré aussi à un joueur sans pronostic sur l'étape).
+- **Classement filtré sur une course ou une étape** : plus de coureurs sous les pseudos (pseudo, pictos
+  et points seulement) ; on les voit en touchant le joueur.

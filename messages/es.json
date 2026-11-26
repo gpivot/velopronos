@@ -88,7 +88,13 @@
     "pseudoChooseTitle": "¡Elige tu nombre de campeón!",
     "pseudoChooseHint": "Por ahora te llamas «{pseudo}». Es el nombre que ven los demás jugadores en la clasificación.",
     "pseudoPlaceholder": "Tu apodo",
-    "pseudoHello": "¡Hola, {pseudo}!"
+    "pseudoHello": "¡Hola, {pseudo}!",
+    "playerPepiteTag": "gregario",
+    "playerExtraBonusX2": "Bonus ×2",
+    "playerExtraCoefficient": "Carrera mayor ×2",
+    "playerExtraBonusQuestions": "Preguntas extra",
+    "pepiteRevealTitleOther": "¡Su gregario ha sido revelado!",
+    "pepiteRevealHintOther": "Primer Top 10 en esta gran vuelta: sus puntos se suman a su resultado de la etapa."
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de ciclismo.",
@@ -443,7 +449,15 @@
     "noStages": "Todavía no hay carreras programadas.",
     "noPicks": "Sin pronóstico",
     "myRankingTitle": "Mi clasificación",
-    "playerPepiteRevealed": "Gregario revelado ({course}):"
+    "playerPepiteRevealed": "Gregario revelado ({course}):",
+    "playerChoicesTitle": "Sus elecciones",
+    "playerChoicesSubtitle": "Equipo, nación, maillots, gregarios",
+    "playerHeartTeam": "Equipo del corazón",
+    "playerFavoriteNation": "Nación favorita",
+    "playerGrandTourTeam": "Equipo para esta gran vuelta",
+    "playerWaterCarrier": "Gregario revelado",
+    "playerNoChoice": "Aún sin elegir",
+    "playerChoicesHint": "Sus maillots aparecen al inicio de la 1.ª etapa de cada carrera; su gregario, una vez revelado."
   },
   "Courses": {
     "title": "Mi temporada",

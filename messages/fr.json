@@ -88,7 +88,13 @@
     "pseudoChooseTitle": "Choisis ton nom de champion !",
     "pseudoChooseHint": "Pour l'instant, tu t'appelles « {pseudo} ». C'est le nom que les autres joueurs voient au classement.",
     "pseudoPlaceholder": "Ton pseudo",
-    "pseudoHello": "Salut {pseudo} !"
+    "pseudoHello": "Salut {pseudo} !",
+    "playerPepiteTag": "porteur d'eau",
+    "playerExtraBonusX2": "Bonus ×2",
+    "playerExtraCoefficient": "Course majeure ×2",
+    "playerExtraBonusQuestions": "Questions bonus",
+    "pepiteRevealTitleOther": "Son porteur d'eau est révélé !",
+    "pepiteRevealHintOther": "Premier Top 10 sur ce Grand Tour : ses points s'ajoutent à son score de l'étape."
   },
   "Landing": {
     "heroTitle": "Pronostique les courses cyclistes.",
@@ -443,7 +449,15 @@
     "noStages": "Aucune course programmée pour le moment.",
     "noPicks": "Pas de pronostic",
     "myRankingTitle": "Mon classement",
-    "playerPepiteRevealed": "Porteur d'eau révélé ({course}) :"
+    "playerPepiteRevealed": "Porteur d'eau révélé ({course}) :",
+    "playerChoicesTitle": "Ses choix",
+    "playerChoicesSubtitle": "Équipe de cœur, nation, maillots, porteurs d'eau",
+    "playerHeartTeam": "Équipe de cœur",
+    "playerFavoriteNation": "Nation favorite",
+    "playerGrandTourTeam": "Équipe de ce Grand Tour",
+    "playerWaterCarrier": "Porteur d'eau révélé",
+    "playerNoChoice": "Pas encore choisie",
+    "playerChoicesHint": "Ses maillots apparaissent au départ de la 1re étape de chaque course, son porteur d'eau une fois révélé."
   },
   "Courses": {
     "title": "Ma saison",

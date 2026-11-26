@@ -88,7 +88,13 @@
     "pseudoChooseTitle": "Wähle deinen Champion-Namen!",
     "pseudoChooseHint": "Im Moment heißt du „{pseudo}“. Diesen Namen sehen die anderen Spieler in der Rangliste.",
     "pseudoPlaceholder": "Dein Spielername",
-    "pseudoHello": "Hallo {pseudo}!"
+    "pseudoHello": "Hallo {pseudo}!",
+    "playerPepiteTag": "Wasserträger",
+    "playerExtraBonusX2": "×2-Bonus",
+    "playerExtraCoefficient": "Großes Rennen ×2",
+    "playerExtraBonusQuestions": "Bonusfragen",
+    "pepiteRevealTitleOther": "Sein Wasserträger ist enthüllt!",
+    "pepiteRevealHintOther": "Erste Top 10 bei dieser Grand Tour: seine Punkte kommen zu seinem Etappenergebnis hinzu."
   },
   "Landing": {
     "heroTitle": "Tippe auf die Radrennen.",
@@ -443,7 +449,15 @@
     "noStages": "Noch keine Rennen geplant.",
     "noPicks": "Kein Tipp",
     "myRankingTitle": "Meine Platzierung",
-    "playerPepiteRevealed": "Wasserträger enthüllt ({course}):"
+    "playerPepiteRevealed": "Wasserträger enthüllt ({course}):",
+    "playerChoicesTitle": "Seine Tipps",
+    "playerChoicesSubtitle": "Herzteam, Nation, Trikots, Wasserträger",
+    "playerHeartTeam": "Herzteam",
+    "playerFavoriteNation": "Lieblingsnation",
+    "playerGrandTourTeam": "Team für diese Grand Tour",
+    "playerWaterCarrier": "Wasserträger enthüllt",
+    "playerNoChoice": "Noch nicht gewählt",
+    "playerChoicesHint": "Seine Trikots erscheinen beim Start der 1. Etappe jedes Rennens, sein Wasserträger nach der Enthüllung."
   },
   "Courses": {
     "title": "Meine Saison",

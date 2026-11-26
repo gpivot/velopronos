@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { CloseIcon } from "@/components/icons";
 import { PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
+import { PepiteReveal } from "@/components/PepiteReveal";
 import { getPlayerRaceResult, type PlayerRaceResult } from "./actions";
 
 /** Ligne du classement des joueurs d'une course : ouvre un pop-up avec le pronostic détaillé du joueur. */
@@ -74,7 +75,7 @@ export function PlayerRaceButton({
             <div className="flex flex-col gap-2 overflow-y-auto">
               {state === "loading" && <div className="py-6 text-center text-[13px] text-text-dim">{tClassement("playerLoading")}</div>}
               {state === "error" && <div className="py-6 text-center text-[13px] text-text-dim">{tClassement("playerError")}</div>}
-              {data && !prediction && <div className="py-6 text-center text-[13px] text-text-dim">{t("playerNoPrediction")}</div>}
+              {data && !prediction && !data.pepite && <div className="py-6 text-center text-[13px] text-text-dim">{t("playerNoPrediction")}</div>}
               {prediction && (
                 <>
                   <div className="flex items-end justify-between gap-3 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-4">
@@ -105,6 +106,8 @@ export function PlayerRaceButton({
                   <PredictionBreakdown picks={prediction.picks} extras={prediction.extras} showLegend={false} showCalc />
                 </>
               )}
+              {/* Porteur d'eau révélé sur cette étape : explique l'écart entre la somme des choix et le total. */}
+              {data?.pepite && <PepiteReveal pepite={data.pepite} other={!data.isSelf} />}
             </div>
           </div>
         </div>

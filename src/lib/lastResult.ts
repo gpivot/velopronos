@@ -276,12 +276,18 @@ export async function getLastResults(
 }
 
 /** Même détail pour une course donnée (page d'une course terminée). */
-export async function getRaceResult(supabase: SupabaseClient, raceId: string, userId: string | null): Promise<LastResult | null> {
+export async function getRaceResult(
+  supabase: SupabaseClient,
+  raceId: string,
+  userId: string | null,
+  /** withPlayerRank false : sans la place du joueur parmi les pronostiqueurs (fiche joueur, plus léger). */
+  options: { withPlayerRank?: boolean } = {}
+): Promise<LastResult | null> {
   const { data: race } = await supabase.from("races").select(RACE_SELECT).eq("id", raceId).maybeSingle();
-  return race ? buildRaceResult(supabase, race, userId) : null;
+  return race ? buildRaceResult(supabase, race, userId, options.withPlayerRank ?? true) : null;
 }
 
-async function buildRaceResult(supabase: SupabaseClient, race: any, userId: string | null): Promise<LastResult> {
+async function buildRaceResult(supabase: SupabaseClient, race: any, userId: string | null, withPlayerRank = true): Promise<LastResult> {
   const stage = race.stages as any as {
     location: string;
     country_code: string;
@@ -403,7 +409,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   const breakdown = (ledger?.breakdown ?? {}) as IndividualBreakdown;
 
   // Place du joueur au classement de la course, questions bonus comprises (comme getRacePlayers).
-  const players = await getRacePlayers(supabase, race.id);
+  const players = withPlayerRank ? await getRacePlayers(supabase, race.id) : [];
   const myRow = players.find((p) => p.userId === userId);
 
   let picks: LastResultPick[];

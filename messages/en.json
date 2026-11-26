@@ -88,7 +88,13 @@
     "pseudoChooseTitle": "Choose your champion name!",
     "pseudoChooseHint": "For now, you're called \"{pseudo}\". This is the name other players see in the standings.",
     "pseudoPlaceholder": "Your username",
-    "pseudoHello": "Hi {pseudo}!"
+    "pseudoHello": "Hi {pseudo}!",
+    "playerPepiteTag": "water carrier",
+    "playerExtraBonusX2": "×2 bonus",
+    "playerExtraCoefficient": "Major race ×2",
+    "playerExtraBonusQuestions": "Bonus questions",
+    "pepiteRevealTitleOther": "Their water carrier is revealed!",
+    "pepiteRevealHintOther": "First Top 10 in this Grand Tour: their points are added to their stage score."
   },
   "Landing": {
     "heroTitle": "Predict the cycling races.",
@@ -443,7 +449,15 @@
     "noStages": "No race scheduled yet.",
     "noPicks": "No prediction",
     "myRankingTitle": "My ranking",
-    "playerPepiteRevealed": "Water carrier revealed ({course}):"
+    "playerPepiteRevealed": "Water carrier revealed ({course}):",
+    "playerChoicesTitle": "Their picks",
+    "playerChoicesSubtitle": "Heart team, nation, jerseys, water carriers",
+    "playerHeartTeam": "Heart team",
+    "playerFavoriteNation": "Favourite nation",
+    "playerGrandTourTeam": "Team for this Grand Tour",
+    "playerWaterCarrier": "Water carrier revealed",
+    "playerNoChoice": "Not chosen yet",
+    "playerChoicesHint": "Their jerseys appear when each race's first stage starts, their water carrier once revealed."
   },
   "Courses": {
     "title": "My season",

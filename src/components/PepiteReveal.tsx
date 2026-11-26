@@ -4,16 +4,23 @@ import { formatPoints } from "@/components/PredictionBreakdown";
 import type { LastResult } from "@/lib/lastResult";
 
 /**
- * Révélation de la Pépite cachée dans le résultat d'une course (accueil, étape de la semaine,
+ * Révélation du porteur d'eau (Pépite cachée du biathlon) dans le résultat d'une course (accueil, étape de la semaine,
  * page de la course) : sa place, son nom et les points qu'elle ajoute au score de la course.
  */
-export function PepiteReveal({ pepite }: { pepite: NonNullable<LastResult["pepite"]> }) {
+export function PepiteReveal({
+  pepite,
+  other = false,
+}: {
+  pepite: NonNullable<LastResult["pepite"]>;
+  /** Porteur d'eau d'un autre joueur (pop-up du classement de l'étape) : « Son porteur d'eau… ». */
+  other?: boolean;
+}) {
   const t = useTranslations("Home");
   return (
     <div className="flex flex-col gap-2 rounded-2xl border border-ice/60 bg-ice-soft px-3.5 py-3">
       <div className="flex items-center gap-2 font-display text-[13px] font-bold text-ice">
         <span className="text-base">💧</span>
-        {t("pepiteRevealTitle")}
+        {t(other ? "pepiteRevealTitleOther" : "pepiteRevealTitle")}
       </div>
       <div className="flex items-center gap-2.5">
         <div className="whitespace-nowrap font-display text-base font-extrabold text-frost">{t("pepiteRevealRank", { rank: pepite.rank })}</div>
@@ -23,7 +30,7 @@ export function PepiteReveal({ pepite }: { pepite: NonNullable<LastResult["pepit
         </div>
         <div className="whitespace-nowrap font-display text-lg font-extrabold text-ice">{formatPoints(pepite.points)}</div>
       </div>
-      <div className="text-[11px] leading-snug text-text-dim">{t("pepiteRevealHint")}</div>
+      <div className="text-[11px] leading-snug text-text-dim">{t(other ? "pepiteRevealHintOther" : "pepiteRevealHint")}</div>
     </div>
   );
 }

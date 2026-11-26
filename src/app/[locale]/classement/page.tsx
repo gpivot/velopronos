@@ -123,7 +123,6 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
 
   const noLeague = scope === "league" && !leagueId;
   let rows: StandingsRow[] = [];
-  let showPicks = false;
   let streaks = new Map<string, number>();
   let ongoingStageLeaders = new Set<string>();
   if (season && !noLeague) {
@@ -142,10 +141,8 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
       ongoingStageLeaders = new Set(ongoingRows.filter((r) => r.rank === 1 && r.points > 0).map((r) => r.userId));
       rows = buildStandings([...leaderboard, ...registered.map((p) => ({ ...p, points: 0 }))], members, null);
     } else if (stage) {
-      // Pronostics affichés (une ligne sous le pseudo) seulement pour une course choisie et déjà partie ;
-      // sur l'étape entière, ils restent dans le pop-up du joueur pour garder des lignes compactes.
-      showPicks = Boolean(race && race.displayStatus !== "upcoming");
-      rows = await getRacesStandings(supabase, race ? [race] : stage.races, members, showPicks, race ? null : stage.id);
+      // Pronostics jamais affichés sous le pseudo : on les voit dans le pop-up du joueur (Guillaume, 26/11/2026).
+      rows = await getRacesStandings(supabase, race ? [race] : stage.races, members, false, race ? null : stage.id);
     }
   }
 
@@ -221,7 +218,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                 userId={row.userId}
                 stage={
                   period === "stages" && stage
-                    ? { stageId: stage.id, rank: row.rank, points: row.points, leader: !race && stage.countsInStandings !== false && row.rank === 1 && row.points > 0, singleRace: !!race }
+                    ? { stageId: stage.id, rank: row.rank, points: row.points, leader: !race && stage.countsInStandings !== false && row.rank === 1 && row.points > 0, singleRace: !!race, raceId: race?.id ?? null }
                     : null
                 }
                 className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3.5 ${
@@ -250,16 +247,6 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                       streak={period === "season" ? streaks.get(row.userId) ?? null : null}
                     />
                   </div>
-                  {showPicks &&
-                    (row.picks && row.picks.length > 0 ? (
-                      row.picks.map((pick) => (
-                        <div key={pick.raceId} className="truncate text-xs leading-snug text-frost">
-                          {pick.names}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="text-xs text-text-dim">{t("noPicks")}</div>
-                    ))}
                 </div>
                 <div className="whitespace-nowrap font-display text-sm font-bold text-ice">{row.points} pts</div>
               </PlayerSeasonButton>
