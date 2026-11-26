@@ -90,7 +90,7 @@ export interface LastResult {
    * Révélation de la Pépite cachée du joueur sur cette course (son premier Top 10) : place, nom
    * et points ajoutés au score de la course. null sinon. Indépendant du pronostic.
    */
-  pepite: { rank: number; name: string; nationCode: string; points: number } | null;
+  pepite: { rank: number; name: string; nationCode: string; points: number; doubled?: boolean } | null;
   /** null : le joueur n'avait pas pronostiqué cette course. */
   prediction: {
     /** Total de la course : pronostic + questions bonus. */
@@ -509,7 +509,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   // Porteur d'eau doublé : ses points simples restent sur sa ligne, le doublement rejoint le ×2.
   let shownPepite = base.pepite;
   if (pepiteDoubledGain > 0 && multiplierKind && shownPepite) {
-    shownPepite = { ...shownPepite, points: shownPepite.points - pepiteDoubledGain };
+    shownPepite = { ...shownPepite, points: shownPepite.points - pepiteDoubledGain, doubled: true };
     multiplierGain += pepiteDoubledGain;
   }
 

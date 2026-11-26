@@ -580,5 +580,6 @@ en pratique jamais, le porteur n'existant que sur les Grands Tours). Le Boost ×
 le joker retardataire ne s'y appliquent pas (le joker exclut déjà le ×2). Code :
 `computePepiteBonus(cote, rang, multiplicateur)`, `applyPepiteBonuses` (`src/lib/admin/raceResults.ts`).
 À l'affichage, la ligne du porteur montre ses points simples et le doublement va dans la pastille
-« Bonus ×2 » (`buildRaceResult`, `src/lib/lastResult.ts`). Les étapes déjà notées ne changent pas tant
+« Bonus ×2 » (`buildRaceResult`, `src/lib/lastResult.ts`) ; dans la fiche d'un joueur du Classement,
+qui n'a pas de pastille ×2, chaque ligne (porteur compris) montre ses points déjà doublés. Les étapes déjà notées ne changent pas tant
 qu'on ne les renote pas dans l'admin. Règlement (`Regles.porteurBody`) mis à jour dans les 5 langues.
