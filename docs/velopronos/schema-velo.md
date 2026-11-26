@@ -568,5 +568,8 @@ au vélo. Correspondances : une « course » du biathlon = une **étape** ici, u
   Aucune migration.
 - **Pop-up d'un joueur sur la page d'une étape** : encadré « Son porteur d'eau est révélé ! » sous ses
   3 coureurs, pour expliquer le total (montré aussi à un joueur sans pronostic sur l'étape).
+- **À revoir aux tests (Guillaume, 26/11/2026)** : voir ce que donne la fiche en pleine saison (au Giro,
+  après les classiques et les courses d'une semaine) ; piste : pendant un Grand Tour, ne laisser
+  dépliable que la course par étapes en cours, et simplifier si la fiche devient une usine à gaz.
 - **Classement filtré sur une course ou une étape** : plus de coureurs sous les pseudos (pseudo, pictos
   et points seulement) ; on les voit en touchant le joueur.
