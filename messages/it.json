@@ -294,7 +294,7 @@
     "combatifFinal": "Supercombattivo: +{points} pt",
     "combatifDaily": "+{points} pt per ogni giorno da più combattivo",
     "porteurTitle": "Il gregario",
-    "porteurBody": "In ogni grande giro, scegli in segreto un outsider. Viene giocato di nascosto su tutte le tappe: alla sua prima Top 10, i punti che guadagna si aggiungono al tuo punteggio della tappa, anche se quel giorno non hai pronosticato. Viene allora rivelato (💧) e non porta più punti. Prima della rivelazione, non puoi metterlo nei tuoi pronostici di tappa.",
+    "porteurBody": "In ogni grande giro, scegli in segreto un outsider. Viene giocato di nascosto su tutte le tappe: alla sua prima Top 10, i punti che guadagna si aggiungono al tuo punteggio della tappa, anche se quel giorno non hai pronosticato. Viene allora rivelato (💧) e non porta più punti. Prima della rivelazione, non puoi metterlo nei tuoi pronostici di tappa. Se hai usato il tuo bonus ×2 su quella tappa, anche i suoi punti vengono raddoppiati.",
     "porteurOdds": "Tutte le sue quote ≥ {odds}",
     "heartTitle": "Squadra e nazione del cuore",
     "heartBody": "Sceglile una volta per la stagione: segui le loro vittorie nella tua home. La nazione preferita vale doppio alla Festa nazionale, la squadra del cuore alimenta la carta Squadra. In ogni grande giro puoi anche scegliere un'altra squadra solo per quel grande giro.",

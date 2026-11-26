@@ -38,6 +38,7 @@ describe("computePepiteBonus", () => {
   it("applique le barème de base (cote × multiplicateur de rang) au 1er Top 10", () => {
     expect(computePepiteBonus(35, 1)).toBe(875); // 35 × 25
     expect(computePepiteBonus(35, 10)).toBe(35); // 35 × 1
+    expect(computePepiteBonus(35, 1, 2)).toBe(1750); // bonus ×2 perso ou course ×2 : doublé
   });
 
   it("ne rapporte rien hors Top 10", () => {
