@@ -235,7 +235,7 @@ export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<
   // §14 — la Pépite est indépendante du pronostic du joueur sur cette course précise : à vérifier
   // même si personne n'a pronostiqué dessus. Après les pronostics, pour s'ajouter à leurs points.
   // Étape hors classement (×0) : la Pépite n'y est pas révélée, elle reste en jeu pour la suite.
-  if (stage.counts_in_standings !== false) await applyPepiteBonuses(admin, stage.season_id, stage.id, race, results ?? []);
+  if (stage.counts_in_standings !== false) await applyPepiteBonuses(admin, stage.season_id, stage.id, race, results ?? [], stage.coefficient);
 
   await admin.from("races").update({ status: "finished" }).eq("id", raceId);
   await recomputeSeasonStreaks(admin, stage.season_id);
@@ -459,7 +459,8 @@ async function applyPepiteBonuses(
   seasonId: string,
   stageId: string,
   race: { id: string; format: string; locks_at: string },
-  results: any[]
+  results: any[],
+  stageCoefficient: number
 ): Promise<void> {
   const raceId = race.id;
   const raceFormat = race.format;
@@ -487,13 +488,21 @@ async function applyPepiteBonuses(
     .in("athlete_id", athleteIds);
   const oddsByAthleteId = new Map((odds ?? []).map((o) => [o.athlete_id as string, o.value as number]));
   const rankByAthleteId = new Map(top10Results.map((r) => [r.athlete_id as string, r.rank as number]));
+  // Bonus ×2 perso posé sur cette étape : il double aussi les points du porteur d'eau (26/11/2026).
+  const { data: x2Rows } = await admin
+    .from("predictions")
+    .select("user_id")
+    .eq("race_id", raceId)
+    .eq("bonus_x2_used", true)
+    .in("user_id", inPlay.map((p) => p.user_id as string));
+  const x2UserIds = new Set((x2Rows ?? []).map((row) => row.user_id as string));
 
   for (const pepite of inPlay) {
     const rank = rankByAthleteId.get(pepite.athlete_id);
     const oddsAtRace = oddsByAthleteId.get(pepite.athlete_id);
     if (rank == null || oddsAtRace == null) continue;
 
-    const bonus = computePepiteBonus(oddsAtRace, rank);
+    const bonus = computePepiteBonus(oddsAtRace, rank, stageCoefficient === 2 || x2UserIds.has(pepite.user_id) ? 2 : 1);
     if (bonus <= 0) continue;
 
     const { data: existing } = await admin

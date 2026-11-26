@@ -125,7 +125,7 @@ une idée en réserve, rien n'est codé.
 - Joué en caché sur toutes les étapes du Grand Tour (pas dans les pronostics du joueur) : à son
   **premier Top 10**, ses points de l'étape (cote du type d'étape × multiplicateur de rang)
   s'ajoutent au score de l'étape du joueur, **même sans pronostic sur l'étape**, une seule fois,
-  hors ×2 et hors joker (comme la Pépite, confirmé par Guillaume le 05/11/2026 ; base44 ne le
+  hors joker (comme la Pépite, confirmé par Guillaume le 05/11/2026 ; base44 ne le
   comptait qu'aux joueurs qui avaient pronostiqué l'étape). Pas de révélation sur un CLM par équipes.
 - Badge 💧 au classement (pour l'instant au général ; règle prévue : seulement dans le classement
   du Grand Tour concerné, à faire avec le classement de saison).
@@ -570,3 +570,16 @@ au vélo. Correspondances : une « course » du biathlon = une **étape** ici, u
   3 coureurs, pour expliquer le total (montré aussi à un joueur sans pronostic sur l'étape).
 - **Classement filtré sur une course ou une étape** : plus de coureurs sous les pseudos (pseudo, pictos
   et points seulement) ; on les voit en touchant le joueur.
+
+## Porteur d'eau doublé par le ×2 (26/11/2026)
+
+Demande de Guillaume du 26/11/2026 (même règle que la Pépite de Biathlonpronos), qui remplace le
+« hors ×2 » du 05/11/2026 : les points du porteur d'eau révélé sont **doublés** quand le joueur a posé
+son **bonus ×2 perso** sur l'étape de la révélation, ou sur une course à coefficient ×2 (sans cumul ;
+en pratique jamais, le porteur n'existant que sur les Grands Tours). Le Boost ×3, la carte Équipe et
+le joker retardataire ne s'y appliquent pas (le joker exclut déjà le ×2). Code :
+`computePepiteBonus(cote, rang, multiplicateur)`, `applyPepiteBonuses` (`src/lib/admin/raceResults.ts`).
+À l'affichage, la ligne du porteur montre ses points simples et le doublement va dans la pastille
+« Bonus ×2 » (`buildRaceResult`, `src/lib/lastResult.ts`) ; dans la fiche d'un joueur du Classement,
+qui n'a pas de pastille ×2, chaque ligne (porteur compris) montre ses points déjà doublés. Les étapes déjà notées ne changent pas tant
+qu'on ne les renote pas dans l'admin. Règlement (`Regles.porteurBody`) mis à jour dans les 5 langues.

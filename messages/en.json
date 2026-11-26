@@ -294,7 +294,7 @@
     "combatifFinal": "Most combative: +{points} pts",
     "combatifDaily": "+{points} pts each day they are most combative",
     "porteurTitle": "The water carrier",
-    "porteurBody": "On each Grand Tour, secretly pick an outsider. They are played hidden on every stage: at their first Top 10, the points they earn are added to your stage score, even if you didn't predict that day. They are then revealed (💧) and earn nothing more. Before the reveal, you can't put them in your stage predictions.",
+    "porteurBody": "On each Grand Tour, secretly pick an outsider. They are played hidden on every stage: at their first Top 10, the points they earn are added to your stage score, even if you didn't predict that day. They are then revealed (💧) and earn nothing more. Before the reveal, you can't put them in your stage predictions. If you played your ×2 bonus on that stage, their points are doubled too.",
     "porteurOdds": "All their odds ≥ {odds}",
     "heartTitle": "Favourite team and nation",
     "heartBody": "Choose them once for the season: you follow their wins on your home page. Your favourite nation counts double on National Day, your favourite team feeds the Team card. On each Grand Tour, you can also pick another team for that Grand Tour only.",

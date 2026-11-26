@@ -294,7 +294,7 @@
     "combatifFinal": "Kämpferischster Fahrer: +{points} Pkt.",
     "combatifDaily": "+{points} Pkt. an jedem Tag als Kämpferischster",
     "porteurTitle": "Der Wasserträger",
-    "porteurBody": "Wähle bei jeder Grand Tour heimlich einen Außenseiter. Er wird auf allen Etappen verdeckt gespielt: Bei seinem ersten Top-10-Platz kommen seine Punkte zu deinem Etappenergebnis hinzu, auch wenn du an dem Tag nicht getippt hast. Dann wird er aufgedeckt (💧) und bringt nichts mehr. Vorher kannst du ihn nicht in deine Etappentipps nehmen.",
+    "porteurBody": "Wähle bei jeder Grand Tour heimlich einen Außenseiter. Er wird auf allen Etappen verdeckt gespielt: Bei seinem ersten Top-10-Platz kommen seine Punkte zu deinem Etappenergebnis hinzu, auch wenn du an dem Tag nicht getippt hast. Dann wird er aufgedeckt (💧) und bringt nichts mehr. Vorher kannst du ihn nicht in deine Etappentipps nehmen. Hast du deinen ×2-Bonus auf diese Etappe gesetzt, werden seine Punkte ebenfalls verdoppelt.",
     "porteurOdds": "Alle seine Quoten ≥ {odds}",
     "heartTitle": "Lieblingsteam und Lieblingsnation",
     "heartBody": "Einmal pro Saison wählen: Du verfolgst ihre Siege auf deiner Startseite. Die Lieblingsnation zählt am Nationalfeiertag doppelt, das Lieblingsteam speist die Team-Karte. Bei jeder Grand Tour kannst du auch ein anderes Team nur für diese Grand Tour wählen.",
